@@ -192,7 +192,7 @@ function Reveal({ children, className = '' }: { children: ReactNode; className?:
   return <div ref={ref} data-reveal className={className}>{children}</div>;
 }
 
-/* ── HERO ── full-bleed sunset, lower-left editorial composition ── */
+/* ── HERO ── full-bleed hero-sunset, bottom-left aligned ── */
 function Hero() {
   return (
     <section className="relative flex min-h-[100svh] items-end overflow-hidden bg-lake-deep text-cream">
@@ -224,9 +224,11 @@ function Hero() {
               >
                 Explore life at Lakeside <ArrowRight size={15} />
               </a>
-              <a href="/owners" className="link-arrow text-cream/60 hover:text-cream">
-                <span className="link-underline">Owners</span>
-                <ArrowUpRight size={15} strokeWidth={1.5} />
+              <a
+                href="/owners"
+                className="inline-flex items-center gap-3 border-b border-cream/20 pb-3 text-[13px] font-semibold uppercase tracking-[0.14em] text-cream/60 transition hover:border-brass hover:text-cream"
+              >
+                Owners
               </a>
             </div>
           </div>
@@ -236,20 +238,12 @@ function Hero() {
   );
 }
 
-/* ── HOME / TOWER ── cream, image left / text right ── */
-function HomeSection() {
+/* ── 1. LAKESIDE TOWER ── cream, text left / tower-aerial right ── */
+function TowerSection() {
   return (
     <section id="home" className="bg-cream section-pad">
       <div className="container-wide">
-        <Reveal className="grid gap-12 lg:grid-cols-[1.4fr_1fr] lg:items-end lg:gap-20">
-          <div className="img-inset relative">
-            <Img
-              slug="tower-aerial"
-              alt="Lakeside Tower overlooking Lake Grapevine from above"
-              className="w-full object-cover"
-              sizes="(min-width: 1024px) 60vw, 100vw"
-            />
-          </div>
+        <Reveal className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:items-end lg:gap-20">
           <div className="lg:pb-6">
             <Eyebrow>Lakeside Tower</Eyebrow>
             <h2 className="display-4 serif mt-6 text-lake">
@@ -263,137 +257,72 @@ function HomeSection() {
               <ArrowLink href="/residences">Discover the residences</ArrowLink>
             </div>
           </div>
+          <div className="img-inset relative order-first lg:order-last">
+            <Img
+              slug="tower-aerial"
+              alt="Lakeside Tower overlooking Lake Grapevine from above"
+              className="w-full object-cover"
+              sizes="(min-width: 1024px) 60vw, 100vw"
+            />
+          </div>
         </Reveal>
       </div>
     </section>
   );
 }
 
-/* ── ARCHITECTURE ── dark full-bleed, tall tower image ── */
-function ArchitectureSection() {
+/* ── 2. THE TRAIL ── full-bleed dark, trail-shoreline, strongest differentiator ── */
+function TrailSection() {
   return (
-    <section className="relative flex min-h-[80vh] items-end overflow-hidden bg-lake-deep text-cream">
+    <section className="relative flex min-h-[90vh] items-end overflow-hidden bg-lake-deep text-cream">
       <div className="absolute inset-0">
         <Img
-          slug="tower-aerial"
-          alt="Lakeside Tower and the lake from above"
+          slug="trail-shoreline"
+          alt="The Northshore Trail beginning at the edge of Lakeside Tower"
           className="h-full w-full object-cover object-center"
           sizes="100vw"
         />
       </div>
       <div className="img-overlay absolute inset-0" />
-      <div className="container-wide relative z-10 pb-12 pt-40 sm:pb-16">
-        <Eyebrow>Architecture</Eyebrow>
-        <h2 className="display-3 serif mt-5 text-cream">
-          Life above<br />
-          <em className="font-medium">the lake.</em>
-        </h2>
-      </div>
-    </section>
-  );
-}
-
-/* ── VILLAGE ── sand, art-directed collage ── */
-function VillageSection() {
-  return (
-    <section className="bg-sand section-pad">
-      <div className="container-wide">
-        <Reveal className="mb-16 max-w-2xl">
-          <Eyebrow>Lakeside Village</Eyebrow>
-          <h2 className="display-4 serif mt-7 text-lake">
-            Good days<br />
-            <em className="font-medium">start close.</em>
+      <div className="container-wide relative z-10 pb-16 pt-40 sm:pb-24 lg:pb-28">
+        <div className="max-w-2xl">
+          <Eyebrow>The Trail</Eyebrow>
+          <h2 className="display-4 serif mt-6 text-cream">
+            Twenty-two miles,<br />
+            <em className="font-medium">straight from the lobby.</em>
           </h2>
-          <p className="body-text mt-8 text-lake/70">
-            Walk to a table in the evening. A patio for a slow afternoon. The neighborhood provides the backdrop.
+          <p className="body-text mt-8 text-cream/75 max-w-lg">
+            You can walk out of the building and onto the Northshore Trail. No car, no trailhead parking, no loading a bike onto a rack &mdash; the trail simply begins where the building ends.
           </p>
-        </Reveal>
-        <Reveal className="grid grid-cols-12 gap-4 sm:gap-5">
-          <div className="col-span-12 sm:col-span-8 img-inset">
-            <Img
-              slug="village-evening"
-              alt="Evening patio at The Tavern at Lakeside"
-              className="w-full object-cover"
-              sizes="(min-width: 640px) 66vw, 100vw"
-            />
-          </div>
-          <div className="col-span-12 mt-4 sm:col-span-4 sm:mt-12 img-inset">
-            <Img
-              slug="village-dining"
-              alt="Dining and neighborhood life at Lakeside Village"
-              className="w-full object-cover"
-              sizes="(min-width: 640px) 33vw, 100vw"
-            />
-          </div>
-          <div className="col-span-12 mt-4 sm:col-span-7 sm:mt-6 img-inset">
-            <Img
-              slug="village-daylight"
-              alt="Daytime patio dining at The Tavern at Lakeside"
-              className="w-full object-cover"
-              sizes="(min-width: 640px) 58vw, 100vw"
-            />
-          </div>
-          <div className="col-span-12 mt-4 sm:col-span-5 sm:mt-6 img-inset">
-            <Img
-              slug="village-signage"
-              alt="Lakeside Village signage"
-              className="w-full object-cover"
-              sizes="(min-width: 640px) 41vw, 100vw"
-            />
-          </div>
-        </Reveal>
-        <div className="mt-12">
-          <ArrowLink href="/life-at-lakeside">Explore life at Lakeside</ArrowLink>
         </div>
       </div>
     </section>
   );
 }
 
-/* ── NORTHSHORE ── cream, full-width panorama + supporting trail ── */
-function OutdoorSection() {
+/* ── 3. LAKESIDE VILLAGE ── sand, village-evening left / text right ── */
+function VillageSection() {
   return (
-    <section className="bg-cream section-pad">
+    <section className="bg-sand section-pad">
       <div className="container-wide">
-        <Reveal className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <Eyebrow>Lake &amp; outdoor life</Eyebrow>
-            <h2 className="display-4 serif mt-6 text-lake">
-              Room to<br />
-              <em className="font-medium">live well.</em>
-            </h2>
-          </div>
-          <p className="body-text max-w-xs">
-            The water changes by the hour. Trails take you beneath the trees.
-          </p>
-        </Reveal>
-      </div>
-      <Reveal className="relative w-full overflow-hidden">
-        <Img
-          slug="lake-panorama"
-          alt="Lake Grapevine shoreline beneath a clear sky"
-          className="h-[45vh] w-full object-cover sm:h-[55vh]"
-          sizes="100vw"
-          objectPosition="center"
-        />
-      </Reveal>
-      <div className="container-wide mt-10">
-        <Reveal className="grid gap-10 sm:grid-cols-[1.2fr_1fr] sm:items-center sm:gap-16">
+        <Reveal className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:items-center lg:gap-20">
           <div className="img-inset">
             <Img
-              slug="trail-shoreline"
-              alt="Wooded Northshore trail near Lake Grapevine"
+              slug="village-evening"
+              alt="Evening patio at Lakeside Village"
               className="w-full object-cover"
-              sizes="(min-width: 640px) 60vw, 100vw"
+              sizes="(min-width: 1024px) 60vw, 100vw"
             />
           </div>
-          <div className="sm:pl-6">
-            <p className="body-text">
-              A North Texas rhythm with room for movement and stillness&mdash;just beyond the door.
+          <div>
+            <Eyebrow>Lakeside Village</Eyebrow>
+            <h2 className="display-4 serif mt-6 text-lake">
+              Good days<br />
+              <em className="font-medium">start close.</em>
+            </h2>
+            <p className="body-text mt-8 text-lake/70">
+              Walk to a table in the evening. A patio for a slow afternoon. More than a dozen places to eat and drink, all of them on foot.
             </p>
-            <div className="mt-8">
-              <ArrowLink href="/life-at-lakeside">See life beyond home</ArrowLink>
-            </div>
           </div>
         </Reveal>
       </div>
@@ -401,44 +330,30 @@ function OutdoorSection() {
   );
 }
 
-/* ── CONNECTION ── dark lake, brand statement ── */
-function ConnectionSection() {
-  const places = ['Lakeside Tower', 'Lakeside Village', 'Flower Mound', 'Dallas\u2013Fort Worth', 'DFW Airport'];
+/* ── 4. LAKE PANORAMA BAND ── full-width, no text, visual breath ── */
+function PanoramaBand() {
   return (
-    <section className="bg-lake section-pad text-cream">
-      <div className="container-wide">
-        <Reveal className="mb-16">
-          <Eyebrow>Connection</Eyebrow>
-          <h2 className="display-4 serif mt-8 text-cream">
-            Easy to leave.<br />
-            <em className="font-medium">Better to return.</em>
-          </h2>
-        </Reveal>
-        <Reveal>
-          <div className="flex flex-wrap gap-x-8 gap-y-3 border-t border-cream/15 pt-8 sm:gap-x-12">
-            {places.map((place, index) => (
-              <span key={place} className="flex items-baseline gap-3">
-                {index > 0 && <span className="text-brass-light/40">&middot;</span>}
-                <span className="text-[17px] font-medium tracking-wide text-cream/55">{place}</span>
-              </span>
-            ))}
-          </div>
-        </Reveal>
-      </div>
-    </section>
+    <div className="relative w-full overflow-hidden">
+      <Img
+        slug="lake-panorama"
+        alt=""
+        className="h-[400px] w-full object-cover"
+        sizes="100vw"
+        objectPosition="center"
+      />
+    </div>
   );
 }
 
-/* ── STORIES ── cream, one feature + two supporting ── */
+/* ── 5. LIFE HERE ── cream, three static cards (not links) ── */
 const stories = [
-  ['01', 'The light you come home to.', 'Views that stay with you.', 'balcony-sunset'] as const,
-  ['02', 'A Saturday without a plan.', 'Coffee, trail, lunch, sunset, home.', 'trail-shoreline'] as const,
-  ['03', 'The world within reach.', 'Leave easily. Come home gladly.', 'village-signage'] as const,
+  ['01', 'The light you come home to.', 'balcony-sunset', true] as const,
+  ['02', 'A Saturday without a plan.', 'trail-woods', false] as const,
+  ['03', 'The world within reach.', 'village-street', true] as const,
 ];
 
 function StoriesSection() {
-  const [feature, ...supporting] = stories;
-  const refs = useRevealStagger<HTMLAnchorElement>(3);
+  const refs = useRevealStagger<HTMLDivElement>(3);
   return (
     <section className="bg-cream section-pad">
       <div className="container-wide">
@@ -449,92 +364,24 @@ function StoriesSection() {
             <em className="font-medium">beautifully told.</em>
           </h2>
         </Reveal>
-        <a href="/journal" className="group mb-12 block sm:mb-16" ref={(el) => { refs.current[0] = el; }} data-reveal>
-          <div className="img-inset overflow-hidden">
-            <Img
-              slug={feature[3]}
-              alt={feature[1]}
-              className="w-full object-cover transition-transform duration-700 group-hover:scale-103"
-              sizes="(min-width: 640px) 100vw, 100vw"
-            />
-          </div>
-          <div className="mt-5 grid gap-4 sm:grid-cols-[1fr_1fr] sm:gap-12">
-            <div>
-              <p className="font-mono text-[13px] text-brass">{feature[0]}</p>
-              <h3 className="display-2 serif mt-2 text-lake">{feature[1]}</h3>
-            </div>
-            <p className="body-text sm:pt-8">{feature[2]}</p>
-          </div>
-        </a>
-        <div className="grid gap-8 border-t border-lake/10 pt-10 sm:grid-cols-2 sm:gap-12">
-          {supporting.map(([num, title, subtitle, image], i) => (
-            <a
-              href="/journal"
+        <div className="grid gap-8 sm:grid-cols-3 sm:gap-10">
+          {stories.map(([num, title, image, tall], i) => (
+            <div
               key={title}
-              className="group"
-              ref={(el) => { refs.current[i + 1] = el; }}
-              data-reveal
-            >
-              <div className="img-inset overflow-hidden">
-                <Img
-                  slug={image}
-                  alt={title}
-                  className="w-full object-cover transition-transform duration-700 group-hover:scale-103"
-                  sizes="(min-width: 640px) 50vw, 100vw"
-                />
-              </div>
-              <p className="mt-4 font-mono text-[13px] text-brass">{num}</p>
-              <h3 className="display-2 serif mt-2 text-lake">{title}</h3>
-              <p className="body-text mt-2">{subtitle}</p>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── JOURNAL ── card/cream, three-column structured ── */
-function JournalSection() {
-  const articles = [
-    ['A changing view', 'Lake Grapevine', 'lake-panorama'] as const,
-    ['Start with somewhere good', 'Lakeside Village', 'village-signage'] as const,
-    ['The return home', 'Resident life', 'hero-sunset'] as const,
-  ];
-  const refs = useRevealStagger<HTMLAnchorElement>(3);
-  return (
-    <section className="bg-card section-pad">
-      <div className="container-wide">
-        <Reveal className="mb-16 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <Eyebrow>Journal</Eyebrow>
-            <h2 className="display-4 serif mt-7 text-lake">
-              The Lakeside<br />
-              <em className="font-medium">Journal.</em>
-            </h2>
-          </div>
-          <ArrowLink href="/journal">Visit the journal</ArrowLink>
-        </Reveal>
-        <div className="grid gap-10 md:grid-cols-3 md:gap-8">
-          {articles.map(([title, category, image], i) => (
-            <a
-              href="/journal"
-              key={title}
-              className="group"
               ref={(el) => { refs.current[i] = el; }}
               data-reveal
             >
               <div className="img-inset overflow-hidden">
                 <Img
-                  slug={image}
+                  slug={image as never}
                   alt={title}
-                  className="aspect-[3/2] w-full object-cover transition-transform duration-700 group-hover:scale-103"
-                  sizes="(min-width: 768px) 33vw, 100vw"
+                  className={`${tall ? 'aspect-[3/4]' : 'aspect-[4/5]'} w-full object-cover`}
+                  sizes="(min-width: 640px) 33vw, 100vw"
                 />
               </div>
-              <p className="mt-5 text-[13px] font-semibold uppercase tracking-[0.14em] text-brass">{category}</p>
+              <p className="mt-5 font-mono text-[13px] text-brass">{num}</p>
               <h3 className="display-2 serif mt-2 text-lake">{title}</h3>
-            </a>
+            </div>
           ))}
         </div>
       </div>
@@ -542,46 +389,44 @@ function JournalSection() {
   );
 }
 
-/* ── OWNER COMMUNITY ── teal, elegant portal teaser ── */
+/* ── 6. FOR OUR COMMUNITY ── dark, four items with brass rules ── */
 function OwnersSection() {
-  const features = ['Community', 'Announcements', 'Upcoming Events', 'Documents', 'Forum'];
+  const items = ['Announcements', 'Events', 'Documents', 'Directory'];
   return (
-    <section className="bg-teal section-pad text-lake">
+    <section className="bg-lake-deep section-pad text-cream">
       <div className="container-wide">
-        <Reveal className="grid gap-14 lg:grid-cols-[1fr_0.85fr] lg:items-center lg:gap-24">
-          <div>
-            <Eyebrow onTeal>For our community</Eyebrow>
-            <h2 className="display-4 serif mt-7 text-lake">
-              Lakeside Tower,<br />
-              <em className="font-medium">at home online.</em>
-            </h2>
-            <p className="body-text mt-8 text-lake/75">
-              A private place for owners and residents to stay connected, share information and participate in life at the Tower.
-            </p>
-            <div className="mt-10 flex flex-wrap items-center gap-6">
-              <a
-                href="/owners"
-                className="inline-flex items-center gap-3 bg-lake px-6 py-4 text-[13px] font-bold uppercase tracking-[0.14em] text-cream transition hover:bg-lake-deep"
+        <Reveal className="mb-14 max-w-2xl">
+          <Eyebrow>For our community</Eyebrow>
+          <h2 className="display-4 serif mt-7 text-cream">
+            Lakeside Tower,<br />
+            <em className="font-medium">at home online.</em>
+          </h2>
+          <p className="body-text mt-8 text-cream/65">
+            A private place for owners and residents to stay connected, share information and take part in life at the Tower.
+          </p>
+        </Reveal>
+        <Reveal>
+          <div className="grid gap-0 border-t border-cream/10 sm:grid-cols-4">
+            {items.map((item) => (
+              <div
+                key={item}
+                className="border-b border-cream/10 py-6 sm:border-r sm:border-cream/10 sm:last:border-r-0 sm:px-6"
               >
-                Visit the owners page <ArrowRight size={15} />
-              </a>
-            </div>
+                <span className="block h-px w-8 bg-brass" />
+                <p className="mt-4 text-[17px] font-medium text-cream/80">{item}</p>
+              </div>
+            ))}
           </div>
-          <div className="lg:pl-6">
-            <p className="serif text-2xl leading-snug text-lake/85 measure-narrow">
-              This website will also become the private digital home of the Lakeside Tower community.
-            </p>
-            <div className="mt-10 border-t border-lake/15">
-              {features.map((feature) => (
-                <div
-                  key={feature}
-                  className="group flex items-center justify-between border-b border-lake/15 py-4 text-[17px] font-medium text-lake/75 transition hover:text-lake"
-                >
-                  <span>{feature}</span>
-                  <span className="h-px w-6 bg-brass-light/40 transition group-hover:w-10 group-hover:bg-brass" />
-                </div>
-              ))}
-            </div>
+        </Reveal>
+        <Reveal className="mt-12">
+          <p className="eyebrow text-cream/35">Owner portal in development.</p>
+          <div className="mt-8">
+            <a
+              href="/owners"
+              className="inline-flex items-center gap-3 border-b border-cream/30 pb-3 text-[13px] font-semibold uppercase tracking-[0.14em] text-cream/70 transition hover:border-brass hover:text-cream"
+            >
+              Learn more <ArrowRight size={15} />
+            </a>
           </div>
         </Reveal>
       </div>
@@ -589,27 +434,15 @@ function OwnersSection() {
   );
 }
 
-/* ── CLOSING ── dark full-bleed sunset ── */
+/* ── 7. CLOSING ── cream, centered, generous whitespace ── */
 function ClosingSection() {
   return (
-    <section className="relative flex min-h-[60vh] items-center overflow-hidden bg-lake-deep text-cream">
-      <div className="absolute inset-0">
-        <Img
-          slug="balcony-sunset"
-          alt="Sunset view over Lake Grapevine from a balcony"
-          className="h-full w-full object-cover object-center"
-          sizes="100vw"
-        />
-      </div>
-      <div className="img-overlay absolute inset-0" />
-      <div className="container-wide relative z-10 text-center">
-        <p className="display-3 serif text-cream">
+    <section className="bg-cream flex min-h-[50vh] items-center justify-center px-6 py-32 text-center sm:py-40">
+      <div className="max-w-3xl">
+        <p className="display-3 serif text-lake">
           Start with home.<br />
           <em className="font-medium">Expand to the horizon.</em>
         </p>
-        <div className="mx-auto mt-10 w-36">
-          <Logo dark />
-        </div>
       </div>
     </section>
   );
@@ -670,13 +503,11 @@ function HomePage() {
         <meta name="description" content="Lakeside Tower — a private home at the water&rsquo;s edge in Flower Mound, Texas." />
       </Head>
       <Hero />
-      <HomeSection />
-      <ArchitectureSection />
+      <TowerSection />
+      <TrailSection />
       <VillageSection />
-      <OutdoorSection />
-      <ConnectionSection />
+      <PanoramaBand />
       <StoriesSection />
-      <JournalSection />
       <OwnersSection />
       <ClosingSection />
       <Footer />
