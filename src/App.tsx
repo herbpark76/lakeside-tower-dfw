@@ -1,10 +1,9 @@
 import { useState, type ReactNode } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+
 import { Head } from 'vite-react-ssg';
 import {
   ArrowRight,
   ArrowUpRight,
-  Check,
   LockKeyhole,
   Menu,
   X,
@@ -695,7 +694,6 @@ function InteriorPage({ data }: { data: { label: string; title: ReactNode; copy:
 }
 
 function LoginPage() {
-  const [submitted, setSubmitted] = useState(false);
   return (
     <>
       <Head>
@@ -724,43 +722,9 @@ function LoginPage() {
             <div className="bg-card p-7 text-lake sm:p-10">
               <p className="eyebrow text-brass">Owner access</p>
               <h2 className="display-3 serif mt-4 text-lake">Sign in to continue.</h2>
-              {submitted ? (
-                <div className="mt-8 border border-teal bg-teal/40 p-5 text-[17px] leading-6">
-                  <Check className="mb-3 text-brass" size={20} />
-                  This is a design preview. Resident access will be available when the private portal launches.
-                </div>
-              ) : (
-                <form
-                  className="mt-8 space-y-5"
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    setSubmitted(true);
-                  }}
-                >
-                  <label className="block">
-                    <span className="eyebrow mb-2 block text-muted">Email address</span>
-                    <input
-                      type="email"
-                      required
-                      className="w-full border-b border-lake/20 bg-transparent px-0 py-3 text-[17px] outline-none placeholder:text-muted/60 focus:border-brass"
-                      placeholder="you@example.com"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="eyebrow mb-2 block text-muted">Password</span>
-                    <input
-                      type="password"
-                      required
-                      className="w-full border-b border-lake/20 bg-transparent px-0 py-3 text-[17px] outline-none placeholder:text-muted/60 focus:border-brass"
-                      placeholder="Enter your password"
-                    />
-                  </label>
-                  <button className="mt-4 inline-flex w-full items-center justify-center gap-3 bg-lake px-5 py-4 text-[13px] font-bold uppercase tracking-[0.14em] text-cream transition hover:bg-lake-deep">
-                    Sign in <ArrowRight size={15} />
-                  </button>
-                  <p className="text-center text-[13px] text-muted">Portal coming soon &middot; This is a visual preview</p>
-                </form>
-              )}
+              <div className="mt-8 border border-lake/15 p-6 text-[17px] leading-7 text-muted">
+                The resident portal is not open yet. Owners will receive sign-in details from the board when it launches.
+              </div>
             </div>
           </div>
         </div>
@@ -799,24 +763,4 @@ export const routes = [
   { path: '*', element: <NotFoundPage /> },
 ];
 
-export default function App() {
-  const location = useLocation();
 
-  return (
-    <>
-      <a href="#main" className="skip-link">Skip to content</a>
-      <main id="main">
-        <Routes location={location}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/residences" element={<InteriorPage data={pageData['/residences']} />} />
-          <Route path="/life-at-lakeside" element={<InteriorPage data={pageData['/life-at-lakeside']} />} />
-          <Route path="/location" element={<InteriorPage data={pageData['/location']} />} />
-          <Route path="/journal" element={<InteriorPage data={pageData['/journal']} />} />
-          <Route path="/about" element={<InteriorPage data={pageData['/about']} />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </main>
-    </>
-  );
-}
