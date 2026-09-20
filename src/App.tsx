@@ -1,10 +1,9 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 
 import { Head } from 'vite-react-ssg';
 import {
   ArrowRight,
   ArrowUpRight,
-  LockKeyhole,
   Menu,
   X,
 } from 'lucide-react';
@@ -39,13 +38,43 @@ function Logo({ dark = false, small = false }: { dark?: boolean; small?: boolean
   );
 }
 
-function Header({ dark = false }: { dark?: boolean }) {
+function Header() {
   const [open, setOpen] = useState(false);
-  const text = dark ? 'text-cream' : 'text-lake';
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const solid = scrolled || open;
+
   return (
-    <header className={`absolute inset-x-0 top-0 z-30 ${text}`}>
+    <header
+      className={`fixed inset-x-0 top-0 z-30 transition-colors duration-700 ${
+        solid
+          ? 'bg-cream border-b border-lake/10 text-lake'
+          : 'bg-transparent text-cream'
+      }`}
+      style={{ transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)' }}
+    >
       <div className="container-wide flex h-24 items-center justify-between">
-        <Logo dark={dark} />
+        <a
+          href="/"
+          className={`block w-36 sm:w-44 ${solid ? '' : 'brightness-0 invert'}`}
+          aria-label="Lakeside Tower home"
+        >
+          <img
+            src="/assets/images/logo-200.png"
+            alt="The Lakeside Tower"
+            className="h-auto w-full"
+            width={200}
+            height={50}
+            loading="eager"
+          />
+        </a>
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
           {navItems.map(([label, href]) => (
             <a
@@ -57,14 +86,10 @@ function Header({ dark = false }: { dark?: boolean }) {
             </a>
           ))}
           <a
-            href="/login"
-            className={`ml-2 inline-flex items-center gap-2 border px-4 py-3 text-[13px] font-semibold uppercase tracking-[0.14em] transition ${
-              dark
-                ? 'border-cream/40 hover:bg-cream hover:text-lake'
-                : 'border-lake/30 hover:bg-lake hover:text-cream'
-            }`}
+            href="/owners"
+            className="ml-2 border-l border-brass pl-6 text-[13px] font-semibold uppercase tracking-[0.14em] transition hover:text-brass"
           >
-            <LockKeyhole size={13} /> Owner Login
+            Owners
           </a>
         </nav>
         <button
@@ -76,28 +101,30 @@ function Header({ dark = false }: { dark?: boolean }) {
         </button>
       </div>
       {open && (
-        <nav
-          className="border-t border-white/15 bg-lake px-6 py-5 lg:hidden"
-          aria-label="Mobile navigation"
-        >
-          {navItems.map(([label, href]) => (
+        <div className="fixed inset-0 top-24 z-20 bg-lake-deep lg:hidden">
+          <nav
+            className="container-wide flex flex-col gap-2 py-12"
+            aria-label="Mobile navigation"
+          >
+            {navItems.map(([label, href]) => (
+              <a
+                onClick={() => setOpen(false)}
+                key={href}
+                href={href}
+                className="serif text-3xl text-cream/80 transition hover:text-cream"
+              >
+                {label}
+              </a>
+            ))}
             <a
               onClick={() => setOpen(false)}
-              key={href}
-              href={href}
-              className="block border-b border-white/10 py-4 text-sm uppercase tracking-[0.14em] text-cream"
+              href="/owners"
+              className="serif mt-4 border-t border-cream/15 pt-6 text-3xl text-brass transition hover:text-cream"
             >
-              {label}
+              Owners
             </a>
-          ))}
-          <a
-            onClick={() => setOpen(false)}
-            href="/login"
-            className="mt-5 inline-flex items-center gap-2 border border-cream/40 px-4 py-3 text-[13px] font-semibold uppercase tracking-[0.14em] text-cream"
-          >
-            <LockKeyhole size={13} /> Owner Login
-          </a>
-        </nav>
+          </nav>
+        </div>
       )}
     </header>
   );
@@ -145,9 +172,9 @@ function Footer() {
         <div>
           <p className="eyebrow mb-6 text-brass">For our community</p>
           <div className="grid gap-4 text-[17px] text-cream/70">
-            <a href="/login" className="link-underline transition hover:text-cream w-fit">Owner Login</a>
-            <a href="/about" className="link-underline transition hover:text-cream w-fit">Contact</a>
-            <a href="/about" className="link-underline transition hover:text-cream w-fit">Privacy</a>
+            <a href="/owners" className="link-underline transition hover:text-cream w-fit">Owners</a>
+            <a href="/contact" className="link-underline transition hover:text-cream w-fit">Contact</a>
+            <a href="/privacy" className="link-underline transition hover:text-cream w-fit">Privacy</a>
           </div>
         </div>
       </div>
@@ -178,7 +205,7 @@ function Hero() {
         />
       </div>
       <div className="img-overlay absolute inset-0" />
-      <Header dark />
+      <Header />
       <div className="container-wide relative z-10 pb-14 pt-40 sm:pb-20 lg:pb-24">
         <div className="max-w-[95%] sm:max-w-[90%]">
           <p className="eyebrow mb-8 text-sand sm:mb-10">Flower Mound &middot; Texas</p>
@@ -197,8 +224,8 @@ function Hero() {
               >
                 Explore life at Lakeside <ArrowRight size={15} />
               </a>
-              <a href="/login" className="link-arrow text-cream/60 hover:text-cream">
-                <span className="link-underline">Owner Login</span>
+              <a href="/owners" className="link-arrow text-cream/60 hover:text-cream">
+                <span className="link-underline">Owners</span>
                 <ArrowUpRight size={15} strokeWidth={1.5} />
               </a>
             </div>
@@ -533,12 +560,11 @@ function OwnersSection() {
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-6">
               <a
-                href="/login"
+                href="/owners"
                 className="inline-flex items-center gap-3 bg-lake px-6 py-4 text-[13px] font-bold uppercase tracking-[0.14em] text-cream transition hover:bg-lake-deep"
               >
-                Owner Login <ArrowRight size={15} />
+                Visit the owners page <ArrowRight size={15} />
               </a>
-              <span className="text-[13px] text-lake/55">Resident portal coming soon</span>
             </div>
           </div>
           <div className="lg:pl-6">
@@ -621,6 +647,18 @@ const pageData: Record<string, { label: string; title: ReactNode; copy: string; 
     copy: 'Lakeside Tower is a private residential community in Flower Mound, Texas, overlooking Lake Grapevine.',
     image: 'village-signage',
   },
+  '/contact': {
+    label: 'Contact',
+    title: <>Let&rsquo;s<br /><em className="font-medium">talk.</em></>,
+    copy: 'Reach the Lakeside Tower team for questions about the building, the community, or life at the water\u2019s edge.',
+    image: 'village-evening',
+  },
+  '/privacy': {
+    label: 'Privacy',
+    title: <>Your<br /><em className="font-medium">privacy.</em></>,
+    copy: 'How Lakeside Tower handles information on this website.',
+    image: 'hero-sunset',
+  },
 };
 
 /* ── PAGES ── */
@@ -663,7 +701,7 @@ function InteriorPage({ data }: { data: { label: string; title: ReactNode; copy:
           />
         </div>
         <div className="img-overlay absolute inset-0" />
-        <Header dark />
+        <Header />
         <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
           <div className="max-w-3xl">
             <p className="eyebrow mb-6 text-brass">{data.label}</p>
@@ -693,42 +731,71 @@ function InteriorPage({ data }: { data: { label: string; title: ReactNode; copy:
   );
 }
 
-function LoginPage() {
+function OwnersPage() {
+  const cards = [
+    ['Announcements', 'Board updates and community news for Lakeside Tower owners and residents.'],
+    ['Events', 'A calendar of upcoming gatherings, meetings, and social occasions at the Tower.'],
+    ['Documents', 'Association documents, meeting minutes, and reference materials in one place.'],
+    ['Directory', 'A private directory of owners, residents, and board contacts for the community.'],
+  ] as const;
+  const refs = useRevealStagger<HTMLDivElement>(4);
   return (
     <>
       <Head>
-        <title>Owner Login | Lakeside Tower</title>
-        <meta name="description" content="Private owner and resident portal for Lakeside Tower." />
+        <title>Owners | Lakeside Tower</title>
+        <meta name="description" content="The Lakeside Tower owner portal is in development. Owners will receive access details from the board when it opens." />
       </Head>
-      <div className="min-h-screen bg-lake text-cream">
-        <div className="container-wide flex min-h-screen flex-col">
-          <div className="flex items-center justify-between py-8">
-            <Logo dark small />
-            <a href="/" className="text-[13px] font-semibold uppercase tracking-[0.14em] text-cream/60 hover:text-cream">
-              Return to site
-            </a>
-          </div>
-          <div className="grid flex-1 items-center gap-16 py-12 lg:grid-cols-2 lg:gap-24">
-            <div className="max-w-xl">
-              <p className="eyebrow text-brass">For our community</p>
-              <h1 className="display-4 serif mt-6 text-cream">
-                Welcome<br />
-                <em className="font-medium">home.</em>
-              </h1>
-              <p className="body-text mt-8 text-cream/65 max-w-sm">
-                Your private space for news, events, documents and the everyday life of Lakeside Tower.
-              </p>
-            </div>
-            <div className="bg-card p-7 text-lake sm:p-10">
-              <p className="eyebrow text-brass">Owner access</p>
-              <h2 className="display-3 serif mt-4 text-lake">Sign in to continue.</h2>
-              <div className="mt-8 border border-lake/15 p-6 text-[17px] leading-7 text-muted">
-                The resident portal is not open yet. Owners will receive sign-in details from the board when it launches.
-              </div>
-            </div>
+      <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
+        <div className="absolute inset-0">
+          <Img
+            slug="hero-sunset"
+            alt=""
+            className="h-full w-full object-cover opacity-50"
+            sizes="100vw"
+          />
+        </div>
+        <div className="img-overlay absolute inset-0" />
+        <Header />
+        <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
+          <div className="max-w-3xl">
+            <p className="eyebrow mb-6 text-brass">For our community</p>
+            <h1 className="display-4 serif text-cream">
+              Lakeside Tower,<br /><em className="font-medium">at home online.</em>
+            </h1>
           </div>
         </div>
       </div>
+      <section className="bg-cream section-pad">
+        <div className="container-wide">
+          <Reveal className="mb-16 max-w-2xl">
+            <p className="body-text">
+              The Lakeside Tower owner portal is in development. When it launches, owners will be able to read announcements, find association documents, see what&rsquo;s coming up, and reach the board&mdash;all in one place.
+            </p>
+          </Reveal>
+          <div className="grid gap-8 sm:grid-cols-2">
+            {cards.map(([title, description], i) => (
+              <div
+                key={title}
+                ref={(el) => { refs.current[i] = el; }}
+                data-reveal
+                className="border border-lake/10 p-7"
+              >
+                <h3 className="serif text-2xl text-lake/40">{title}</h3>
+                <p className="body-text mt-4 text-muted/70">{description}</p>
+              </div>
+            ))}
+          </div>
+          <Reveal className="mt-16 max-w-2xl">
+            <p className="body-text">
+              Owners will receive access details from the board when the portal opens.
+            </p>
+            <div className="mt-8">
+              <ArrowLink href="/contact">Contact the board</ArrowLink>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+      <Footer />
     </>
   );
 }
@@ -739,12 +806,16 @@ function NotFoundPage() {
       <Head>
         <title>Page not found | Lakeside Tower</title>
       </Head>
-      <div className="flex min-h-screen flex-col items-center justify-center bg-cream text-lake">
-        <p className="eyebrow text-brass">404</p>
-        <h1 className="display-3 serif mt-4 text-lake">Page not found</h1>
-        <a href="/" className="mt-8 link-arrow text-lake">
-          <span className="link-underline">Return home</span>
-          <ArrowUpRight size={15} strokeWidth={1.5} />
+      <div className="flex min-h-screen flex-col items-center justify-center bg-cream px-6 text-center text-lake">
+        <h1 className="display-4 serif text-lake">This page has drifted off.</h1>
+        <p className="body-text mt-6 max-w-md">
+          The page you&rsquo;re looking for isn&rsquo;t here. Let&rsquo;s get you back to the water&rsquo;s edge.
+        </p>
+        <a
+          href="/"
+          className="mt-10 inline-flex items-center gap-3 bg-lake px-6 py-4 text-[13px] font-bold uppercase tracking-[0.14em] text-cream transition hover:bg-lake-deep"
+        >
+          Return home <ArrowRight size={15} />
         </a>
       </div>
     </>
@@ -759,7 +830,9 @@ export const routes = [
   { path: '/location', element: <InteriorPage data={pageData['/location']} /> },
   { path: '/journal', element: <InteriorPage data={pageData['/journal']} /> },
   { path: '/about', element: <InteriorPage data={pageData['/about']} /> },
-  { path: '/login', element: <LoginPage /> },
+  { path: '/contact', element: <InteriorPage data={pageData['/contact']} /> },
+  { path: '/privacy', element: <InteriorPage data={pageData['/privacy']} /> },
+  { path: '/owners', element: <OwnersPage /> },
   { path: '*', element: <NotFoundPage /> },
 ];
 
