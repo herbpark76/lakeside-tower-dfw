@@ -1,0 +1,13 @@
+{
+  "name": "Lakeside Tower",
+  "short_name": "Lakeside Tower",
+  "description": "A private home at the water's edge in Flower Mound, Texas.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F5F0",
+  "theme_color": "#18323B",
+  "icons": [
+    { "src": "/favicon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
