@@ -450,23 +450,11 @@ function ClosingSection() {
 
 /* ── PAGE DATA ── */
 const pageData: Record<string, { label: string; title: ReactNode; copy: string; image: string }> = {
-  '/residences': {
-    label: 'The residences',
-    title: <>A private place<br /><em className="font-medium">to be yourself.</em></>,
-    copy: 'The residence story begins with light, outlook and the quiet pleasure of a home above the lake.',
-    image: 'tower-aerial',
-  },
   '/life-at-lakeside': {
     label: 'Life at Lakeside',
     title: <>More horizon.<br /><em className="font-medium">More life.</em></>,
     copy: 'From the first light on the water to dinner around the corner, a day here has room to unfold naturally.',
     image: 'village-evening',
-  },
-  '/location': {
-    label: 'Location',
-    title: <>Close to the<br /><em className="font-medium">right things.</em></>,
-    copy: 'Lake Grapevine, Lakeside Village, Flower Mound and the wider Dallas\u2013Fort Worth region form a setting with both calm and reach.',
-    image: 'lake-panorama',
   },
   '/journal': {
     label: 'The Lakeside Journal',
@@ -631,6 +619,261 @@ function OwnersPage() {
   );
 }
 
+function LocationPage() {
+  const places = [
+    ['Lakeside Tower', 'The building itself, on the north shore of Lake Grapevine.'],
+    ['Lakeside Village', 'A walkable collection of restaurants and shops at the foot of the tower.'],
+    ['Flower Mound', 'The town Lakeside Tower calls home, named for a wildflower-covered mound.'],
+    ['Dallas\u2013Fort Worth', 'The metroplex, reachable in under an hour for work, culture, and sport.'],
+    ['DFW Airport', 'The airport&rsquo;s north entrance is about seven minutes away.'],
+  ];
+  return (
+    <>
+      <Head>
+        <title>Location | Lakeside Tower</title>
+        <meta name="description" content="Lakeside Tower on the north shore of Lake Grapevine in Flower Mound, Texas — close to everything, far from the noise." />
+      </Head>
+      {/* Hero: lake-panorama wide band */}
+      <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
+        <div className="absolute inset-0">
+          <Img
+            slug="lake-panorama"
+            alt=""
+            className="h-full w-full object-cover opacity-60"
+            sizes="100vw"
+          />
+        </div>
+        <div className="img-overlay absolute inset-0" />
+        <Header />
+        <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
+          <div className="max-w-3xl">
+            <p className="eyebrow mb-6 text-brass">Location</p>
+            <h1 className="display-4 serif text-cream">
+              Close to everything.<br />
+              <em className="font-medium">Far from the noise.</em>
+            </h1>
+            <p className="body-text mt-8 text-cream/70 max-w-xl">
+              Lakeside Tower sits on the north shore of Lake Grapevine in Flower Mound, Texas &mdash; a stretch of water the Army Corps of Engineers impounded in 1952 and still manages today. Seven thousand acres, sixty miles of shoreline, and a horizon that changes by the hour.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* THE WALK — sand, village-evening left / text right */}
+      <section className="bg-sand section-pad">
+        <div className="container-wide">
+          <Reveal className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:items-center lg:gap-20">
+            <div className="img-inset">
+              <Img
+                slug="village-evening"
+                alt="Evening at Lakeside Village"
+                className="w-full object-cover"
+                sizes="(min-width: 1024px) 60vw, 100vw"
+              />
+            </div>
+            <div>
+              <Eyebrow>The Walk</Eyebrow>
+              <h2 className="display-4 serif mt-6 text-lake">
+                Good days<br />
+                <em className="font-medium">start close.</em>
+              </h2>
+              <p className="body-text mt-8 text-lake/70">
+                Lakeside Village begins at the foot of the building. More than a dozen places to eat and drink are within walking distance &mdash; a wine bar, a Texas kitchen, sushi, Tex-Mex, an Italian trattoria, a wood-fired pizzeria, a gelato counter, a movie house that serves dinner. Some evenings the walk home is the best part.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* THE TRAIL — full-bleed dark, trail-shoreline */}
+      <section className="relative flex min-h-[90vh] items-end overflow-hidden bg-lake-deep text-cream">
+        <div className="absolute inset-0">
+          <Img
+            slug="trail-shoreline"
+            alt="The Northshore Trail beginning at the edge of Lakeside Tower"
+            className="h-full w-full object-cover object-center"
+            sizes="100vw"
+          />
+        </div>
+        <div className="img-overlay absolute inset-0" />
+        <div className="container-wide relative z-10 pb-16 pt-40 sm:pb-24 lg:pb-28">
+          <div className="max-w-2xl">
+            <Eyebrow>The Trail</Eyebrow>
+            <h2 className="display-4 serif mt-6 text-cream">
+              Twenty-two miles,<br />
+              <em className="font-medium">straight from the lobby.</em>
+            </h2>
+            <p className="body-text mt-8 text-cream/75 max-w-lg">
+              You can walk out of the building and onto the Northshore Trail. No car, no trailhead parking, no loading a bike onto a rack &mdash; the trail simply begins where the building ends.
+            </p>
+            <p className="body-text mt-6 text-cream/60 max-w-lg">
+              It runs roughly twenty-two miles along the north shore of Lake Grapevine, from Rockledge Park in the east to Twin Coves Park in the west. Single-track, and single-purpose: hiking, running and mountain biking, no horses. It closes to bikes when the ground is wet, though walking stays open. Dogs are welcome on a leash.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* THE REGION — cream */}
+      <section className="bg-cream section-pad">
+        <div className="container-wide">
+          <Reveal className="measure-narrow">
+            <Eyebrow>The Region</Eyebrow>
+            <h2 className="display-4 serif mt-6 text-lake">
+              Easy to leave.<br />
+              <em className="font-medium">Better to return.</em>
+            </h2>
+            <p className="body-text mt-8">
+              DFW International sits just south across the water. The airport&rsquo;s north entrance is about seven minutes away &mdash; close enough that a morning flight doesn&rsquo;t require a pre-dawn start, far enough that you never hear it.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* PLACE LIST — cream, vertical, brass rules */}
+      <section className="bg-cream pb-[var(--space-xl)] md:pb-[var(--space-2xl)]">
+        <div className="container-wide">
+          <Reveal>
+            <div className="border-t border-lake/10">
+              {places.map(([name, description]) => (
+                <div
+                  key={name}
+                  className="grid gap-2 border-b border-lake/10 py-6 sm:grid-cols-[1fr_1.5fr] sm:gap-12 sm:py-8"
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="h-px w-8 bg-brass" />
+                    <p className="serif text-xl text-lake">{name}</p>
+                  </div>
+                  <p className="body-text text-muted">{description}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <Footer />
+    </>
+  );
+}
+
+function ResidencesPage() {
+  const amenityGroups = [
+    ['The water', 'Resort-style pool with hot tub and poolside cabanas; outdoor fire pit and grilling stations.'],
+    ['Movement', 'Fitness center; yoga and Pilates studio; GolfZon golf simulator; putting green.'],
+    ['Gathering', 'Club room and lounge; wine room with private dining; screening room; billiards lounge; coffee bar.'],
+    ['Service', 'Concierge, twenty-four hours; guest suites; on-site spa; reserved parking in an attached garage; dog park and wash station.'],
+  ] as const;
+  const refs = useRevealStagger<HTMLDivElement>(4);
+  return (
+    <>
+      <Head>
+        <title>The Residences | Lakeside Tower</title>
+        <meta name="description" content="Fifty-five residences across sixteen floors at Lakeside Tower — a private place to be yourself, overlooking Lake Grapevine." />
+      </Head>
+      {/* Hero: tower-aerial */}
+      <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
+        <div className="absolute inset-0">
+          <Img
+            slug="tower-aerial"
+            alt=""
+            className="h-full w-full object-cover opacity-60"
+            sizes="100vw"
+          />
+        </div>
+        <div className="img-overlay absolute inset-0" />
+        <Header />
+        <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
+          <div className="max-w-3xl">
+            <p className="eyebrow mb-6 text-brass">The Residences</p>
+            <h1 className="display-4 serif text-cream">
+              A private place<br />
+              <em className="font-medium">to be yourself.</em>
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      {/* Intro — cream */}
+      <section className="bg-cream section-pad">
+        <div className="container-wide">
+          <Reveal className="measure-narrow space-y-6">
+            <p className="body-text text-lg leading-8 text-lake/80">
+              Fifty-five residences across sixteen floors. Two to four bedrooms, from roughly thirteen hundred square feet to nearly six thousand.
+            </p>
+            <p className="body-text text-lg leading-8 text-lake/80">
+              Ten-foot ceilings. Glass doors that fold away onto the balcony. An elevator that opens into the residence rather than a corridor.
+            </p>
+            <p className="body-text text-lg leading-8 text-lake/80">
+              The building is Mediterranean in character &mdash; warm stone, deep shade, a posture that suits the water it faces.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* WHAT'S HERE — four groups, brass subheadings, hairline rules */}
+      <section className="bg-cream pb-[var(--space-xl)] md:pb-[var(--space-2xl)]">
+        <div className="container-wide">
+          <Reveal className="mb-12">
+            <Eyebrow>What&rsquo;s here</Eyebrow>
+          </Reveal>
+          <div className="border-t border-lake/10">
+            {amenityGroups.map(([heading, body], i) => (
+              <div
+                key={heading}
+                ref={(el) => { refs.current[i] = el; }}
+                data-reveal
+                className="grid gap-2 border-b border-lake/10 py-7 sm:grid-cols-[1fr_2fr] sm:gap-16 sm:py-9"
+              >
+                <h3 className="eyebrow text-brass">{heading}</h3>
+                <p className="body-text">{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Editorial moment — "A room for bad weather." */}
+      <section className="bg-sand section-pad">
+        <div className="container-wide">
+          <Reveal className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start lg:gap-24">
+            {/* TALL portrait balcony-sunset — min 600px */}
+            <div className="img-inset order-first lg:order-last">
+              <Img
+                slug="balcony-sunset"
+                alt="Sunset over Lake Grapevine from a balcony at Lakeside Tower"
+                className="h-[600px] w-full object-cover sm:h-[700px]"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+              />
+            </div>
+            <div className="lg:pt-16">
+              <h2 className="display-3 serif text-lake">
+                A room for<br />
+                <em className="font-medium">bad weather.</em>
+              </h2>
+              <p className="body-text mt-8 text-lake/70 max-w-md">
+                There&rsquo;s a GolfZon simulator downstairs. In August, when the putting green is a bad idea by ten in the morning, it turns out to be the most-used room in the building.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Close */}
+      <section className="bg-cream section-pad">
+        <div className="container-wide">
+          <Reveal className="measure-narrow">
+            <p className="body-text text-lg leading-8 text-lake/80">
+              Lakeside Tower sold out during its original release. Residences become available through resale from time to time.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <Footer />
+    </>
+  );
+}
+
 function NotFoundPage() {
   return (
     <>
@@ -656,9 +899,9 @@ function NotFoundPage() {
 /* ── ROUTES ── */
 export const routes = [
   { path: '/', element: <HomePage /> },
-  { path: '/residences', element: <InteriorPage data={pageData['/residences']} /> },
+  { path: '/residences', element: <ResidencesPage /> },
   { path: '/life-at-lakeside', element: <InteriorPage data={pageData['/life-at-lakeside']} /> },
-  { path: '/location', element: <InteriorPage data={pageData['/location']} /> },
+  { path: '/location', element: <LocationPage /> },
   { path: '/journal', element: <InteriorPage data={pageData['/journal']} /> },
   { path: '/about', element: <InteriorPage data={pageData['/about']} /> },
   { path: '/contact', element: <InteriorPage data={pageData['/contact']} /> },
