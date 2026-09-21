@@ -27,7 +27,7 @@ function Logo({ dark = false, small = false }: { dark?: boolean; small?: boolean
       aria-label="Lakeside Tower home"
     >
       <img
-        src="/assets/images/logo-200.png"
+        src="/assets/images/logo-400.png"
         alt="The Lakeside Tower"
         className="h-auto w-full"
         width={200}
@@ -67,7 +67,7 @@ function Header() {
           aria-label="Lakeside Tower home"
         >
           <img
-            src="/assets/images/logo-200.png"
+            src="/assets/images/logo-400.png"
             alt="The Lakeside Tower"
             className="h-auto w-full"
             width={200}
@@ -729,8 +729,8 @@ function LocationPage() {
         </div>
       </section>
 
-      {/* PLACE LIST — cream, vertical, brass rules */}
-      <section className="bg-cream pb-[var(--space-xl)] md:pb-[var(--space-2xl)]">
+      {/* PLACE LIST — sand, vertical, brass rules */}
+      <section className="bg-sand section-pad">
         <div className="container-wide">
           <Reveal>
             <div className="border-t border-lake/10">
