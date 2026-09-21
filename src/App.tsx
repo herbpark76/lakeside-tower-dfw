@@ -448,40 +448,6 @@ function ClosingSection() {
   );
 }
 
-/* ── PAGE DATA ── */
-const pageData: Record<string, { label: string; title: ReactNode; copy: string; image: string }> = {
-  '/life-at-lakeside': {
-    label: 'Life at Lakeside',
-    title: <>More horizon.<br /><em className="font-medium">More life.</em></>,
-    copy: 'From the first light on the water to dinner around the corner, a day here has room to unfold naturally.',
-    image: 'village-evening',
-  },
-  '/journal': {
-    label: 'The Lakeside Journal',
-    title: <>Real life,<br /><em className="font-medium">beautifully told.</em></>,
-    copy: 'A future collection of stories from the water\u2019s edge: dining, trails, travel, neighborhood life and the rituals of coming home.',
-    image: 'hero-sunset',
-  },
-  '/about': {
-    label: 'About Lakeside Tower',
-    title: <>A home with<br /><em className="font-medium">a point of view.</em></>,
-    copy: 'Lakeside Tower is a private residential community in Flower Mound, Texas, overlooking Lake Grapevine.',
-    image: 'village-signage',
-  },
-  '/contact': {
-    label: 'Contact',
-    title: <>Let&rsquo;s<br /><em className="font-medium">talk.</em></>,
-    copy: 'Reach the Lakeside Tower team for questions about the building, the community, or life at the water\u2019s edge.',
-    image: 'village-evening',
-  },
-  '/privacy': {
-    label: 'Privacy',
-    title: <>Your<br /><em className="font-medium">privacy.</em></>,
-    copy: 'How Lakeside Tower handles information on this website.',
-    image: 'hero-sunset',
-  },
-};
-
 /* ── PAGES ── */
 function HomePage() {
   return (
@@ -498,53 +464,6 @@ function HomePage() {
       <StoriesSection />
       <OwnersSection />
       <ClosingSection />
-      <Footer />
-    </>
-  );
-}
-
-function InteriorPage({ data }: { data: { label: string; title: ReactNode; copy: string; image: string } }) {
-  return (
-    <>
-      <Head>
-        <title>{data.label} | Lakeside Tower</title>
-        <meta name="description" content={data.copy} />
-      </Head>
-      <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
-        <div className="absolute inset-0">
-          <Img
-            slug={data.image as never}
-            alt=""
-            className="h-full w-full object-cover opacity-60"
-            sizes="100vw"
-          />
-        </div>
-        <div className="img-overlay absolute inset-0" />
-        <Header />
-        <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
-          <div className="max-w-3xl">
-            <p className="eyebrow mb-6 text-brass">{data.label}</p>
-            <h1 className="display-4 serif text-cream">{data.title}</h1>
-            <p className="body-text mt-8 text-cream/70 max-w-md">{data.copy}</p>
-          </div>
-        </div>
-      </div>
-      <section className="bg-cream section-pad">
-        <div className="container-wide grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-          <Reveal>
-            <Eyebrow>A first look</Eyebrow>
-            <h2 className="display-3 serif mt-6 text-lake">The story is just beginning.</h2>
-          </Reveal>
-          <Reveal className="measure-narrow">
-            <p className="body-text text-lg leading-8 text-muted">
-              This page is a considered beginning for a deeper Lakeside Tower experience. The next layer will bring verified residence details, neighborhood guides, local context and stories from the people who make this place feel like home.
-            </p>
-            <div className="mt-9">
-              <ArrowLink href="/">Return home</ArrowLink>
-            </div>
-          </Reveal>
-        </div>
-      </section>
       <Footer />
     </>
   );
@@ -874,6 +793,354 @@ function ResidencesPage() {
   );
 }
 
+/* ── /life-at-lakeside ── */
+function LifeAtLakesidePage() {
+  return (
+    <>
+      <Head>
+        <title>Life at Lakeside | Lakeside Tower</title>
+        <meta name="description" content="Real life, beautifully told — a day at Lakeside Tower, from the trail to the village to the water." />
+      </Head>
+      {/* Hero: village-dining */}
+      <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
+        <div className="absolute inset-0">
+          <Img
+            slug="village-dining"
+            alt=""
+            className="h-full w-full object-cover opacity-60"
+            sizes="100vw"
+          />
+        </div>
+        <div className="img-overlay absolute inset-0" />
+        <Header />
+        <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
+          <div className="max-w-3xl">
+            <p className="eyebrow mb-6 text-brass">Life at Lakeside</p>
+            <h1 className="display-4 serif text-cream">
+              Real life,<br />
+              <em className="font-medium">beautifully told.</em>
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      {/* 1. A Saturday without a plan — cream, image right */}
+      <section className="bg-cream section-pad">
+        <div className="container-wide">
+          <Reveal className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:items-start lg:gap-20">
+            <div className="lg:pt-8">
+              <Eyebrow>01</Eyebrow>
+              <h2 className="display-4 serif mt-6 text-lake">
+                A Saturday<br />
+                <em className="font-medium">without a plan.</em>
+              </h2>
+              <p className="body-text mt-8 text-lake/70 max-w-md">
+                Coffee first, on the balcony, while the lake decides what color it&rsquo;s going to be. Then the trail &mdash; an hour under the trees, or three if the morning holds. Lunch on a patio downstairs. The afternoon goes wherever it wants. By evening the light comes back through the west windows and the day closes itself.
+              </p>
+              <p className="serif text-2xl leading-snug text-lake/85 mt-8 max-w-md">
+                The luxury isn&rsquo;t any single part of that. It&rsquo;s that none of it required arranging.
+              </p>
+            </div>
+            <div className="img-inset order-first lg:order-last">
+              <Img
+                slug="trail-woods"
+                alt="Light through the trees on the Northshore Trail"
+                className="w-full object-cover"
+                sizes="(min-width: 1024px) 60vw, 100vw"
+              />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 2. Good days start close — sand, image left */}
+      <section className="bg-sand section-pad">
+        <div className="container-wide">
+          <Reveal className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:items-start lg:gap-20">
+            <div className="img-inset">
+              <Img
+                slug="village-daylight"
+                alt="Daytime dining at Lakeside Village"
+                className="w-full object-cover"
+                sizes="(min-width: 1024px) 60vw, 100vw"
+              />
+            </div>
+            <div className="lg:pt-8">
+              <Eyebrow>02</Eyebrow>
+              <h2 className="display-4 serif mt-6 text-lake">
+                Good days<br />
+                <em className="font-medium">start close.</em>
+              </h2>
+              <p className="body-text mt-8 text-lake/70 max-w-md">
+                A wine bar for a Tuesday. A Texas kitchen when someone visits. Sushi, Tex-Mex, an Italian room with a short menu, a pizzeria with a wood fire, a chocolate shop that has no business being this good. A movie house that serves dinner while you watch.
+              </p>
+              <p className="body-text mt-6 text-lake/70 max-w-md">
+                All of it on foot. None of it requiring a car, a reservation made three weeks out, or a drive home afterward.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 3. The water — dark full-bleed, hero-sunset */}
+      <section className="relative flex min-h-[80vh] items-end overflow-hidden bg-lake-deep text-cream">
+        <div className="absolute inset-0">
+          <Img
+            slug="hero-sunset"
+            alt="Sunset over Lake Grapevine"
+            className="h-full w-full object-cover object-center"
+            sizes="100vw"
+          />
+        </div>
+        <div className="img-overlay absolute inset-0" />
+        <div className="container-wide relative z-10 pb-16 pt-40 sm:pb-24 lg:pb-28">
+          <div className="max-w-xl">
+            <Eyebrow>03</Eyebrow>
+            <h2 className="display-4 serif mt-6 text-cream">
+              The<br />
+              <em className="font-medium">water.</em>
+            </h2>
+            <p className="body-text mt-8 text-cream/75 max-w-lg">
+              Seven thousand acres. Sixty miles of shoreline. The Corps has kept this lake since 1952 and it still looks like it belongs to no one, which is the point.
+            </p>
+            <p className="body-text mt-6 text-cream/60 max-w-lg">
+              Mornings it&rsquo;s glass. Afternoons it turns to chop and sailboats. Evenings it goes gold and then copper and then dark, and you find you&rsquo;ve been watching it for twenty minutes.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </>
+  );
+}
+
+/* ── /about ── */
+function AboutPage() {
+  return (
+    <>
+      <Head>
+        <title>About | Lakeside Tower</title>
+        <meta name="description" content="Lakeside Tower is a private residential community of fifty-five residences on the north shore of Lake Grapevine in Flower Mound, Texas." />
+      </Head>
+      <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
+        <div className="absolute inset-0">
+          <Img
+            slug="village-signage"
+            alt=""
+            className="h-full w-full object-cover opacity-60"
+            sizes="100vw"
+          />
+        </div>
+        <div className="img-overlay absolute inset-0" />
+        <Header />
+        <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
+          <div className="max-w-3xl">
+            <p className="eyebrow mb-6 text-brass">About Lakeside Tower</p>
+            <h1 className="display-4 serif text-cream">
+              A home with<br />
+              <em className="font-medium">a point of view.</em>
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <section className="bg-cream section-pad">
+        <div className="container-wide">
+          <Reveal className="measure-narrow space-y-8">
+            <p className="body-text text-lg leading-8 text-lake/80">
+              Lakeside Tower is a private residential community of fifty-five residences on the north shore of Lake Grapevine in Flower Mound, Texas. The building is owned and governed by its residents through the homeowners association.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-sand section-pad">
+        <div className="container-wide">
+          <Reveal className="measure-narrow">
+            <Eyebrow>This site</Eyebrow>
+            <p className="body-text mt-6 text-lake/70 max-w-lg">
+              This website is maintained by the Lakeside Tower community. It exists to introduce the building to people discovering it for the first time, and to serve as the online home of the people who already live here.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <Footer />
+    </>
+  );
+}
+
+/* ── /contact ── */
+function ContactPage() {
+  return (
+    <>
+      <Head>
+        <title>Contact | Lakeside Tower</title>
+        <meta name="description" content="Contact Lakeside Tower at 2800 Lakeside Parkway, Flower Mound, TX 75022." />
+      </Head>
+      <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
+        <div className="absolute inset-0">
+          <Img
+            slug="village-evening"
+            alt=""
+            className="h-full w-full object-cover opacity-60"
+            sizes="100vw"
+          />
+        </div>
+        <div className="img-overlay absolute inset-0" />
+        <Header />
+        <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
+          <div className="max-w-3xl">
+            <p className="eyebrow mb-6 text-brass">Contact</p>
+            <h1 className="display-4 serif text-cream">
+              Let&rsquo;s<br />
+              <em className="font-medium">talk.</em>
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <section className="bg-cream section-pad">
+        <div className="container-wide">
+          <Reveal className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-24">
+            <div>
+              <Eyebrow>Address</Eyebrow>
+              <div className="mt-6 space-y-1">
+                <p className="body-text text-lake">Lakeside Tower</p>
+                <p className="body-text text-lake/70">2800 Lakeside Parkway</p>
+                <p className="body-text text-lake/70">Flower Mound, TX 75022</p>
+              </div>
+            </div>
+            <div>
+              <Eyebrow>Email</Eyebrow>
+              <div className="mt-6">
+                <p className="body-text text-lake/70 mb-4">
+                  Reach the Lakeside Tower community by email.
+                </p>
+                {/* PLACEHOLDER — replace with the real email address before publishing */}
+                <div className="border border-dashed border-brass/50 bg-brass/5 p-5">
+                  <p className="eyebrow text-brass/70 mb-3">Placeholder &mdash; needs replacing</p>
+                  <a
+                    href="mailto:hello@lakesidetower.example"
+                    className="link-arrow text-lake"
+                  >
+                    <span className="link-underline">hello@lakesidetower.example</span>
+                    <ArrowUpRight size={15} strokeWidth={1.5} />
+                  </a>
+                  <p className="mt-3 text-[13px] text-lake/50">
+                    Replace this with the verified contact email before the page goes live.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <Footer />
+    </>
+  );
+}
+
+/* ── /privacy ── */
+function PrivacyPage() {
+  return (
+    <>
+      <Head>
+        <title>Privacy | Lakeside Tower</title>
+        <meta name="description" content="Lakeside Tower's privacy policy — this site currently collects nothing." />
+      </Head>
+      <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
+        <div className="absolute inset-0">
+          <Img
+            slug="hero-sunset"
+            alt=""
+            className="h-full w-full object-cover opacity-60"
+            sizes="100vw"
+          />
+        </div>
+        <div className="img-overlay absolute inset-0" />
+        <Header />
+        <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
+          <div className="max-w-3xl">
+            <p className="eyebrow mb-6 text-brass">Privacy</p>
+            <h1 className="display-4 serif text-cream">
+              Your<br />
+              <em className="font-medium">privacy.</em>
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <section className="bg-cream section-pad">
+        <div className="container-wide">
+          <Reveal className="measure-narrow space-y-8">
+            <p className="body-text text-lg leading-8 text-lake/80">
+              This website currently collects nothing. There is no analytics, no cookies, no tracking of any kind.
+            </p>
+            <p className="body-text text-lake/70">
+              When the owner portal launches, it will have its own privacy policy, written to reflect what it collects and how that information is used.
+            </p>
+            {/* PENDING REVIEW marker */}
+            <div className="mt-12 inline-flex items-center gap-3 border border-dashed border-brass/40 bg-brass/5 px-5 py-3">
+              <span className="eyebrow text-brass/60">Pending review</span>
+              <span className="text-[13px] text-lake/50">This page is a draft and has not been reviewed by the board.</span>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <Footer />
+    </>
+  );
+}
+
+/* ── /journal ── */
+function JournalPage() {
+  return (
+    <>
+      <Head>
+        <title>The Lakeside Journal | Lakeside Tower</title>
+        <meta name="description" content="A collection of stories from the water's edge — coming soon." />
+      </Head>
+      <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
+        <div className="absolute inset-0">
+          <Img
+            slug="hero-sunset"
+            alt=""
+            className="h-full w-full object-cover opacity-60"
+            sizes="100vw"
+          />
+        </div>
+        <div className="img-overlay absolute inset-0" />
+        <Header />
+        <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
+          <div className="max-w-3xl">
+            <p className="eyebrow mb-6 text-brass">Journal</p>
+            <h1 className="display-4 serif text-cream">
+              The Lakeside<br />
+              <em className="font-medium">Journal.</em>
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <section className="bg-cream section-pad">
+        <div className="container-wide">
+          <Reveal className="measure-narrow">
+            <p className="body-text text-lg leading-8 text-lake/80">
+              A collection of stories from the water&rsquo;s edge: dining, trails, travel, neighborhood life and the rituals of coming home. The first entries are being written.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <Footer />
+    </>
+  );
+}
+
 function NotFoundPage() {
   return (
     <>
@@ -900,12 +1167,12 @@ function NotFoundPage() {
 export const routes = [
   { path: '/', element: <HomePage /> },
   { path: '/residences', element: <ResidencesPage /> },
-  { path: '/life-at-lakeside', element: <InteriorPage data={pageData['/life-at-lakeside']} /> },
+  { path: '/life-at-lakeside', element: <LifeAtLakesidePage /> },
   { path: '/location', element: <LocationPage /> },
-  { path: '/journal', element: <InteriorPage data={pageData['/journal']} /> },
-  { path: '/about', element: <InteriorPage data={pageData['/about']} /> },
-  { path: '/contact', element: <InteriorPage data={pageData['/contact']} /> },
-  { path: '/privacy', element: <InteriorPage data={pageData['/privacy']} /> },
+  { path: '/journal', element: <JournalPage /> },
+  { path: '/about', element: <AboutPage /> },
+  { path: '/contact', element: <ContactPage /> },
+  { path: '/privacy', element: <PrivacyPage /> },
   { path: '/owners', element: <OwnersPage /> },
   { path: '*', element: <NotFoundPage /> },
 ];
