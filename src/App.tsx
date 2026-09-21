@@ -1,6 +1,5 @@
 import { useState, useEffect, type ReactNode } from 'react';
 
-import { Head } from 'vite-react-ssg';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -8,7 +7,53 @@ import {
   X,
 } from 'lucide-react';
 import { Img } from '@/components/Img';
+import { Seo } from '@/components/Seo';
 import { useReveal, useRevealStagger } from '@/hooks/useReveal';
+
+/* ── Skip to content link ── */
+function SkipLink() {
+  return (
+    <a href="#main" className="skip-link">
+      Skip to content
+    </a>
+  );
+}
+
+/* ── Homepage JSON-LD: ApartmentComplex ── */
+const homeJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ApartmentComplex',
+  name: 'Lakeside Tower',
+  url: 'https://www.lakesidetower.com',
+  image: 'https://www.lakesidetower.com/assets/images/og-card-1200x630.jpg',
+  numberOfAccommodationUnits: 55,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '2800 Lakeside Parkway',
+    addressLocality: 'Flower Mound',
+    addressRegion: 'TX',
+    postalCode: '75022',
+    addressCountry: 'US',
+  },
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'Resort-style pool with hot tub and poolside cabanas' },
+    { '@type': 'LocationFeatureSpecification', name: 'Outdoor fire pit and grilling stations' },
+    { '@type': 'LocationFeatureSpecification', name: 'Fitness center' },
+    { '@type': 'LocationFeatureSpecification', name: 'Yoga and Pilates studio' },
+    { '@type': 'LocationFeatureSpecification', name: 'GolfZon golf simulator' },
+    { '@type': 'LocationFeatureSpecification', name: 'Putting green' },
+    { '@type': 'LocationFeatureSpecification', name: 'Club room and lounge' },
+    { '@type': 'LocationFeatureSpecification', name: 'Wine room with private dining' },
+    { '@type': 'LocationFeatureSpecification', name: 'Screening room' },
+    { '@type': 'LocationFeatureSpecification', name: 'Billiards lounge' },
+    { '@type': 'LocationFeatureSpecification', name: 'Coffee bar' },
+    { '@type': 'LocationFeatureSpecification', name: 'Concierge, twenty-four hours' },
+    { '@type': 'LocationFeatureSpecification', name: 'Guest suites' },
+    { '@type': 'LocationFeatureSpecification', name: 'On-site spa' },
+    { '@type': 'LocationFeatureSpecification', name: 'Reserved parking in an attached garage' },
+    { '@type': 'LocationFeatureSpecification', name: 'Dog park and wash station' },
+  ],
+};
 
 /* ── Navigation ── */
 const navItems = [
@@ -452,10 +497,14 @@ function ClosingSection() {
 function HomePage() {
   return (
     <>
-      <Head>
-        <title>Lakeside Tower | Live at the water&rsquo;s edge</title>
-        <meta name="description" content="Lakeside Tower — a private home at the water&rsquo;s edge in Flower Mound, Texas." />
-      </Head>
+      <Seo
+        title="Lakeside Tower | Live at the water's edge"
+        description="Lakeside Tower — a private home at the water's edge in Flower Mound, Texas."
+        path="/"
+        jsonLd={homeJsonLd}
+      />
+      <SkipLink />
+      <main id="main">
       <Hero />
       <TowerSection />
       <TrailSection />
@@ -464,6 +513,7 @@ function HomePage() {
       <StoriesSection />
       <OwnersSection />
       <ClosingSection />
+      </main>
       <Footer />
     </>
   );
@@ -479,10 +529,13 @@ function OwnersPage() {
   const refs = useRevealStagger<HTMLDivElement>(4);
   return (
     <>
-      <Head>
-        <title>Owners | Lakeside Tower</title>
-        <meta name="description" content="The Lakeside Tower owner portal is in development. Owners will receive access details from the board when it opens." />
-      </Head>
+      <Seo
+        title="Owners | Lakeside Tower"
+        description="The Lakeside Tower owner portal is in development. Owners will receive access details from the board when it opens."
+        path="/owners"
+      />
+      <SkipLink />
+      <main id="main">
       <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
         <div className="absolute inset-0">
           <Img
@@ -533,6 +586,7 @@ function OwnersPage() {
           </Reveal>
         </div>
       </section>
+      </main>
       <Footer />
     </>
   );
@@ -548,10 +602,13 @@ function LocationPage() {
   ];
   return (
     <>
-      <Head>
-        <title>Location | Lakeside Tower</title>
-        <meta name="description" content="Lakeside Tower on the north shore of Lake Grapevine in Flower Mound, Texas — close to everything, far from the noise." />
-      </Head>
+      <Seo
+        title="Location | Lakeside Tower"
+        description="Lakeside Tower on the north shore of Lake Grapevine in Flower Mound, Texas — close to everything, far from the noise."
+        path="/location"
+      />
+      <SkipLink />
+      <main id="main">
       {/* Hero: lake-panorama wide band */}
       <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
         <div className="absolute inset-0">
@@ -670,6 +727,7 @@ function LocationPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );
@@ -685,10 +743,13 @@ function ResidencesPage() {
   const refs = useRevealStagger<HTMLDivElement>(4);
   return (
     <>
-      <Head>
-        <title>The Residences | Lakeside Tower</title>
-        <meta name="description" content="Fifty-five residences across sixteen floors at Lakeside Tower — a private place to be yourself, overlooking Lake Grapevine." />
-      </Head>
+      <Seo
+        title="The Residences | Lakeside Tower"
+        description="Fifty-five residences across sixteen floors at Lakeside Tower — a private place to be yourself, overlooking Lake Grapevine."
+        path="/residences"
+      />
+      <SkipLink />
+      <main id="main">
       {/* Hero: tower-aerial */}
       <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
         <div className="absolute inset-0">
@@ -788,6 +849,7 @@ function ResidencesPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );
@@ -797,10 +859,13 @@ function ResidencesPage() {
 function LifeAtLakesidePage() {
   return (
     <>
-      <Head>
-        <title>Life at Lakeside | Lakeside Tower</title>
-        <meta name="description" content="Real life, beautifully told — a day at Lakeside Tower, from the trail to the village to the water." />
-      </Head>
+      <Seo
+        title="Life at Lakeside | Lakeside Tower"
+        description="Real life, beautifully told — a day at Lakeside Tower, from the trail to the village to the water."
+        path="/life-at-lakeside"
+      />
+      <SkipLink />
+      <main id="main">
       {/* Hero: village-dining */}
       <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
         <div className="absolute inset-0">
@@ -910,6 +975,7 @@ function LifeAtLakesidePage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );
@@ -919,10 +985,13 @@ function LifeAtLakesidePage() {
 function AboutPage() {
   return (
     <>
-      <Head>
-        <title>About | Lakeside Tower</title>
-        <meta name="description" content="Lakeside Tower is a private residential community of fifty-five residences on the north shore of Lake Grapevine in Flower Mound, Texas." />
-      </Head>
+      <Seo
+        title="About | Lakeside Tower"
+        description="Lakeside Tower is a private residential community of fifty-five residences on the north shore of Lake Grapevine in Flower Mound, Texas."
+        path="/about"
+      />
+      <SkipLink />
+      <main id="main">
       <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
         <div className="absolute inset-0">
           <Img
@@ -966,6 +1035,7 @@ function AboutPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );
@@ -975,10 +1045,13 @@ function AboutPage() {
 function ContactPage() {
   return (
     <>
-      <Head>
-        <title>Contact | Lakeside Tower</title>
-        <meta name="description" content="Contact Lakeside Tower at 2800 Lakeside Parkway, Flower Mound, TX 75022." />
-      </Head>
+      <Seo
+        title="Contact | Lakeside Tower"
+        description="Contact Lakeside Tower at 2800 Lakeside Parkway, Flower Mound, TX 75022."
+        path="/contact"
+      />
+      <SkipLink />
+      <main id="main">
       <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
         <div className="absolute inset-0">
           <Img
@@ -1038,6 +1111,7 @@ function ContactPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );
@@ -1047,10 +1121,13 @@ function ContactPage() {
 function PrivacyPage() {
   return (
     <>
-      <Head>
-        <title>Privacy | Lakeside Tower</title>
-        <meta name="description" content="Lakeside Tower's privacy policy — this site currently collects nothing." />
-      </Head>
+      <Seo
+        title="Privacy | Lakeside Tower"
+        description="Lakeside Tower's privacy policy — this site currently collects nothing. No analytics, no cookies, no tracking."
+        path="/privacy"
+      />
+      <SkipLink />
+      <main id="main">
       <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
         <div className="absolute inset-0">
           <Img
@@ -1091,6 +1168,7 @@ function PrivacyPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );
@@ -1100,10 +1178,13 @@ function PrivacyPage() {
 function JournalPage() {
   return (
     <>
-      <Head>
-        <title>The Lakeside Journal | Lakeside Tower</title>
-        <meta name="description" content="A collection of stories from the water's edge — coming soon." />
-      </Head>
+      <Seo
+        title="The Lakeside Journal | Lakeside Tower"
+        description="A collection of stories from the water's edge — coming soon."
+        path="/journal"
+      />
+      <SkipLink />
+      <main id="main">
       <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
         <div className="absolute inset-0">
           <Img
@@ -1136,6 +1217,7 @@ function JournalPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </>
   );
@@ -1144,10 +1226,13 @@ function JournalPage() {
 function NotFoundPage() {
   return (
     <>
-      <Head>
-        <title>Page not found | Lakeside Tower</title>
-      </Head>
-      <div className="flex min-h-screen flex-col items-center justify-center bg-cream px-6 text-center text-lake">
+      <Seo
+        title="Page not found | Lakeside Tower"
+        description="The page you're looking for isn't here."
+        path="/404"
+      />
+      <SkipLink />
+      <main id="main" className="flex min-h-screen flex-col items-center justify-center bg-cream px-6 text-center text-lake">
         <h1 className="display-4 serif text-lake">This page has drifted off.</h1>
         <p className="body-text mt-6 max-w-md">
           The page you&rsquo;re looking for isn&rsquo;t here. Let&rsquo;s get you back to the water&rsquo;s edge.
@@ -1158,7 +1243,7 @@ function NotFoundPage() {
         >
           Return home <ArrowRight size={15} />
         </a>
-      </div>
+      </main>
     </>
   );
 }
