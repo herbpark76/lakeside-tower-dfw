@@ -132,7 +132,7 @@ function Header() {
           ))}
           <a
             href="/owners"
-            className="ml-2 border-l border-brass pl-6 text-[13px] font-semibold uppercase tracking-[0.14em] transition hover:text-brass"
+            className="ml-2 border-l border-brass pl-6 text-[13px] font-semibold uppercase tracking-[0.14em] transition hover:text-brass-on-dark"
           >
             Owners
           </a>
@@ -164,7 +164,7 @@ function Header() {
             <a
               onClick={() => setOpen(false)}
               href="/owners"
-              className="serif mt-4 border-t border-cream/15 pt-6 text-3xl text-brass transition hover:text-cream"
+              className="serif mt-4 border-t border-cream/15 pt-6 text-3xl text-brass-on-dark transition hover:text-cream"
             >
               Owners
             </a>
@@ -187,9 +187,9 @@ function ArrowLink({ children, href = '#', light = false }: { children: ReactNod
   );
 }
 
-function Eyebrow({ children, onTeal = false }: { children: ReactNode; onTeal?: boolean }) {
+function Eyebrow({ children, onTeal = false, dark = false }: { children: ReactNode; onTeal?: boolean; dark?: boolean }) {
   return (
-    <p className={`eyebrow ${onTeal ? 'text-lake' : 'text-brass'}`}>{children}</p>
+    <p className={`eyebrow ${onTeal ? 'text-lake' : dark ? 'text-brass-on-dark' : 'text-brass-on-light'}`}>{children}</p>
   );
 }
 
@@ -205,7 +205,7 @@ function Footer() {
           </p>
         </div>
         <div>
-          <p className="eyebrow mb-6 text-brass">Explore</p>
+          <p className="eyebrow mb-6 text-brass-on-dark">Explore</p>
           <div className="grid gap-4 text-[17px] text-cream/70">
             {navItems.slice(0, 4).map(([label, href]) => (
               <a key={href} href={href} className="link-underline transition hover:text-cream w-fit">
@@ -215,7 +215,7 @@ function Footer() {
           </div>
         </div>
         <div>
-          <p className="eyebrow mb-6 text-brass">For our community</p>
+          <p className="eyebrow mb-6 text-brass-on-dark">For our community</p>
           <div className="grid gap-4 text-[17px] text-cream/70">
             <a href="/owners" className="link-underline transition hover:text-cream w-fit">Owners</a>
             <a href="/contact" className="link-underline transition hover:text-cream w-fit">Contact</a>
@@ -265,7 +265,7 @@ function Hero() {
             <div className="flex flex-wrap items-center gap-6 sm:gap-8">
               <a
                 href="/life-at-lakeside"
-                className="inline-flex items-center gap-3 border-b border-cream/40 pb-3 text-[13px] font-bold uppercase tracking-[0.14em] text-cream transition hover:border-brass hover:text-brass"
+                className="inline-flex items-center gap-3 border-b border-cream/40 pb-3 text-[13px] font-bold uppercase tracking-[0.14em] text-cream transition hover:border-brass hover:text-brass-on-dark"
               >
                 Explore life at Lakeside <ArrowRight size={15} />
               </a>
@@ -331,7 +331,7 @@ function TrailSection() {
       <div className="img-overlay absolute inset-0" />
       <div className="container-wide relative z-10 pb-16 pt-40 sm:pb-24 lg:pb-28">
         <div className="max-w-2xl">
-          <Eyebrow>The Trail</Eyebrow>
+          <Eyebrow dark>The Trail</Eyebrow>
           <h2 className="display-4 serif mt-6 text-cream">
             Twenty-two miles,<br />
             <em className="font-medium">straight from the lobby.</em>
@@ -424,7 +424,7 @@ function StoriesSection() {
                   sizes="(min-width: 640px) 33vw, 100vw"
                 />
               </div>
-              <p className="mt-5 font-mono text-[13px] text-brass">{num}</p>
+              <p className="mt-5 font-mono text-[13px] text-brass-on-light">{num}</p>
               <h3 className="display-2 serif mt-2 text-lake">{title}</h3>
             </div>
           ))}
@@ -441,7 +441,7 @@ function OwnersSection() {
     <section className="bg-lake-deep section-pad text-cream">
       <div className="container-wide">
         <Reveal className="mb-14 max-w-2xl">
-          <Eyebrow>For our community</Eyebrow>
+          <Eyebrow dark>For our community</Eyebrow>
           <h2 className="display-4 serif mt-7 text-cream">
             Lakeside Tower,<br />
             <em className="font-medium">at home online.</em>
@@ -549,7 +549,7 @@ function OwnersPage() {
         <Header />
         <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
           <div className="max-w-3xl">
-            <p className="eyebrow mb-6 text-brass">For our community</p>
+            <p className="eyebrow mb-6 text-brass-on-dark">For our community</p>
             <h1 className="display-4 serif text-cream">
               Lakeside Tower,<br /><em className="font-medium">at home online.</em>
             </h1>
@@ -623,7 +623,7 @@ function LocationPage() {
         <Header />
         <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
           <div className="max-w-3xl">
-            <p className="eyebrow mb-6 text-brass">Location</p>
+            <p className="eyebrow mb-6 text-brass-on-dark">Location</p>
             <h1 className="display-4 serif text-cream">
               Close to everything.<br />
               <em className="font-medium">Far from the noise.</em>
@@ -674,7 +674,7 @@ function LocationPage() {
         <div className="img-overlay absolute inset-0" />
         <div className="container-wide relative z-10 pb-16 pt-40 sm:pb-24 lg:pb-28">
           <div className="max-w-2xl">
-            <Eyebrow>The Trail</Eyebrow>
+            <Eyebrow dark>The Trail</Eyebrow>
             <h2 className="display-4 serif mt-6 text-cream">
               Twenty-two miles,<br />
               <em className="font-medium">straight from the lobby.</em>
@@ -764,7 +764,7 @@ function ResidencesPage() {
         <Header />
         <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
           <div className="max-w-3xl">
-            <p className="eyebrow mb-6 text-brass">The Residences</p>
+            <p className="eyebrow mb-6 text-brass-on-dark">The Residences</p>
             <h1 className="display-4 serif text-cream">
               A private place<br />
               <em className="font-medium">to be yourself.</em>
@@ -804,7 +804,7 @@ function ResidencesPage() {
                 data-reveal
                 className="grid gap-2 border-b border-lake/10 py-7 sm:grid-cols-[1fr_2fr] sm:gap-16 sm:py-9"
               >
-                <h3 className="eyebrow text-brass">{heading}</h3>
+                <h3 className="eyebrow text-brass-on-light">{heading}</h3>
                 <p className="body-text">{body}</p>
               </div>
             ))}
@@ -880,7 +880,7 @@ function LifeAtLakesidePage() {
         <Header />
         <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
           <div className="max-w-3xl">
-            <p className="eyebrow mb-6 text-brass">Life at Lakeside</p>
+            <p className="eyebrow mb-6 text-brass-on-dark">Life at Lakeside</p>
             <h1 className="display-4 serif text-cream">
               Real life,<br />
               <em className="font-medium">beautifully told.</em>
@@ -960,7 +960,7 @@ function LifeAtLakesidePage() {
         <div className="img-overlay absolute inset-0" />
         <div className="container-wide relative z-10 pb-16 pt-40 sm:pb-24 lg:pb-28">
           <div className="max-w-xl">
-            <Eyebrow>03</Eyebrow>
+            <Eyebrow dark>03</Eyebrow>
             <h2 className="display-4 serif mt-6 text-cream">
               The<br />
               <em className="font-medium">water.</em>
@@ -1005,7 +1005,7 @@ function AboutPage() {
         <Header />
         <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
           <div className="max-w-3xl">
-            <p className="eyebrow mb-6 text-brass">About Lakeside Tower</p>
+            <p className="eyebrow mb-6 text-brass-on-dark">About Lakeside Tower</p>
             <h1 className="display-4 serif text-cream">
               A home with<br />
               <em className="font-medium">a point of view.</em>
@@ -1065,7 +1065,7 @@ function ContactPage() {
         <Header />
         <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
           <div className="max-w-3xl">
-            <p className="eyebrow mb-6 text-brass">Contact</p>
+            <p className="eyebrow mb-6 text-brass-on-dark">Contact</p>
             <h1 className="display-4 serif text-cream">
               Let&rsquo;s<br />
               <em className="font-medium">talk.</em>
@@ -1093,7 +1093,7 @@ function ContactPage() {
                 </p>
                 {/* PLACEHOLDER — replace with the real email address before publishing */}
                 <div className="border border-dashed border-brass/50 bg-brass/5 p-5">
-                  <p className="eyebrow text-brass/70 mb-3">Placeholder &mdash; needs replacing</p>
+                  <p className="eyebrow text-brass-on-light/70 mb-3">Placeholder &mdash; needs replacing</p>
                   <a
                     href="mailto:hello@lakesidetower.example"
                     className="link-arrow text-lake"
@@ -1141,7 +1141,7 @@ function PrivacyPage() {
         <Header />
         <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
           <div className="max-w-3xl">
-            <p className="eyebrow mb-6 text-brass">Privacy</p>
+            <p className="eyebrow mb-6 text-brass-on-dark">Privacy</p>
             <h1 className="display-4 serif text-cream">
               Your<br />
               <em className="font-medium">privacy.</em>
@@ -1161,7 +1161,7 @@ function PrivacyPage() {
             </p>
             {/* PENDING REVIEW marker */}
             <div className="mt-12 inline-flex items-center gap-3 border border-dashed border-brass/40 bg-brass/5 px-5 py-3">
-              <span className="eyebrow text-brass/60">Pending review</span>
+              <span className="eyebrow text-brass-on-light/60">Pending review</span>
               <span className="text-[13px] text-lake/50">This page is a draft and has not been reviewed by the board.</span>
             </div>
           </Reveal>
@@ -1198,7 +1198,7 @@ function JournalPage() {
         <Header />
         <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
           <div className="max-w-3xl">
-            <p className="eyebrow mb-6 text-brass">Journal</p>
+            <p className="eyebrow mb-6 text-brass-on-dark">Journal</p>
             <h1 className="display-4 serif text-cream">
               The Lakeside<br />
               <em className="font-medium">Journal.</em>

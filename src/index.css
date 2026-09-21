@@ -11,6 +11,8 @@
   --teal: #86B6BD;
   --brass: #8A6F3D;
   --brass-light: #B1935B;
+  --brass-on-light: #735C32;
+  --brass-on-dark: #B1935B;
   --sand: #E7DDC9;
   --cream: #F7F5F0;
   --card: #FFFDF9;
@@ -47,7 +49,7 @@
 html { scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; max-width: 100%; overflow-x: hidden; background: var(--cream); }
 button, a { -webkit-tap-highlight-color: transparent; }
-::selection { background: var(--brass-light); color: var(--card); }
+::selection { background: var(--brass-on-dark); color: var(--card); }
 
 /* Focus rings */
 a:focus-visible,

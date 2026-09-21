@@ -9,6 +9,8 @@ export default {
         teal: '#86B6BD',
         brass: '#8A6F3D',
         'brass-light': '#B1935B',
+        'brass-on-light': '#735C32',
+        'brass-on-dark': '#B1935B',
         sand: '#E7DDC9',
         cream: '#F7F5F0',
         card: '#FFFDF9',
