@@ -14,7 +14,7 @@ interface WeatherData {
 }
 
 interface SunPhase {
-  phase: 'before_golden' | 'golden' | 'afterglow' | 'night';
+  phase: 'pre_dawn' | 'before_golden' | 'golden' | 'afterglow' | 'night';
   headline: string;
   subline: string;
   sunsetTime: Date | null;
@@ -62,46 +62,71 @@ function formatTime(date: Date): string {
   });
 }
 
+function getChicagoDateParts(now: Date) {
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  const parts = fmt.formatToParts(now);
+  const get = (type: string) => parseInt(parts.find((p) => p.type === type)?.value ?? '0');
+  return { year: get('year'), month: get('month'), day: get('day') };
+}
+
+function getSunTimesForChicagoDate(now: Date): SunCalc.GetTimesResult {
+  const { year, month, day } = getChicagoDateParts(now);
+  const dateForCalc = new Date(year, month - 1, day, 12, 0, 0);
+  return SunCalc.getTimes(dateForCalc, LAT, LON);
+}
+
 function getSunPhase(now: Date, sunTimes: SunCalc.GetTimesResult): SunPhase {
   const sunset = sunTimes.sunset ?? null;
-  const goldenHourEnd = sunTimes.goldenHour ?? null;
   const dusk = sunTimes.dusk ?? null;
   const sunrise = sunTimes.sunrise ?? null;
 
-  // Golden hour is the hour before sunset (sunset to goldenHour in suncalc is after sunset)
-  // suncalc's goldenHour is the end of evening golden hour (after sunset).
-  // We need the start of evening golden hour = sunset - 1hr
   const goldenStart = sunset ? new Date(sunset.getTime() - 60 * 60 * 1000) : null;
 
-  if (goldenStart && now < goldenStart) {
-    // Before golden hour
-    const diff = sunset!.getTime() - now.getTime();
-    const subline = `in ${formatDuration(diff)}`;
+  // Pre-dawn: between midnight and today's sunrise
+  if (sunrise && now < sunrise) {
     return {
-      phase: 'before_golden',
-      headline: `Sunset at ${formatTime(sunset!)}`,
-      subline,
+      phase: 'pre_dawn',
+      headline: `Sunrise at ${formatTime(sunrise)}`,
+      subline: '',
       sunsetTime: sunset,
       sunriseTime: sunrise,
       duskTime: dusk,
     };
   }
 
+  // Before golden hour (after sunrise, before golden hour starts)
+  if (goldenStart && now < goldenStart) {
+    const diff = sunset!.getTime() - now.getTime();
+    return {
+      phase: 'before_golden',
+      headline: `Sunset at ${formatTime(sunset!)}`,
+      subline: `in ${formatDuration(diff)}`,
+      sunsetTime: sunset,
+      sunriseTime: sunrise,
+      duskTime: dusk,
+    };
+  }
+
+  // During golden hour
   if (goldenStart && sunset && now >= goldenStart && now < sunset) {
-    // During golden hour
     const diff = sunset.getTime() - now.getTime();
     return {
       phase: 'golden',
       headline: 'Golden hour',
-      subline: `Sunset at ${formatTime(sunset)} · in ${formatDuration(diff)}`,
+      subline: `Sunset at ${formatTime(sunset)} \u00b7 in ${formatDuration(diff)}`,
       sunsetTime: sunset,
       sunriseTime: sunrise,
       duskTime: dusk,
     };
   }
 
+  // Afterglow: sunset to dusk
   if (sunset && dusk && now >= sunset && now < dusk) {
-    // Afterglow
     return {
       phase: 'afterglow',
       headline: 'The sun has just set',
@@ -112,23 +137,19 @@ function getSunPhase(now: Date, sunTimes: SunCalc.GetTimesResult): SunPhase {
     };
   }
 
-  // Night — find tomorrow's sunrise
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowTimes = SunCalc.getTimes(tomorrow, LAT, LON);
+  // Night: after dusk until midnight — show tomorrow's sunrise
+  const chicagoParts = getChicagoDateParts(now);
+  const tomorrowDate = new Date(chicagoParts.year, chicagoParts.month - 1, chicagoParts.day + 1, 12, 0, 0);
+  const tomorrowTimes = SunCalc.getTimes(tomorrowDate, LAT, LON);
   const tomorrowSunrise = tomorrowTimes.sunrise ?? null;
 
-  // If after midnight, use today's sunrise (which is later today)
-  const isAfterMidnight = now.getHours() >= 0 && now.getHours() < 6;
-  const effectiveSunrise = isAfterMidnight ? sunrise : tomorrowSunrise;
-
-  if (effectiveSunrise) {
+  if (tomorrowSunrise) {
     return {
       phase: 'night',
-      headline: `${isAfterMidnight ? '' : "Tomorrow's "}sunrise at ${formatTime(effectiveSunrise)}`,
+      headline: `Tomorrow's sunrise at ${formatTime(tomorrowSunrise)}`,
       subline: '',
       sunsetTime: sunset,
-      sunriseTime: effectiveSunrise,
+      sunriseTime: tomorrowSunrise,
       duskTime: dusk,
     };
   }
@@ -204,7 +225,7 @@ async function fetchWeather(sunsetDate: Date | null): Promise<WeatherData | null
 
 function useSunPhase(now: Date) {
   return useMemo(() => {
-    const sunTimes = SunCalc.getTimes(now, LAT, LON);
+    const sunTimes = getSunTimesForChicagoDate(now);
     return getSunPhase(now, sunTimes);
   }, [now]);
 }
@@ -250,7 +271,7 @@ export function TonightAtTheLake() {
 
   const outlook = useMemo(() => {
     if (!weather || weather.sunsetCloudCover === null) return null;
-    if (sunPhase.phase === 'afterglow' || sunPhase.phase === 'night') return null;
+    if (sunPhase.phase === 'pre_dawn' || sunPhase.phase === 'afterglow' || sunPhase.phase === 'night') return null;
     return getSunsetOutlook(weather.sunsetCloudCover);
   }, [weather, sunPhase.phase]);
 
@@ -286,7 +307,7 @@ export function TonightAtTheLake() {
             {weather && (
               <div className="flex flex-col gap-1.5">
                 <p className="text-[15px] text-lake/70">
-                  {weather.temperature}&deg;&middot; {weather.condition} &middot; Wind {weather.windSpeed} mph
+                  {weather.temperature}&deg; &middot; {weather.condition} &middot; Wind {weather.windSpeed} mph
                 </p>
                 {outlook && (
                   <p className="text-[14px] text-muted">{outlook}</p>
