@@ -9,6 +9,7 @@ import {
 import { Img } from '@/components/Img';
 import { Seo } from '@/components/Seo';
 import { TonightAtTheLake } from '@/components/TonightAtTheLake';
+import { WalkabilitySection } from '@/components/WalkabilityMap';
 import { useReveal, useRevealStagger } from '@/hooks/useReveal';
 
 /* ── Skip to content link ── */
@@ -662,6 +663,8 @@ function LocationPage() {
           </Reveal>
         </div>
       </section>
+
+      <WalkabilitySection />
 
       {/* THE TRAIL — full-bleed dark, trail-shoreline */}
       <section className="relative flex min-h-[90vh] items-end overflow-hidden bg-lake-deep text-cream">

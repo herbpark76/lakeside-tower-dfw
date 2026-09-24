@@ -228,3 +228,201 @@ p { text-wrap: pretty; }
   left: 0;
   top: 0;
 }
+
+/* ── Walkability map ── */
+.walkability-map-wrapper {
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid rgba(24, 50, 59, 0.08);
+}
+.walkability-map {
+  height: 420px;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .walkability-map { height: 520px; }
+}
+.walkability-map-placeholder {
+  height: 420px;
+  background: var(--sand);
+  border-radius: 2px;
+}
+@media (min-width: 768px) {
+  .walkability-map-placeholder { height: 520px; }
+}
+
+/* Scroll hint */
+.walkability-map .leaflet-control-container .leaflet-top .leaflet-control-zoom {
+  display: none;
+}
+.walkability-map .leaflet-control-attribution {
+  font-size: 10px;
+  background: rgba(247, 245, 240, 0.85);
+  color: var(--muted);
+  padding: 2px 6px;
+  border-radius: 0;
+}
+.walkability-map .leaflet-control-attribution a {
+  color: var(--brass-on-light);
+}
+
+/* Tower pin — navy with tower glyph */
+.tower-pin { background: transparent !important; border: none !important; }
+.tower-pin-inner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--lake-deep);
+  border: 2px solid var(--cream);
+  box-shadow: 0 2px 8px rgba(16, 41, 50, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brass-on-dark);
+}
+
+/* Building pins — brass dots */
+.building-pin { background: transparent !important; border: none !important; }
+.building-pin-dot {
+  border-radius: 50%;
+  background: var(--brass);
+  border: 2px solid var(--cream);
+  box-shadow: 0 1px 4px rgba(138, 111, 61, 0.3);
+  transition: transform 200ms var(--ease), background 200ms var(--ease);
+}
+.building-pin-dot--active {
+  background: var(--brass-on-light);
+  transform: scale(1.15);
+}
+
+/* Filter pills */
+.walkability-pill {
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  padding: 7px 16px;
+  border: 1px solid rgba(24, 50, 59, 0.15);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 200ms var(--ease);
+}
+.walkability-pill:hover {
+  border-color: var(--brass);
+  color: var(--brass-on-light);
+}
+.walkability-pill--active {
+  background: var(--lake-deep);
+  border-color: var(--lake-deep);
+  color: var(--cream);
+}
+.walkability-pill--active:hover {
+  color: var(--cream);
+  border-color: var(--lake-deep);
+}
+
+/* List items */
+.walkability-list-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 0;
+  transition: color 200ms var(--ease);
+}
+.walkability-list-name {
+  font-size: var(--step-0);
+  color: var(--lake);
+  text-align: left;
+}
+.walkability-list-item:hover .walkability-list-name {
+  color: var(--brass-on-light);
+}
+.walkability-list-cat {
+  font-size: var(--step--1);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Leaflet popups */
+.leaflet-popup-content-wrapper {
+  border-radius: 2px;
+  box-shadow: 0 4px 24px rgba(16, 41, 50, 0.12);
+  border: 1px solid rgba(24, 50, 59, 0.06);
+}
+.leaflet-popup-content {
+  margin: 14px 16px;
+  font-family: 'DM Sans', sans-serif;
+}
+.map-popup { min-width: 200px; }
+.map-popup-headline {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.25rem;
+  color: var(--lake-deep);
+  margin: 0 0 2px 0;
+  line-height: 1.2;
+}
+.map-popup-sub {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  margin: 0 0 8px 0;
+}
+.map-popup-note {
+  font-size: 0.8125rem;
+  color: var(--lake);
+  margin: 0 0 10px 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+.map-popup-list {
+  list-style: none;
+  margin: 0 0 10px 0;
+  padding: 0;
+  border-top: 1px solid rgba(24, 50, 59, 0.08);
+}
+.map-popup-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(24, 50, 59, 0.06);
+}
+.map-popup-biz-name {
+  font-size: 0.875rem;
+  color: var(--lake);
+  line-height: 1.3;
+}
+.map-popup-biz-cat {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--brass-on-light);
+  white-space: nowrap;
+}
+.map-popup-directions {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--brass-on-light);
+  text-decoration: none;
+  border-bottom: 1px solid var(--brass);
+  padding-bottom: 2px;
+  transition: color 200ms var(--ease);
+}
+.map-popup-directions:hover {
+  color: var(--lake-deep);
+}
+.leaflet-popup-tip {
+  box-shadow: 0 4px 24px rgba(16, 41, 50, 0.08);
+}

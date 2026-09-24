@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { Sun } from 'lucide-react';
 import * as SunCalc from 'suncalc';
 
-const LAT = 33.044;
-const LON = -97.06;
+const LAT = 32.98822;
+const LON = -97.06793;
 const TIMEZONE = 'America/Chicago';
 
 interface WeatherData {
