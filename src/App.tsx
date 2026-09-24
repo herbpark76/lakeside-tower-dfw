@@ -60,8 +60,8 @@ const navItems = [
   ['The Residences', '/residences'],
   ['Life at Lakeside', '/life-at-lakeside'],
   ['Location', '/location'],
-  ['Journal', '/journal'],
   ['About', '/about'],
+  ['Contact', '/contact'],
 ] as const;
 
 function Logo({ dark = false, small = false }: { dark?: boolean; small?: boolean }) {
@@ -381,7 +381,7 @@ function PanoramaBand() {
     <div className="relative w-full overflow-hidden">
       <Img
         slug="lake-panorama"
-        alt=""
+        alt="Panoramic view of Lake Grapevine from Lakeside Tower"
         className="h-[400px] w-full object-cover"
         sizes="100vw"
         objectPosition="center"
@@ -598,7 +598,7 @@ function LocationPage() {
     ['Lakeside Village', 'A walkable collection of restaurants and shops at the foot of the tower.'],
     ['Flower Mound', 'The town Lakeside Tower calls home, named for a wildflower-covered mound.'],
     ['Dallas\u2013Fort Worth', 'The metroplex, reachable in under an hour for work, culture, and sport.'],
-    ['DFW Airport', 'The airport&rsquo;s north entrance is about seven minutes away.'],
+    ['DFW Airport', 'The airport\u2019s north entrance is about seven minutes away.'],
   ];
   return (
     <>
@@ -1091,20 +1091,13 @@ function ContactPage() {
                 <p className="body-text text-lake/70 mb-4">
                   Reach the Lakeside Tower community by email.
                 </p>
-                {/* PLACEHOLDER — replace with the real email address before publishing */}
-                <div className="border border-dashed border-brass/50 bg-brass/5 p-5">
-                  <p className="eyebrow text-brass-on-light/70 mb-3">Placeholder &mdash; needs replacing</p>
-                  <a
-                    href="mailto:hello@lakesidetower.example"
-                    className="link-arrow text-lake"
-                  >
-                    <span className="link-underline">hello@lakesidetower.example</span>
-                    <ArrowUpRight size={15} strokeWidth={1.5} />
-                  </a>
-                  <p className="mt-3 text-[13px] text-lake/50">
-                    Replace this with the verified contact email before the page goes live.
-                  </p>
-                </div>
+                <a
+                  href="mailto:[REAL EMAIL HERE]"
+                  className="link-arrow text-lake"
+                >
+                  <span className="link-underline">[REAL EMAIL HERE]</span>
+                  <ArrowUpRight size={15} strokeWidth={1.5} />
+                </a>
               </div>
             </div>
           </Reveal>
@@ -1159,11 +1152,6 @@ function PrivacyPage() {
             <p className="body-text text-lake/70">
               When the owner portal launches, it will have its own privacy policy, written to reflect what it collects and how that information is used.
             </p>
-            {/* PENDING REVIEW marker */}
-            <div className="mt-12 inline-flex items-center gap-3 border border-dashed border-brass/40 bg-brass/5 px-5 py-3">
-              <span className="eyebrow text-brass-on-light/60">Pending review</span>
-              <span className="text-[13px] text-lake/50">This page is a draft and has not been reviewed by the board.</span>
-            </div>
           </Reveal>
         </div>
       </section>
