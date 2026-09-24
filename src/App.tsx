@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { Img } from '@/components/Img';
 import { Seo } from '@/components/Seo';
+import { TonightAtTheLake } from '@/components/TonightAtTheLake';
 import { useReveal, useRevealStagger } from '@/hooks/useReveal';
 
 /* ── Skip to content link ── */
@@ -506,6 +507,7 @@ function HomePage() {
       <SkipLink />
       <main id="main">
       <Hero />
+      <TonightAtTheLake />
       <TowerSection />
       <TrailSection />
       <VillageSection />
