@@ -292,7 +292,7 @@ export function PhotoGallery() {
           <p className="eyebrow text-brass-on-light">Gallery</p>
           <h2 className="display-4 serif mt-6 text-lake">
             Seen from<br />
-            <em className="font-medium">the eleventh floor.</em>
+            <em className="font-medium">the water&rsquo;s edge.</em>
           </h2>
         </div>
 
@@ -301,10 +301,7 @@ export function PhotoGallery() {
             {filterOptions.map((cat) => (
               <button
                 key={cat}
-                onClick={() => {
-                  setFilter(cat);
-                  setExpanded(false);
-                }}
+                onClick={() => setFilter(cat)}
                 className={`walkability-pill ${filter === cat ? 'walkability-pill--active' : ''}`}
               >
                 {cat}
@@ -339,7 +336,7 @@ export function PhotoGallery() {
 
       {lightboxIndex !== null && (
         <Lightbox
-          photos={visiblePhotos}
+          photos={filteredPhotos}
           index={lightboxIndex}
           onClose={handleClose}
           onNavigate={handleNavigate}
