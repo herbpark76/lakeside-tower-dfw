@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Head } from 'vite-react-ssg';
 import { marked } from 'marked';
@@ -57,6 +57,7 @@ export function EventDetailPage() {
   const [toast, setToast] = useState<string | null>(null);
   const [showCalendarMenu, setShowCalendarMenu] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
   const showToast = useCallback((msg: string) => {
     setToast(msg);
@@ -132,6 +133,19 @@ export function EventDetailPage() {
     showToast('Event cancelled (demo only — stored in this browser)');
     setTimeout(() => navigate('/portal/events'), 1500);
   };
+
+  // Esc to close modal + focus management
+  useEffect(() => {
+    if (!showCancelConfirm) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowCancelConfirm(false);
+        cancelButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [showCancelConfirm]);
 
   return (
     <>
@@ -214,6 +228,7 @@ export function EventDetailPage() {
                   <Copy size={14} /> Duplicate
                 </button>
                 <button
+                  ref={cancelButtonRef}
                   onClick={() => setShowCancelConfirm(true)}
                   className="inline-flex items-center gap-2 border border-red-600/20 px-4 py-2 text-[12px] font-semibold uppercase tracking-wider text-red-700 transition hover:border-red-600"
                 >
@@ -305,17 +320,27 @@ export function EventDetailPage() {
       {showCancelConfirm && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-          onClick={() => setShowCancelConfirm(false)}
+          onClick={() => {
+            setShowCancelConfirm(false);
+            cancelButtonRef.current?.focus();
+          }}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cancel-modal-heading"
             className="mx-4 max-w-sm rounded-lg bg-white p-6 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <h3 className="serif text-lg text-lake">Cancel this event?</h3>
+              <h3 id="cancel-modal-heading" className="serif text-lg text-lake">Cancel this event?</h3>
               <button
-                onClick={() => setShowCancelConfirm(false)}
+                onClick={() => {
+                  setShowCancelConfirm(false);
+                  cancelButtonRef.current?.focus();
+                }}
                 className="text-lake/40 hover:text-lake"
+                aria-label="Close dialog"
               >
                 <X size={18} />
               </button>
@@ -331,7 +356,10 @@ export function EventDetailPage() {
                 Yes, cancel event
               </button>
               <button
-                onClick={() => setShowCancelConfirm(false)}
+                onClick={() => {
+                  setShowCancelConfirm(false);
+                  cancelButtonRef.current?.focus();
+                }}
                 className="border border-lake/20 px-4 py-2 text-[12px] font-semibold uppercase tracking-wider text-lake"
               >
                 No, go back

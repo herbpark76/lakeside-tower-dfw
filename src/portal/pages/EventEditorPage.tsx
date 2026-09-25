@@ -6,6 +6,7 @@ import { PortalLayout } from '../components/PortalLayout';
 import { useAuth } from '../auth/AuthContext';
 import { useEvent, dataSource } from '../data/hooks';
 import { EVENT_CATEGORIES } from '../components/EventBadges';
+import { toChicagoISO } from '../lib/dates';
 import type { PortalEvent, EventCategory, EventStatus } from '../data/types';
 
 function Toast({ message, onClose }: { message: string; onClose: () => void }) {
@@ -69,18 +70,19 @@ function emptyForm(organizerName: string): FormState {
 }
 
 function eventToForm(event: PortalEvent): FormState {
-  const s = new Date(event.startsAt);
-  const e = event.endsAt ? new Date(event.endsAt) : s;
+  const TZ = 'America/Chicago';
   const PAD = (n: number) => String(n).padStart(2, '0');
-  const toLocalInputs = (d: Date) => ({
-    date: `${d.getFullYear()}-${PAD(d.getMonth() + 1)}-${PAD(d.getDate())}`,
-    time: `${PAD(d.getHours())}:${PAD(d.getMinutes())}`,
-  });
-  const startInputs = toLocalInputs(s);
-  const endInputs = toLocalInputs(e);
+  const toLocalInputs = (iso: string) => {
+    const d = new Date(iso);
+    return {
+      date: d.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: TZ }).replace(/\//g, '-'),
+      time: d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: TZ }).replace(/^24/, '00'),
+    };
+  };
+  const startInputs = toLocalInputs(event.startsAt);
+  const endInputs = event.endsAt ? toLocalInputs(event.endsAt) : { date: '', time: '20:00' };
 
-  const deadline = event.rsvpDeadline ? new Date(event.rsvpDeadline) : null;
-  const deadlineInputs = deadline ? toLocalInputs(deadline) : { date: '', time: '12:00' };
+  const deadlineInputs = event.rsvpDeadline ? toLocalInputs(event.rsvpDeadline) : { date: '', time: '12:00' };
 
   return {
     title: event.title,
@@ -107,11 +109,11 @@ function eventToForm(event: PortalEvent): FormState {
 }
 
 function formToEvent(form: FormState, id: string): PortalEvent {
-  const startsAt = form.startDate ? `${form.startDate}T${form.startTime}` : '';
-  const endsAt = form.endDate ? `${form.endDate}T${form.endTime}` : undefined;
+  const startsAt = form.startDate ? toChicagoISO(form.startDate, form.startTime) : '';
+  const endsAt = form.endDate ? toChicagoISO(form.endDate, form.endTime) : undefined;
   const rsvpDeadline =
     form.rsvpRequired && form.rsvpDeadlineDate
-      ? `${form.rsvpDeadlineDate}T${form.rsvpDeadlineTime}`
+      ? toChicagoISO(form.rsvpDeadlineDate, form.rsvpDeadlineTime)
       : undefined;
 
   return {

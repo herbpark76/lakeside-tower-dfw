@@ -111,6 +111,44 @@ export function formatDateLong(iso: string): string {
   });
 }
 
+/**
+ * Convert a local date+time (as entered in the editor) to an ISO string
+ * with the America/Chicago offset, so it displays correctly in any timezone.
+ * Input: "2026-10-22" + "18:00" → "2026-10-22T18:00:00-05:00" (or -06:00 in DST).
+ */
+export function toChicagoISO(date: string, time: string): string {
+  if (!date) return '';
+  const dt = new Date(`${date}T${time || '00:00'}:00`);
+  // Use Intl to determine the offset at this instant in Chicago
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: TZ,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+  const parts = formatter.formatToParts(dt);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '0';
+  const chicagoDate = new Date(
+    parseInt(get('year'), 10),
+    parseInt(get('month'), 10) - 1,
+    parseInt(get('day'), 10),
+    parseInt(get('hour'), 10) === 24 ? 0 : parseInt(get('hour'), 10),
+    parseInt(get('minute'), 10),
+    parseInt(get('second'), 10),
+  );
+  const offsetMs = chicagoDate.getTime() - dt.getTime();
+  const offsetMin = Math.round(offsetMs / 60000);
+  const sign = offsetMin >= 0 ? '+' : '-';
+  const absMin = Math.abs(offsetMin);
+  const offHours = String(Math.floor(absMin / 60)).padStart(2, '0');
+  const offMins = String(absMin % 60).padStart(2, '0');
+  return `${date}T${time || '00:00'}:00${sign}${offHours}:${offMins}`;
+}
+
 /** Format an ISO datetime as a long weekday + month + day in Chicago tz. */
 export function formatWeekdayLongInTZ(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', {

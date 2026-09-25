@@ -91,14 +91,6 @@ function getMergedEvents(): PortalEvent[] {
     }
   }
 
-  // Apply cancellations
-  for (const id of stored.cancelled) {
-    const idx = result.findIndex((e) => e.id === id);
-    if (idx >= 0) {
-      result[idx] = { ...result[idx], status: 'cancelled' as const };
-    }
-  }
-
   // Add created events
   for (const evt of Object.values(stored.created)) {
     const idx = result.findIndex((e) => e.id === evt.id);
@@ -106,6 +98,14 @@ function getMergedEvents(): PortalEvent[] {
       result[idx] = evt;
     } else {
       result.push(evt);
+    }
+  }
+
+  // Apply cancellations last so they cover staff-created events too
+  for (const id of stored.cancelled) {
+    const idx = result.findIndex((e) => e.id === id);
+    if (idx >= 0) {
+      result[idx] = { ...result[idx], status: 'cancelled' as const };
     }
   }
 

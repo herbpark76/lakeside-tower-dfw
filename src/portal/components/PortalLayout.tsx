@@ -79,16 +79,18 @@ export function PortalLayout({ children }: { children: ReactNode }) {
 
           <div className="hidden items-center gap-4 md:flex">
             {user && (
-              <span className="text-[13px] text-lake/70">
-                {user.displayName} ·{' '}
-                {user.role === 'staff' && user.staffTitle
-                  ? user.staffTitle
-                  : user.unit}
+              <span className="flex min-w-0 items-baseline gap-1.5 text-[13px] text-lake/70">
+                <span className="truncate font-semibold text-lake/80">{user.displayName}</span>
+                <span className="shrink-0 text-[11px] text-lake/40">
+                  {user.role === 'staff' && user.staffTitle
+                    ? user.staffTitle
+                    : user.unit}
+                </span>
               </span>
             )}
             <button
               onClick={handleSignOut}
-              className="inline-flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.12em] text-lake/60 transition hover:text-lake"
+              className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[12px] font-semibold uppercase tracking-[0.12em] text-lake/60 transition hover:text-lake"
             >
               <LogOut size={14} strokeWidth={1.5} />
               Sign out
