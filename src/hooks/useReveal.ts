@@ -16,6 +16,11 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>() {
       return;
     }
 
+    if (!('IntersectionObserver' in window)) {
+      el.classList.add('is-revealed');
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -25,7 +30,7 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>() {
           }
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
     );
 
     observer.observe(el);
@@ -48,6 +53,11 @@ export function useRevealStagger<T extends HTMLElement = HTMLElement>(count: num
       return;
     }
 
+    if (!('IntersectionObserver' in window)) {
+      refs.current.forEach((el) => el?.classList.add('is-revealed'));
+      return;
+    }
+
     const observers: IntersectionObserver[] = [];
 
     refs.current.forEach((el, index) => {
@@ -63,7 +73,7 @@ export function useRevealStagger<T extends HTMLElement = HTMLElement>(count: num
             }
           });
         },
-        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
       );
 
       observer.observe(el);

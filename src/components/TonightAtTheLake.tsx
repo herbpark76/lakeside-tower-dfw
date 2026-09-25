@@ -231,11 +231,16 @@ function useSunPhase(now: Date) {
 }
 
 export function TonightAtTheLake() {
+  const [mounted, setMounted] = useState(false);
   const [now, setNow] = useState(() => new Date());
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherVisible, setWeatherVisible] = useState(false);
 
   const sunPhase = useSunPhase(now);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Update clock every minute
   useEffect(() => {
@@ -275,7 +280,9 @@ export function TonightAtTheLake() {
     return getSunsetOutlook(weather.sunsetCloudCover);
   }, [weather, sunPhase.phase]);
 
-  if (!sunPhase.headline) return null;
+  if (!mounted || !sunPhase.headline) {
+    return <section className="bg-cream border-b border-lake/5" style={{ minHeight: '88px' }} aria-hidden="true" />;
+  }
 
   return (
     <section className="bg-cream border-b border-lake/5 py-10 sm:py-12">

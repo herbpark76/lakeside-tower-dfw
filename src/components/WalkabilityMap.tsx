@@ -5,6 +5,7 @@ import {
   type MapPlace,
   type Category,
 } from '@/data/lakesideMap';
+import { useReveal } from '@/hooks/useReveal';
 
 const WalkabilityMapInner = lazy(() =>
   import('@/components/WalkabilityMapInner').then((m) => ({
@@ -16,6 +17,10 @@ export function WalkabilitySection() {
   const [activeFilter, setActiveFilter] = useState<'All' | Category>('All');
   const [mounted, setMounted] = useState(false);
   const [focusPlace, setFocusPlace] = useState<MapPlace | null>(null);
+
+  const headerRef = useReveal<HTMLDivElement>();
+  const mapRef = useReveal<HTMLDivElement>();
+  const listRef = useReveal<HTMLDivElement>();
 
   useEffect(() => {
     setMounted(true);
@@ -43,7 +48,7 @@ export function WalkabilitySection() {
   return (
     <section className="bg-cream section-pad">
       <div className="container-wide">
-        <div className="mb-10 max-w-2xl" data-reveal>
+        <div ref={headerRef} data-reveal className="mb-10 max-w-2xl">
           <p className="eyebrow text-brass-on-light">Walkability</p>
           <h2 className="display-4 serif mt-6 text-lake">
             Everything within<br />
@@ -51,7 +56,7 @@ export function WalkabilitySection() {
           </h2>
         </div>
 
-        <div data-reveal>
+        <div ref={mapRef} data-reveal>
           <div className="flex flex-wrap gap-2 mb-6">
             {filterCategories.map((cat) => (
               <button
@@ -79,7 +84,7 @@ export function WalkabilitySection() {
           </div>
         </div>
 
-        <div className="mt-12" data-reveal>
+        <div ref={listRef} data-reveal className="mt-12">
           <p className="eyebrow text-brass-on-light mb-6">By walking time</p>
           <div className="grid gap-8 sm:grid-cols-2">
             {placesByWalkTime.map(({ minutes, places }) => (

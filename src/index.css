@@ -255,6 +255,9 @@ p { text-wrap: pretty; }
 .walkability-map .leaflet-control-container .leaflet-top .leaflet-control-zoom {
   display: none;
 }
+.walkability-map .leaflet-tile-pane {
+  filter: grayscale(0.85) sepia(0.12) brightness(1.04) contrast(0.92);
+}
 .walkability-map .leaflet-control-attribution {
   font-size: 10px;
   background: rgba(247, 245, 240, 0.85);
