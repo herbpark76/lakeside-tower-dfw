@@ -18,5 +18,6 @@ export default defineConfig({
     format: 'esm',
     dirStyle: 'nested',
     waitForReady: true,
+    includedRoutes: (paths) => paths.filter((p) => !p.startsWith('/portal')),
   },
 });

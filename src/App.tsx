@@ -13,6 +13,13 @@ import { WalkabilitySection } from '@/components/WalkabilityMap';
 import { PhotoGallery } from '@/components/PhotoGallery';
 import { JournalIndexPage, JournalPostPage } from '@/components/JournalPages';
 import { journalPosts } from '@/data/journal';
+import { AuthProvider } from '@/portal/auth/AuthContext';
+import { RequireAuth } from '@/portal/auth/RequireAuth';
+import { SignInPage } from '@/portal/pages/SignInPage';
+import { PortalHomePage } from '@/portal/pages/PortalHomePage';
+import { AnnouncementsPage } from '@/portal/pages/AnnouncementsPage';
+import { AnnouncementDetailPage } from '@/portal/pages/AnnouncementDetailPage';
+import { EventsPage, DocumentsPage, DirectoryPage } from '@/portal/pages/PlaceholderPages';
 import { useReveal, useRevealStagger } from '@/hooks/useReveal';
 
 /* ── Skip to content link ── */
@@ -587,8 +594,15 @@ function OwnersPage() {
             <p className="body-text">
               Owners will receive access details from the board when the portal opens.
             </p>
-            <div className="mt-8">
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
               <ArrowLink href="/contact">Contact the board</ArrowLink>
+              <a
+                href="/portal/sign-in"
+                className="link-arrow text-lake/50 transition hover:text-lake"
+              >
+                <span className="link-underline">Preview the owner portal (demo)</span>
+                <ArrowUpRight size={15} strokeWidth={1.5} />
+              </a>
             </div>
           </Reveal>
         </div>
@@ -1232,6 +1246,13 @@ export const routes = [
   { path: '/contact', element: <ContactPage /> },
   { path: '/privacy', element: <PrivacyPage /> },
   { path: '/owners', element: <OwnersPage /> },
+  { path: '/portal/sign-in', element: <SignInPage /> },
+  { path: '/portal', element: <AuthProvider><RequireAuth><PortalHomePage /></RequireAuth></AuthProvider> },
+  { path: '/portal/announcements', element: <AuthProvider><RequireAuth><AnnouncementsPage /></RequireAuth></AuthProvider> },
+  { path: '/portal/announcements/:id', element: <AuthProvider><RequireAuth><AnnouncementDetailPage /></RequireAuth></AuthProvider> },
+  { path: '/portal/events', element: <AuthProvider><RequireAuth><EventsPage /></RequireAuth></AuthProvider> },
+  { path: '/portal/documents', element: <AuthProvider><RequireAuth><DocumentsPage /></RequireAuth></AuthProvider> },
+  { path: '/portal/directory', element: <AuthProvider><RequireAuth><DirectoryPage /></RequireAuth></AuthProvider> },
   { path: '*', element: <NotFoundPage /> },
 ];
 
