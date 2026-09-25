@@ -11,6 +11,8 @@ import { Seo } from '@/components/Seo';
 import { TonightAtTheLake } from '@/components/TonightAtTheLake';
 import { WalkabilitySection } from '@/components/WalkabilityMap';
 import { PhotoGallery } from '@/components/PhotoGallery';
+import { JournalIndexPage, JournalPostPage } from '@/components/JournalPages';
+import { journalPosts } from '@/data/journal';
 import { useReveal, useRevealStagger } from '@/hooks/useReveal';
 
 /* ── Skip to content link ── */
@@ -63,6 +65,7 @@ const navItems = [
   ['The Residences', '/residences'],
   ['Life at Lakeside', '/life-at-lakeside'],
   ['Location', '/location'],
+  ['Journal', '/journal'],
   ['About', '/about'],
   ['Contact', '/contact'],
 ] as const;
@@ -210,7 +213,7 @@ function Footer() {
         <div>
           <p className="eyebrow mb-6 text-brass-on-dark">Explore</p>
           <div className="grid gap-4 text-[17px] text-cream/70">
-            {navItems.slice(0, 4).map(([label, href]) => (
+            {navItems.slice(0, 5).map(([label, href]) => (
               <a key={href} href={href} className="link-underline transition hover:text-cream w-fit">
                 {label}
               </a>
@@ -1174,50 +1177,14 @@ function PrivacyPage() {
 function JournalPage() {
   return (
     <>
-      <Seo
-        title="The Lakeside Journal | Lakeside Tower"
-        description="A collection of stories from the water's edge — coming soon."
-        path="/journal"
-      />
       <SkipLink />
-      <main id="main">
-      <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
-        <div className="absolute inset-0">
-          <Img
-            slug="hero-sunset"
-            alt=""
-            className="h-full w-full object-cover opacity-60"
-            sizes="100vw"
-          />
-        </div>
-        <div className="img-overlay absolute inset-0" />
-        <Header />
-        <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
-          <div className="max-w-3xl">
-            <p className="eyebrow mb-6 text-brass-on-dark">Journal</p>
-            <h1 className="display-4 serif text-cream">
-              The Lakeside<br />
-              <em className="font-medium">Journal.</em>
-            </h1>
-          </div>
-        </div>
-      </div>
-
-      <section className="bg-cream section-pad">
-        <div className="container-wide">
-          <Reveal className="measure-narrow">
-            <p className="body-text text-lg leading-8 text-lake/80">
-              A collection of stories from the water&rsquo;s edge: dining, trails, travel, neighborhood life and the rituals of coming home. The first entries are being written.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      </main>
+      <JournalIndexPage />
       <Footer />
     </>
   );
 }
+
+/* ── /journal/:slug ── routes generated below from journalPosts ── */
 
 function NotFoundPage() {
   return (
@@ -1251,6 +1218,16 @@ export const routes = [
   { path: '/life-at-lakeside', element: <LifeAtLakesidePage /> },
   { path: '/location', element: <LocationPage /> },
   { path: '/journal', element: <JournalPage /> },
+  ...journalPosts.map((post) => ({
+    path: `/journal/${post.slug}`,
+    element: (
+      <>
+        <SkipLink />
+        <JournalPostPage slug={post.slug} />
+        <Footer />
+      </>
+    ),
+  })),
   { path: '/about', element: <AboutPage /> },
   { path: '/contact', element: <ContactPage /> },
   { path: '/privacy', element: <PrivacyPage /> },
