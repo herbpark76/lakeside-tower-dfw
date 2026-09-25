@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/portal", "destination": "/portal.html" },
+    { "source": "/portal/:path*", "destination": "/portal.html" }
+  ]
+}

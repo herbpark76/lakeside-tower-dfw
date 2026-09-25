@@ -1,4 +1,5 @@
 import { useState, useEffect, type ReactNode } from 'react';
+import { Outlet } from 'react-router-dom';
 
 import {
   ArrowRight,
@@ -1246,13 +1247,19 @@ export const routes = [
   { path: '/contact', element: <ContactPage /> },
   { path: '/privacy', element: <PrivacyPage /> },
   { path: '/owners', element: <OwnersPage /> },
-  { path: '/portal/sign-in', element: <SignInPage /> },
-  { path: '/portal', element: <AuthProvider><RequireAuth><PortalHomePage /></RequireAuth></AuthProvider> },
-  { path: '/portal/announcements', element: <AuthProvider><RequireAuth><AnnouncementsPage /></RequireAuth></AuthProvider> },
-  { path: '/portal/announcements/:id', element: <AuthProvider><RequireAuth><AnnouncementDetailPage /></RequireAuth></AuthProvider> },
-  { path: '/portal/events', element: <AuthProvider><RequireAuth><EventsPage /></RequireAuth></AuthProvider> },
-  { path: '/portal/documents', element: <AuthProvider><RequireAuth><DocumentsPage /></RequireAuth></AuthProvider> },
-  { path: '/portal/directory', element: <AuthProvider><RequireAuth><DirectoryPage /></RequireAuth></AuthProvider> },
+  {
+    path: '/portal',
+    element: <AuthProvider><Outlet /></AuthProvider>,
+    children: [
+      { index: true, element: <RequireAuth><PortalHomePage /></RequireAuth> },
+      { path: 'sign-in', element: <SignInPage /> },
+      { path: 'announcements', element: <RequireAuth><AnnouncementsPage /></RequireAuth> },
+      { path: 'announcements/:id', element: <RequireAuth><AnnouncementDetailPage /></RequireAuth> },
+      { path: 'events', element: <RequireAuth><EventsPage /></RequireAuth> },
+      { path: 'documents', element: <RequireAuth><DocumentsPage /></RequireAuth> },
+      { path: 'directory', element: <RequireAuth><DirectoryPage /></RequireAuth> },
+    ],
+  },
   { path: '*', element: <NotFoundPage /> },
 ];
 
