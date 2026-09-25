@@ -82,6 +82,20 @@ export function EventDetailPage() {
   const isFull = capacity > 0 && goingCount >= capacity;
   const capacityPct = capacity > 0 ? Math.min((goingCount / capacity) * 100, 100) : 0;
 
+  // Esc to close cancel modal + focus management.
+  // Must run on every render regardless of loading/event state (Rules of Hooks).
+  useEffect(() => {
+    if (!showCancelConfirm) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowCancelConfirm(false);
+        cancelButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [showCancelConfirm]);
+
   if (loading) {
     return (
       <>
@@ -133,19 +147,6 @@ export function EventDetailPage() {
     showToast('Event cancelled (demo only — stored in this browser)');
     setTimeout(() => navigate('/portal/events'), 1500);
   };
-
-  // Esc to close modal + focus management
-  useEffect(() => {
-    if (!showCancelConfirm) return;
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setShowCancelConfirm(false);
-        cancelButtonRef.current?.focus();
-      }
-    };
-    document.addEventListener('keydown', handleEsc);
-    return () => document.removeEventListener('keydown', handleEsc);
-  }, [showCancelConfirm]);
 
   return (
     <>
