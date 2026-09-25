@@ -4,8 +4,8 @@ import {
   nextWeekdayDate,
 } from '../utils/dateUtils';
 
-// Thursday = 4
-const nextThursday = nextWeekdayDate(4);
+// Thursday = 4. strictlyAfterToday ensures "until Thursday" is always in the future.
+const nextThursday = nextWeekdayDate(4, { strictlyAfterToday: true });
 
 export const mockAmenityStatus: AmenityStatus[] = [
   {

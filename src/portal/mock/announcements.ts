@@ -5,8 +5,8 @@ import {
   weekdayName,
 } from '../utils/dateUtils';
 
-// Thursday = 4
-const nextThursday = nextWeekdayDate(4);
+// Thursday = 4. strictlyAfterToday ensures the date is always after today.
+const nextThursday = nextWeekdayDate(4, { strictlyAfterToday: true });
 
 export const mockAnnouncements: Announcement[] = [
   {

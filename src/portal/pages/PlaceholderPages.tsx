@@ -28,15 +28,6 @@ export function PlaceholderPage({ title, description }: PlaceholderProps) {
   );
 }
 
-export function EventsPage() {
-  return (
-    <PlaceholderPage
-      title="Events"
-      description="A calendar of upcoming gatherings, meetings, and social occasions at the Tower. This section is coming next."
-    />
-  );
-}
-
 export function BuildingPage() {
   return (
     <PlaceholderPage

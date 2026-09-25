@@ -2,7 +2,25 @@ import type { PortalEvent } from '../data/types';
 import {
   daysFromNowAt,
   daysFromNow,
+  nextWeekdayAt,
 } from '../utils/dateUtils';
+
+// Friday = weekday 5. For the upcoming Fitness Friday, use the next Friday at 9 AM.
+const upcomingFitnessFriday = nextWeekdayAt(5, 9, 0);
+// For the past one, use last Friday (next Friday - 7 days).
+const pastFitnessFridayStart = (() => {
+  const d = new Date(upcomingFitnessFriday + 'Z');
+  d.setDate(d.getDate() - 7);
+  const PAD = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${PAD(d.getMonth() + 1)}-${PAD(d.getDate())}T09:00`;
+})();
+const pastFitnessFridayEnd = (() => {
+  const d = new Date(upcomingFitnessFriday + 'Z');
+  d.setDate(d.getDate() - 7);
+  d.setHours(10, 0, 0, 0);
+  const PAD = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${PAD(d.getMonth() + 1)}-${PAD(d.getDate())}T10:00`;
+})();
 
 export const mockEvents: PortalEvent[] = [
   // Past events (2 weeks ago through recent)
@@ -26,8 +44,8 @@ export const mockEvents: PortalEvent[] = [
     title: 'Fitness Friday',
     description: `Start your Friday with a group fitness session. All levels welcome. Bring water and a towel.`,
     category: 'Fitness',
-    startsAt: daysFromNowAt(-10, 9, 0),
-    endsAt: daysFromNowAt(-10, 10, 0),
+    startsAt: pastFitnessFridayStart,
+    endsAt: pastFitnessFridayEnd,
     location: 'Fitness Center',
     locationTBD: false,
     rsvpRequired: false,
@@ -100,8 +118,13 @@ export const mockEvents: PortalEvent[] = [
     title: 'Fitness Friday',
     description: `Start your Friday with a group fitness session. All levels welcome. Bring water and a towel.`,
     category: 'Fitness',
-    startsAt: daysFromNowAt(9, 9, 0),
-    endsAt: daysFromNowAt(9, 10, 0),
+    startsAt: upcomingFitnessFriday,
+    endsAt: (() => {
+      const d = new Date(upcomingFitnessFriday + 'Z');
+      d.setHours(10, 0, 0, 0);
+      const PAD = (n: number) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${PAD(d.getMonth() + 1)}-${PAD(d.getDate())}T10:00`;
+    })(),
     location: 'Location TBD',
     locationTBD: true,
     rsvpRequired: false,

@@ -11,6 +11,7 @@ import type {
 } from './types';
 
 const dataSource = createMockDataSource();
+export { dataSource };
 
 export function useAnnouncements() {
   const [data, setData] = useState<Announcement[]>([]);
@@ -43,13 +44,18 @@ export function useAnnouncement(id: string | undefined) {
 export function useEvents() {
   const [data, setData] = useState<PortalEvent[]>([]);
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
+  const refresh = useCallback(() => {
     dataSource.listEvents().then((d) => {
       setData(d);
       setLoading(false);
     });
   }, []);
-  return { events: data, loading };
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  return { events: data, loading, refresh };
 }
 
 export function useEvent(id: string | undefined) {
@@ -87,9 +93,10 @@ export function useRsvps(eventId: string | undefined) {
   }, [refresh]);
 
   const submitRsvp = useCallback(
-    async (rsvp: Rsvp) => {
-      await dataSource.setRsvp(rsvp.eventId, rsvp);
+    async (rsvp: Rsvp): Promise<Rsvp> => {
+      const result = await dataSource.setRsvp(rsvp.eventId, rsvp);
       refresh();
+      return result;
     },
     [refresh],
   );

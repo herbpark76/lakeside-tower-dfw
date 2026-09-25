@@ -17,41 +17,103 @@ import { mockAmenityStatus } from '../mock/amenities';
 import { mockProjects } from '../mock/projects';
 
 const RSVP_STORAGE_KEY = 'lakeside_portal_demo_rsvps';
+const EVENT_STORAGE_KEY = 'lakeside_portal_demo_events';
 
-function readStoredRsvps(): Record<string, Rsvp[]> {
+function readStored<T>(key: string): T | null {
   try {
-    const raw = localStorage.getItem(RSVP_STORAGE_KEY);
-    if (!raw) return {};
-    return JSON.parse(raw) as Record<string, Rsvp[]>;
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    return JSON.parse(raw) as T;
   } catch {
-    return {};
+    return null;
   }
 }
 
-function writeStoredRsvps(data: Record<string, Rsvp[]>): void {
+function writeStored(key: string, data: unknown): void {
   try {
-    localStorage.setItem(RSVP_STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem(key, JSON.stringify(data));
   } catch {
     // localStorage may be unavailable; ignore.
   }
 }
 
+// --- RSVP storage ---
+type StoredRsvps = Record<string, Rsvp[]>;
+
+function readStoredRsvps(): StoredRsvps {
+  return readStored<StoredRsvps>(RSVP_STORAGE_KEY) ?? {};
+}
+
 function getMergedRsvps(): Rsvp[] {
   const stored = readStoredRsvps();
   const storedList = Object.values(stored).flat();
-  // Merge: stored RSVPs override mock RSVPs with the same eventId+userId
   const merged: Rsvp[] = [...mockRsvps];
   for (const sr of storedList) {
     const idx = merged.findIndex(
       (m) => m.eventId === sr.eventId && m.userId === sr.userId,
     );
-    if (idx >= 0) {
-      merged[idx] = sr;
-    } else {
-      merged.push(sr);
-    }
+    if (idx >= 0) merged[idx] = sr;
+    else merged.push(sr);
   }
   return merged;
+}
+
+// --- Event storage (staff-created/edited events overlay) ---
+type StoredEvents = {
+  created: Record<string, PortalEvent>;
+  patches: Record<string, Partial<PortalEvent>>;
+  cancelled: string[];
+};
+
+function readStoredEvents(): StoredEvents {
+  return (
+    readStored<StoredEvents>(EVENT_STORAGE_KEY) ?? {
+      created: {},
+      patches: {},
+      cancelled: [],
+    }
+  );
+}
+
+function writeStoredEvents(data: StoredEvents): void {
+  writeStored(EVENT_STORAGE_KEY, data);
+}
+
+function getMergedEvents(): PortalEvent[] {
+  const stored = readStoredEvents();
+  const result: PortalEvent[] = [...mockEvents];
+
+  // Apply patches
+  for (const [id, patch] of Object.entries(stored.patches)) {
+    const idx = result.findIndex((e) => e.id === id);
+    if (idx >= 0) {
+      result[idx] = { ...result[idx], ...patch };
+    }
+  }
+
+  // Apply cancellations
+  for (const id of stored.cancelled) {
+    const idx = result.findIndex((e) => e.id === id);
+    if (idx >= 0) {
+      result[idx] = { ...result[idx], status: 'cancelled' as const };
+    }
+  }
+
+  // Add created events
+  for (const evt of Object.values(stored.created)) {
+    const idx = result.findIndex((e) => e.id === evt.id);
+    if (idx >= 0) {
+      result[idx] = evt;
+    } else {
+      result.push(evt);
+    }
+  }
+
+  return result;
+}
+
+function genId(prefix: string): string {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
 export function createMockDataSource(): PortalDataSource {
@@ -68,31 +130,118 @@ export function createMockDataSource(): PortalDataSource {
     },
 
     async listEvents(): Promise<PortalEvent[]> {
-      return [...mockEvents].sort((a, b) =>
+      return getMergedEvents().sort((a, b) =>
         a.startsAt.localeCompare(b.startsAt),
       );
     },
 
     async getEvent(id: string): Promise<PortalEvent | undefined> {
-      return mockEvents.find((e) => e.id === id);
+      return getMergedEvents().find((e) => e.id === id);
+    },
+
+    async createEvent(event: PortalEvent): Promise<PortalEvent> {
+      const stored = readStoredEvents();
+      const id = event.id || genId('evt');
+      const created = { ...event, id };
+      stored.created[id] = created;
+      writeStoredEvents(stored);
+      return created;
+    },
+
+    async updateEvent(
+      id: string,
+      patch: Partial<PortalEvent>,
+    ): Promise<PortalEvent | undefined> {
+      const stored = readStoredEvents();
+      const events = getMergedEvents();
+      const existing = events.find((e) => e.id === id);
+      if (!existing) return undefined;
+
+      if (stored.created[id]) {
+        // Staff-created event: update directly
+        stored.created[id] = { ...stored.created[id], ...patch };
+      } else {
+        // Sample event: store a patch
+        stored.patches[id] = { ...stored.patches[id], ...patch };
+      }
+      writeStoredEvents(stored);
+      return { ...existing, ...patch };
+    },
+
+    async cancelEvent(id: string): Promise<void> {
+      const stored = readStoredEvents();
+      if (!stored.cancelled.includes(id)) {
+        stored.cancelled.push(id);
+      }
+      writeStoredEvents(stored);
+    },
+
+    async duplicateEvent(id: string): Promise<PortalEvent | undefined> {
+      const events = getMergedEvents();
+      const original = events.find((e) => e.id === id);
+      if (!original) return undefined;
+
+      const newId = genId('evt');
+      const copy: PortalEvent = {
+        ...original,
+        id: newId,
+        title: `${original.title} (Copy)`,
+        startsAt: '',
+        endsAt: undefined,
+      };
+      const stored = readStoredEvents();
+      stored.created[newId] = copy;
+      writeStoredEvents(stored);
+      return copy;
     },
 
     async listRsvps(eventId: string): Promise<Rsvp[]> {
       return getMergedRsvps().filter((r) => r.eventId === eventId);
     },
 
-    async setRsvp(eventId: string, rsvp: Rsvp): Promise<void> {
+    async setRsvp(eventId: string, rsvp: Rsvp): Promise<Rsvp> {
+      // Enforce deadline
+      const events = getMergedEvents();
+      const event = events.find((e) => e.id === eventId);
+      const now = new Date().toISOString();
+      const finalRsvp: Rsvp = { ...rsvp, respondedAt: now };
+
+      if (event?.rsvpDeadline) {
+        const deadline = new Date(event.rsvpDeadline);
+        if (new Date(now) > deadline) {
+          // RSVPs are closed — return the RSVP unchanged but don't store
+          return finalRsvp;
+        }
+      }
+
+      // Enforce capacity for "going" status
+      if (event?.capacity && event.capacity > 0 && finalRsvp.status === 'going') {
+        const allRsvps = getMergedRsvps().filter(
+          (r) =>
+            r.eventId === eventId &&
+            r.userId !== finalRsvp.userId &&
+            r.status === 'going',
+        );
+        const currentGoing = allRsvps.reduce(
+          (sum, r) => sum + 1 + r.guests,
+          0,
+        );
+        const newTotal = currentGoing + 1 + finalRsvp.guests;
+        if (newTotal > event.capacity) {
+          finalRsvp.status = 'waitlist';
+        }
+      }
+
       const stored = readStoredRsvps();
       if (!stored[eventId]) stored[eventId] = [];
       const idx = stored[eventId].findIndex(
-        (r) => r.userId === rsvp.userId,
+        (r) => r.userId === finalRsvp.userId,
       );
-      if (idx >= 0) {
-        stored[eventId][idx] = rsvp;
-      } else {
-        stored[eventId].push(rsvp);
-      }
-      writeStoredRsvps(stored);
+      if (idx >= 0) stored[eventId][idx] = finalRsvp;
+      else stored[eventId].push(finalRsvp);
+      writeStored(RSVP_STORAGE_KEY, stored);
+
+      return finalRsvp;
     },
 
     async listAmenityStatus(): Promise<AmenityStatus[]> {

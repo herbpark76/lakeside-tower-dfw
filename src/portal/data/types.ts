@@ -58,7 +58,7 @@ export interface PortalEvent {
   status: EventStatus;
 }
 
-export type RsvpStatus = 'going' | 'maybe' | 'not_going';
+export type RsvpStatus = 'going' | 'maybe' | 'not_going' | 'waitlist';
 
 export interface Rsvp {
   eventId: string;

@@ -20,7 +20,11 @@ import { SignInPage } from '@/portal/pages/SignInPage';
 import { PortalHomePage } from '@/portal/pages/PortalHomePage';
 import { AnnouncementsPage } from '@/portal/pages/AnnouncementsPage';
 import { AnnouncementDetailPage } from '@/portal/pages/AnnouncementDetailPage';
-import { EventsPage, BuildingPage, DocumentsPage, DirectoryPage } from '@/portal/pages/PlaceholderPages';
+import { EventsPage } from '@/portal/pages/EventsPage';
+import { EventDetailPage } from '@/portal/pages/EventDetailPage';
+import { EventEditorPage } from '@/portal/pages/EventEditorPage';
+import { EventsFlyerPage } from '@/portal/pages/EventsFlyerPage';
+import { BuildingPage, DocumentsPage, DirectoryPage } from '@/portal/pages/PlaceholderPages';
 import { useReveal, useRevealStagger } from '@/hooks/useReveal';
 
 /* ── Skip to content link ── */
@@ -1256,6 +1260,10 @@ export const routes = [
       { path: 'announcements', element: <RequireAuth><AnnouncementsPage /></RequireAuth> },
       { path: 'announcements/:id', element: <RequireAuth><AnnouncementDetailPage /></RequireAuth> },
       { path: 'events', element: <RequireAuth><EventsPage /></RequireAuth> },
+      { path: 'events/flyer', element: <RequireAuth><EventsFlyerPage /></RequireAuth> },
+      { path: 'events/new', element: <RequireAuth><EventEditorPage /></RequireAuth> },
+      { path: 'events/:id', element: <RequireAuth><EventDetailPage /></RequireAuth> },
+      { path: 'events/:id/edit', element: <RequireAuth><EventEditorPage /></RequireAuth> },
       { path: 'building', element: <RequireAuth><BuildingPage /></RequireAuth> },
       { path: 'documents', element: <RequireAuth><DocumentsPage /></RequireAuth> },
       { path: 'directory', element: <RequireAuth><DirectoryPage /></RequireAuth> },
