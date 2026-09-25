@@ -16,7 +16,7 @@ import { journalPosts } from '@/data/journal';
 import { useReveal, useRevealStagger } from '@/hooks/useReveal';
 
 /* ── Skip to content link ── */
-function SkipLink() {
+export function SkipLink() {
   return (
     <a href="#main" className="skip-link">
       Skip to content
@@ -89,7 +89,7 @@ function Logo({ dark = false, small = false }: { dark?: boolean; small?: boolean
   );
 }
 
-function Header() {
+export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -199,7 +199,7 @@ function Eyebrow({ children, onTeal = false, dark = false }: { children: ReactNo
   );
 }
 
-function Footer() {
+export function Footer() {
   return (
     <footer className="bg-lake-deep text-cream">
       <div className="container-wide grid gap-14 py-16 md:grid-cols-[1.2fr_1fr_1fr] md:py-20">

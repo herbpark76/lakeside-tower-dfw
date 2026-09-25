@@ -8,9 +8,9 @@ heroAlt: "Light through the trees on the Northshore Trail"
 author: "Lakeside Tower Community"
 ---
 
-Most trails start with a drive. This one starts with a short walk past the dog park.
+Most trails start with a drive. This one starts with a four-minute walk.
 
-The Lakeside Village trailhead sits on the Lakeside Boardwalk, just west of the tower near Edgemere and Loma Alta — about four minutes on foot from the front door. From there the Northshore Trail runs roughly twenty-two miles in seven loops along the north shore of Lake Grapevine, between Rockledge Park to the east and Twin Coves Park to the west.
+The Lakeside Village trailhead sits on the Lakeside Boardwalk, just west of the tower near Edgemere and Loma Alta. From there the Northshore Trail runs roughly twenty-two miles in seven loops along the north shore of Lake Grapevine, between Rockledge Park to the east and Twin Coves Park to the west.
 
 ## What to expect
 
@@ -25,4 +25,4 @@ Start at the boardwalk and head out on the nearest loop. Turn around when you've
 
 ## Before and after
 
-If you need gear, Trailhead Running Supply and Cadence Cyclery are both in the Village, about a thirteen-minute walk up the parkway. Coffee is closer still.
+If you need gear, Trailhead Running Supply and Cadence Cyclery are both in the Village, about a thirteen-minute walk up the parkway. Epic Gelato & Craft Coffee and Starbucks are a few minutes farther, for the walk home.

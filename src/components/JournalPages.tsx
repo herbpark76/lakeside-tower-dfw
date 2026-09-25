@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useReveal } from '@/hooks/useReveal';
+import { Header } from '@/App';
 import {
   journalPosts,
   getPostBySlug,
@@ -60,6 +61,7 @@ export function JournalIndexPage() {
           />
         </div>
         <div className="img-overlay absolute inset-0" />
+        <Header />
         <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
           <div className="max-w-3xl">
             <p className="eyebrow mb-6 text-brass-on-dark">Journal</p>
@@ -162,6 +164,7 @@ export function JournalPostPage({ slug }: { slug: string }) {
             />
           </div>
           <div className="img-overlay absolute inset-0" />
+          <Header />
           <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
             <div className="max-w-3xl">
               <p className="eyebrow mb-4 text-brass-on-dark">
