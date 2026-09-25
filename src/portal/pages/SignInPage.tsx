@@ -7,7 +7,7 @@ export function SignInPage() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
-  const handleSignIn = (role: 'owner' | 'board') => {
+  const handleSignIn = (role: 'owner' | 'board' | 'staff') => {
     signIn(role);
     navigate('/portal');
   };
@@ -38,7 +38,7 @@ export function SignInPage() {
         <p className="body-text mt-8 max-w-md text-cream/60">
           This is a demo with sample data only. Nothing here is real or saved to a server. Choose a role to continue.
         </p>
-        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+        <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
           <button
             onClick={() => handleSignIn('owner')}
             className="inline-flex items-center gap-3 bg-brass px-7 py-4 text-[13px] font-bold uppercase tracking-[0.14em] text-lake-deep transition hover:brightness-110"
@@ -51,6 +51,13 @@ export function SignInPage() {
             className="inline-flex items-center gap-3 border border-cream/30 px-7 py-4 text-[13px] font-bold uppercase tracking-[0.14em] text-cream transition hover:border-brass hover:text-brass-on-dark"
           >
             Continue as demo board member
+            <ArrowRight size={15} />
+          </button>
+          <button
+            onClick={() => handleSignIn('staff')}
+            className="inline-flex items-center gap-3 border border-cream/30 px-7 py-4 text-[13px] font-bold uppercase tracking-[0.14em] text-cream transition hover:border-brass hover:text-brass-on-dark"
+          >
+            Continue as demo staff (Lifestyle Manager)
             <ArrowRight size={15} />
           </button>
         </div>

@@ -37,6 +37,15 @@ export function EventsPage() {
   );
 }
 
+export function BuildingPage() {
+  return (
+    <PlaceholderPage
+      title="Building"
+      description="Amenity statuses, ongoing projects, and maintenance updates for the building. This section is coming next."
+    />
+  );
+}
+
 export function DocumentsPage() {
   return (
     <PlaceholderPage

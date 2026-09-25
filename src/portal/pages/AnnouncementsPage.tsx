@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Head } from 'vite-react-ssg';
-import { Pin } from 'lucide-react';
+import { Pin, Paperclip } from 'lucide-react';
 import { PortalLayout } from '../components/PortalLayout';
 import { useAnnouncements } from '../data/hooks';
 import { formatDate } from '../utils/format';
@@ -11,8 +11,10 @@ const CATEGORIES: (AnnouncementCategory | 'All')[] = [
   'All',
   'General',
   'Maintenance',
+  'Projects',
+  'Billing',
+  'Safety',
   'Board',
-  'Social',
 ];
 
 export function AnnouncementsPage() {
@@ -68,8 +70,14 @@ export function AnnouncementsPage() {
                     <span className="eyebrow text-brass-on-light">{a.category}</span>
                     <span className="text-[12px] text-lake/40">·</span>
                     <span className="text-[12px] text-lake/50">{formatDate(a.publishedAt)}</span>
+                    {a.attachments && a.attachments.length > 0 && (
+                      <Paperclip size={12} className="ml-1 text-lake/40" />
+                    )}
                   </div>
                   <h2 className="serif text-xl text-lake mt-2 leading-snug">{a.title}</h2>
+                  <p className="mt-1.5 text-[12px] text-lake/40">
+                    {a.authorName} · {a.authorTitle}
+                  </p>
                   <p className="mt-2 text-[14px] leading-6 text-lake/60 line-clamp-2">
                     {a.body.replace(/[#*]/g, '').slice(0, 160)}…
                   </p>

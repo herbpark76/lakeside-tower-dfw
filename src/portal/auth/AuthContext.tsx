@@ -13,13 +13,14 @@ import {
   type ReactNode,
 } from 'react';
 
-export type PortalRole = 'owner' | 'board';
+export type PortalRole = 'owner' | 'board' | 'staff';
 
 export interface PortalUser {
   id: string;
   displayName: string;
   unit: string;
   role: PortalRole;
+  staffTitle?: string;
 }
 
 interface AuthContextValue {
@@ -43,6 +44,14 @@ const DEMO_BOARD: PortalUser = {
   displayName: 'Demo Board Member',
   unit: 'Unit 901',
   role: 'board',
+};
+
+const DEMO_STAFF: PortalUser = {
+  id: 'demo-staff-c',
+  displayName: 'Demo Lifestyle Manager',
+  unit: '',
+  role: 'staff',
+  staffTitle: 'Lifestyle Manager',
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -79,7 +88,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = useCallback((role: PortalRole) => {
-    const next = role === 'board' ? DEMO_BOARD : DEMO_OWNER;
+    const next =
+      role === 'board' ? DEMO_BOARD : role === 'staff' ? DEMO_STAFF : DEMO_OWNER;
     writeStoredUser(next);
     setUser(next);
   }, []);

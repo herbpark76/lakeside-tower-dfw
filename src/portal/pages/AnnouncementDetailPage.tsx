@@ -1,20 +1,39 @@
+import { useState, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Head } from 'vite-react-ssg';
-import { ArrowLeft, Pin } from 'lucide-react';
+import { ArrowLeft, Pin, Paperclip, FileText } from 'lucide-react';
 import { marked } from 'marked';
 import { PortalLayout } from '../components/PortalLayout';
 import { useAnnouncement } from '../data/hooks';
 import { formatDate } from '../utils/format';
 
+function Toast({ message, onClose }: { message: string; onClose: () => void }) {
+  return (
+    <div
+      className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-lake-deep px-5 py-3 text-[13px] text-cream shadow-lg"
+      role="status"
+      onClick={onClose}
+    >
+      {message}
+    </div>
+  );
+}
+
 export function AnnouncementDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { announcement, loading } = useAnnouncement(id);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = useCallback((msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  }, []);
 
   return (
     <>
       <Head>
         <title>{announcement ? `${announcement.title} | Owner Portal` : 'Announcement | Owner Portal'} | Lakeside Tower</title>
-        <meta name="description" content={announcement?.excerpt ?? 'Community announcement.'} />
+        <meta name="description" content="Community announcement." />
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <PortalLayout>
@@ -45,17 +64,45 @@ export function AnnouncementDetailPage() {
                 <span className="text-[12px] text-lake/50">{formatDate(announcement.publishedAt)}</span>
               </div>
               <h1 className="display-4 serif mt-4 text-lake leading-tight">{announcement.title}</h1>
-              <p className="mt-3 text-[13px] text-lake/40">By {announcement.author}</p>
+              <p className="mt-3 text-[13px] text-lake/40">
+                By {announcement.authorName} · {announcement.authorTitle}
+              </p>
+              {announcement.updatedAt && (
+                <p className="mt-1 text-[12px] text-lake/30">
+                  Updated {formatDate(announcement.updatedAt)}
+                </p>
+              )}
               <div
                 className="journal-body mt-8"
                 dangerouslySetInnerHTML={{
                   __html: marked.parse(announcement.body, { async: false }) as string,
                 }}
               />
+
+              {announcement.attachments && announcement.attachments.length > 0 && (
+                <div className="mt-10 border-t border-lake/10 pt-6">
+                  <h2 className="serif text-lg text-lake mb-4">Attachments</h2>
+                  <div className="space-y-2">
+                    {announcement.attachments.map((att) => (
+                      <button
+                        key={att.id}
+                        onClick={() => showToast('Sample document — not available in demo')}
+                        className="flex w-full items-center gap-3 border border-lake/10 bg-white px-4 py-3 text-left transition hover:border-brass"
+                      >
+                        <FileText size={16} className="shrink-0 text-brass-on-light" />
+                        <span className="flex-1 text-[14px] font-semibold text-lake">{att.title}</span>
+                        <span className="text-[12px] text-lake/40">{att.fileSizeLabel}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </article>
           )}
         </div>
       </PortalLayout>
+
+      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
     </>
   );
 }

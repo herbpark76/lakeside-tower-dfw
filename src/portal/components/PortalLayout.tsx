@@ -7,6 +7,7 @@ const PORTAL_NAV = [
   { label: 'Home', to: '/portal' },
   { label: 'Announcements', to: '/portal/announcements' },
   { label: 'Events', to: '/portal/events' },
+  { label: 'Building', to: '/portal/building' },
   { label: 'Documents', to: '/portal/documents' },
   { label: 'Directory', to: '/portal/directory' },
 ] as const;
@@ -79,7 +80,10 @@ export function PortalLayout({ children }: { children: ReactNode }) {
           <div className="hidden items-center gap-4 md:flex">
             {user && (
               <span className="text-[13px] text-lake/70">
-                {user.displayName} · {user.unit}
+                {user.displayName} ·{' '}
+                {user.role === 'staff' && user.staffTitle
+                  ? user.staffTitle
+                  : user.unit}
               </span>
             )}
             <button
@@ -123,7 +127,10 @@ export function PortalLayout({ children }: { children: ReactNode }) {
               {user && (
                 <div className="mt-3 border-t border-lake/10 pt-3">
                   <p className="text-[13px] text-lake/70">
-                    {user.displayName} · {user.unit}
+                    {user.displayName} ·{' '}
+                    {user.role === 'staff' && user.staffTitle
+                      ? user.staffTitle
+                      : user.unit}
                   </p>
                   <button
                     onClick={handleSignOut}
