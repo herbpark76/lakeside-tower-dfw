@@ -10,6 +10,7 @@ import { Img } from '@/components/Img';
 import { Seo } from '@/components/Seo';
 import { TonightAtTheLake } from '@/components/TonightAtTheLake';
 import { WalkabilitySection } from '@/components/WalkabilityMap';
+import { PhotoGallery } from '@/components/PhotoGallery';
 import { useReveal, useRevealStagger } from '@/hooks/useReveal';
 
 /* ── Skip to content link ── */
@@ -816,6 +817,8 @@ function ResidencesPage() {
           </div>
         </div>
       </section>
+
+      <PhotoGallery />
 
       {/* Editorial moment — "A room for bad weather." */}
       <section className="bg-sand section-pad">

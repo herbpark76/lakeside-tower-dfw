@@ -2,7 +2,7 @@ interface ImageVariant {
   width: number;
 }
 
-const imageRegistry: Record<string, {
+export const imageRegistry: Record<string, {
   widths: number[];
   ext: 'jpg' | 'png';
   aspectRatio: number;
@@ -22,7 +22,7 @@ const imageRegistry: Record<string, {
   'tower-detail':     { widths: [474],             ext: 'jpg', aspectRatio: 474 / 474 },
 };
 
-const imageBase = '/assets/images/';
+export const imageBase = '/assets/images/';
 
 interface ImgProps {
   slug: keyof typeof imageRegistry;
@@ -31,6 +31,7 @@ interface ImgProps {
   priority?: boolean;
   sizes?: string;
   objectPosition?: string;
+  onLoad?: () => void;
 }
 
 export function Img({
@@ -40,6 +41,7 @@ export function Img({
   priority = false,
   sizes = '100vw',
   objectPosition = 'center',
+  onLoad,
 }: ImgProps) {
   const meta = imageRegistry[slug];
   if (!meta) throw new Error(`Unknown image slug: ${slug}`);
@@ -77,6 +79,7 @@ export function Img({
         className={className}
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"
+        onLoad={onLoad}
         {...(priority ? { fetchpriority: 'high' } : {})}
         style={objectPosition !== 'center' ? { objectPosition } : undefined}
       />
