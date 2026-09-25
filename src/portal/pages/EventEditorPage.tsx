@@ -229,12 +229,12 @@ export function EventEditorPage() {
 
     if (isEdit && id) {
       const evt = formToEvent(form, id);
-      await ds.updateEvent(id, evt);
+      await dataSource.updateEvent(id, evt);
       showToast('Saved (demo only — stored in this browser)');
       setTimeout(() => navigate(`/portal/events/${id}`), 1000);
     } else {
       const evt = formToEvent(form, `evt-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`);
-      const created = await ds.createEvent(evt);
+      const created = await dataSource.createEvent(evt);
       showToast('Saved (demo only — stored in this browser)');
       setTimeout(() => navigate(`/portal/events/${created.id}`), 1000);
     }

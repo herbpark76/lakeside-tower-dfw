@@ -65,8 +65,24 @@ const RSVP_STATUS_LABELS: Record<RsvpStatus, { label: string; className: string 
   waitlist: { label: 'On waitlist', className: 'bg-lake/10 text-lake' },
 };
 
+const NEUTRAL_STATUS_LABELS: Record<RsvpStatus, { label: string; className: string }> = {
+  going: { label: 'Going', className: 'bg-green-600/10 text-green-700' },
+  maybe: { label: 'Maybe', className: 'bg-amber-500/10 text-amber-700' },
+  not_going: { label: "Can't go", className: 'bg-red-600/10 text-red-700' },
+  waitlist: { label: 'Waitlist', className: 'bg-lake/10 text-lake' },
+};
+
 export function RsvpStatusChip({ status }: { status: RsvpStatus }) {
   const info = RSVP_STATUS_LABELS[status];
+  return (
+    <span className={`rounded px-2 py-0.5 text-[11px] font-semibold ${info.className}`}>
+      {info.label}
+    </span>
+  );
+}
+
+export function NeutralStatusChip({ status }: { status: RsvpStatus }) {
+  const info = NEUTRAL_STATUS_LABELS[status];
   return (
     <span className={`rounded px-2 py-0.5 text-[11px] font-semibold ${info.className}`}>
       {info.label}

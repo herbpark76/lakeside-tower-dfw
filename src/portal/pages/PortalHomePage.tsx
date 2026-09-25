@@ -11,7 +11,8 @@ import {
 import { PortalLayout } from '../components/PortalLayout';
 import { useAuth } from '../auth/AuthContext';
 import { useAnnouncements, useEvents, useAmenityStatus, useRsvps } from '../data/hooks';
-import { formatDate, formatEventDate } from '../utils/format';
+import { formatDate } from '../utils/format';
+import { formatTimeInTZ } from '../lib/dates';
 import { countGoing } from '../utils/rsvpUtils';
 import { TODAY_ISO } from '../utils/dateUtils';
 import type { AmenityStatusType } from '../data/types';
@@ -40,23 +41,26 @@ function AmenityChip({ amenity }: { amenity: { amenity: string; status: AmenityS
   );
 }
 
-function EventCard({ event, headcount, userRsvpStatus }: { event: { id: string; title: string; startsAt: string; location: string; rsvpRequired: boolean; category: string }; headcount: number; userRsvpStatus?: string }) {
+function EventCard({ event, headcount, userRsvpStatus, isEvite }: { event: { id: string; title: string; startsAt: string; location: string; rsvpRequired: boolean; category: string }; headcount: number; userRsvpStatus?: string; isEvite: boolean }) {
   const d = new Date(event.startsAt);
   return (
     <Link to={`/portal/events/${event.id}`} className="block">
     <div className="flex gap-4 border border-lake/10 bg-white p-4 transition hover:border-brass">
       <div className="flex shrink-0 flex-col items-center justify-center w-14 rounded-md bg-lake/5 py-2">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-lake/40">
-          {d.toLocaleDateString('en-US', { month: 'short' })}
+          {d.toLocaleDateString('en-US', { month: 'short', timeZone: 'America/Chicago' })}
         </span>
         <span className="serif text-2xl text-lake leading-none mt-0.5">
-          {d.getDate()}
+          {d.toLocaleDateString('en-US', { day: 'numeric', timeZone: 'America/Chicago' })}
         </span>
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="eyebrow text-brass-on-light">{event.category}</span>
-          {event.rsvpRequired && (
+          {isEvite && (
+            <span className="rounded bg-lake/8 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-lake">Evite</span>
+          )}
+          {!isEvite && event.rsvpRequired && (
             <span className="rounded bg-brass/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brass-on-light">
               RSVP
             </span>
@@ -64,13 +68,13 @@ function EventCard({ event, headcount, userRsvpStatus }: { event: { id: string; 
         </div>
         <h3 className="serif text-base text-lake mt-1 leading-snug">{event.title}</h3>
         <p className="text-[12px] text-lake/50 mt-1">
-          {d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} ·{' '}
-          {d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} · {event.location}
+          {d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/Chicago' })} ·{' '}
+          {formatTimeInTZ(event.startsAt)} · {event.location}
         </p>
-        {headcount > 0 && (
+        {!isEvite && headcount > 0 && (
           <p className="text-[12px] font-semibold text-lake/60 mt-1.5">{headcount} going</p>
         )}
-        {userRsvpStatus && (
+        {!isEvite && userRsvpStatus && (
           <span className={`mt-1.5 inline-block rounded px-2 py-0.5 text-[11px] font-semibold ${
             userRsvpStatus === 'going' ? 'bg-green-600/10 text-green-700' :
             userRsvpStatus === 'maybe' ? 'bg-amber-500/10 text-amber-700' :
@@ -238,9 +242,10 @@ export function PortalHomePage() {
   );
 }
 
-function EventCardWithRsvp({ event, userId }: { event: { id: string; title: string; startsAt: string; location: string; rsvpRequired: boolean; category: string }; userId: string }) {
+function EventCardWithRsvp({ event, userId }: { event: { id: string; title: string; startsAt: string; location: string; rsvpRequired: boolean; category: string; externalRsvpUrl?: string }; userId: string }) {
   const { rsvps } = useRsvps(event.id);
   const headcount = countGoing(rsvps);
   const userRsvp = rsvps.find((r) => r.userId === userId);
-  return <EventCard event={event} headcount={headcount} userRsvpStatus={userRsvp?.status} />;
+  const isEvite = !!event.externalRsvpUrl;
+  return <EventCard event={event} headcount={isEvite ? 0 : headcount} userRsvpStatus={isEvite ? undefined : userRsvp?.status} isEvite={isEvite} />;
 }

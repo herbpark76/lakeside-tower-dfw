@@ -22,11 +22,13 @@ import {
   groupEventsByMonth,
 } from '../utils/calendarUtils';
 import {
-  formatTime,
-  formatWeekday,
+  formatTimeInTZ,
+  formatWeekdayInTZ,
+  formatMonthDayInTZ,
   getMonthName,
-  formatMonthDay,
-} from '../utils/format';
+  monthKeyFromNums,
+} from '../lib/dates';
+import { dayKey } from '../lib/dates';
 import { TODAY_ISO } from '../utils/dateUtils';
 import type { EventCategory, PortalEvent } from '../data/types';
 
@@ -104,7 +106,7 @@ export function EventsPage() {
     });
   };
 
-  const flyerMonth = `${currentMonth.year}-${String(currentMonth.month + 1).padStart(2, '0')}`;
+  const flyerMonth = monthKeyFromNums(currentMonth.year, currentMonth.month);
 
   return (
     <>
@@ -325,8 +327,8 @@ function MonthView({
         <div className="mt-6 border border-lake/10 bg-white p-5">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="serif text-lg text-lake">
-              {formatMonthDay(selectedDay)}{' '}
-              <span className="text-lake/40">· {formatWeekday(selectedDay)}</span>
+              {formatMonthDayInTZ(selectedDay + 'T00:00')}{' '}
+              <span className="text-lake/40">· {formatWeekdayInTZ(selectedDay + 'T00:00')}</span>
             </h3>
             <button
               onClick={() => setSelectedDay(null)}
@@ -357,7 +359,7 @@ function DayEventRow({ event }: { event: PortalEvent }) {
       className="flex items-center gap-4 border border-lake/10 p-3 transition hover:border-brass"
     >
       <span className="shrink-0 text-[13px] font-semibold text-lake/50">
-        {formatTime(event.startsAt)}
+        {formatTimeInTZ(event.startsAt)}
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
@@ -441,7 +443,12 @@ function ListEventRow({ event, userId }: { event: PortalEvent; userId: string })
   const { rsvps } = useRsvps(event.id);
   const headcount = countGoing(rsvps);
   const userRsvp = findUserRsvp(rsvps, userId);
+  const isEvite = !!event.externalRsvpUrl;
+
   const d = new Date(event.startsAt);
+  const monthShort = d.toLocaleDateString('en-US', { month: 'short', timeZone: 'America/Chicago' });
+  const dayNum = d.toLocaleDateString('en-US', { day: 'numeric', timeZone: 'America/Chicago' });
+  const weekdayShort = d.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/Chicago' });
 
   return (
     <Link
@@ -451,13 +458,13 @@ function ListEventRow({ event, userId }: { event: PortalEvent; userId: string })
       {/* Date block */}
       <div className="flex shrink-0 flex-col items-center justify-center w-14 rounded-md bg-lake/5 py-2">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-lake/40">
-          {d.toLocaleDateString('en-US', { month: 'short', timeZone: 'America/Chicago' })}
+          {monthShort}
         </span>
         <span className="serif text-2xl text-lake leading-none mt-0.5">
-          {d.toLocaleDateString('en-US', { day: 'numeric', timeZone: 'America/Chicago' })}
+          {dayNum}
         </span>
         <span className="text-[10px] text-lake/40 mt-0.5">
-          {d.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/Chicago' })}
+          {weekdayShort}
         </span>
       </div>
 
@@ -469,16 +476,16 @@ function ListEventRow({ event, userId }: { event: PortalEvent; userId: string })
         </div>
         <h3 className="serif text-base text-lake mt-1.5 leading-snug">{event.title}</h3>
         <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-lake/50">
-          <span>{formatTime(event.startsAt)}</span>
+          <span>{formatTimeInTZ(event.startsAt)}</span>
           <span className="inline-flex items-center gap-1">
             {event.locationTBD ? 'Location TBD' : event.location}
           </span>
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-3">
-          {headcount > 0 && (
+          {!isEvite && headcount > 0 && (
             <span className="text-[12px] font-semibold text-lake/60">{headcount} going</span>
           )}
-          {userRsvp && <RsvpStatusChip status={userRsvp.status} />}
+          {!isEvite && userRsvp && <RsvpStatusChip status={userRsvp.status} />}
         </div>
       </div>
     </Link>

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Head } from 'vite-react-ssg';
 import { marked } from 'marked';
@@ -14,16 +14,13 @@ import {
   XCircle,
   Download,
   ChevronDown,
+  X,
 } from 'lucide-react';
 import { PortalLayout } from '../components/PortalLayout';
 import { useAuth } from '../auth/AuthContext';
 import { useEvent, useRsvps, dataSource } from '../data/hooks';
-import { EventBadges, CategoryChip, RsvpStatusChip } from '../components/EventBadges';
-import {
-  formatEventTimeRange,
-  formatTime,
-  formatDate,
-} from '../utils/format';
+import { EventBadges, CategoryChip, RsvpStatusChip, NeutralStatusChip } from '../components/EventBadges';
+import { formatEventRange, formatTimeInTZ, formatDateLong } from '../lib/dates';
 import {
   countGoing,
   countMaybe,
@@ -33,7 +30,7 @@ import {
   countByStatus,
 } from '../utils/rsvpUtils';
 import { downloadICS, getGoogleCalendarUrl } from '../utils/calendarUtils';
-import type { RsvpStatus, Rsvp } from '../data/types';
+import type { RsvpStatus, Rsvp, PortalEvent } from '../data/types';
 
 function Toast({ message, onClose }: { message: string; onClose: () => void }) {
   return (
@@ -45,6 +42,10 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
       {message}
     </div>
   );
+}
+
+function isEviteEvent(event: PortalEvent | undefined): boolean {
+  return !!event?.externalRsvpUrl;
 }
 
 export function EventDetailPage() {
@@ -65,7 +66,7 @@ export function EventDetailPage() {
   const isStaff = user?.role === 'staff';
   const isStaffOrBoard = user?.role === 'staff' || user?.role === 'board';
   const isCancelled = event?.status === 'cancelled';
-  const hasExternalRsvp = !!event?.externalRsvpUrl;
+  const isEvite = isEviteEvent(event);
 
   const userRsvp = user ? findUserRsvp(rsvps, user.id) : undefined;
   const isRsvpClosed = useMemo(() => {
@@ -74,11 +75,11 @@ export function EventDetailPage() {
   }, [event?.rsvpDeadline]);
 
   const goingCount = countGoing(rsvps);
-  const headcount = goingCount;
+  const rsvpCount = rsvps.filter((r) => r.status === 'going' || r.status === 'maybe' || r.status === 'waitlist').length;
   const capacity = event?.capacity ?? 0;
-  const spotsFilled = Math.min(headcount, capacity);
-  const isFull = capacity > 0 && headcount >= capacity;
-  const capacityPct = capacity > 0 ? Math.min((headcount / capacity) * 100, 100) : 0;
+  const spotsFilled = Math.min(goingCount, capacity);
+  const isFull = capacity > 0 && goingCount >= capacity;
+  const capacityPct = capacity > 0 ? Math.min((goingCount / capacity) * 100, 100) : 0;
 
   if (loading) {
     return (
@@ -121,8 +122,7 @@ export function EventDetailPage() {
     );
   }
 
-  const handleDuplicate = async () => {
-    // Duplicate navigates to the editor with a prefilled event (date cleared)
+  const handleDuplicate = () => {
     navigate(`/portal/events/new?from=${event.id}`);
   };
 
@@ -169,9 +169,7 @@ export function EventDetailPage() {
             <div className="mt-4 space-y-1.5 text-[14px] text-lake/60">
               <p className="flex items-center gap-2">
                 <Calendar size={15} className="text-brass-on-light" />
-                {event.endsAt
-                  ? formatEventTimeRange(event.startsAt, event.endsAt)
-                  : formatEventTimeRange(event.startsAt, event.startsAt)}
+                {formatEventRange(event.startsAt, event.endsAt)}
               </p>
               <p className="flex items-center gap-2">
                 <Users size={15} className="text-brass-on-light" />
@@ -224,33 +222,10 @@ export function EventDetailPage() {
               </div>
             )}
 
-            {/* Cancel confirm dialog */}
-            {showCancelConfirm && (
-              <div className="mt-6 rounded-md border border-red-600/20 bg-red-600/5 px-5 py-4">
-                <p className="text-[14px] text-lake">
-                  Are you sure you want to cancel this event? This cannot be undone in the demo.
-                </p>
-                <div className="mt-3 flex gap-3">
-                  <button
-                    onClick={handleCancel}
-                    className="bg-red-600 px-4 py-2 text-[12px] font-bold uppercase tracking-wider text-white"
-                  >
-                    Yes, cancel event
-                  </button>
-                  <button
-                    onClick={() => setShowCancelConfirm(false)}
-                    className="border border-lake/20 px-4 py-2 text-[12px] font-semibold uppercase tracking-wider text-lake"
-                  >
-                    No, go back
-                  </button>
-                </div>
-              </div>
-            )}
-
             {/* RSVP section */}
             {!isCancelled && (
               <div className="mt-10 border-t border-lake/10 pt-8">
-                {hasExternalRsvp ? (
+                {isEvite ? (
                   <div>
                     <h2 className="serif text-xl text-lake mb-3">RSVP</h2>
                     <a
@@ -282,7 +257,8 @@ export function EventDetailPage() {
                     rsvps={rsvps}
                     submitRsvp={submitRsvp}
                     showToast={showToast}
-                    headcount={headcount}
+                    goingCount={goingCount}
+                    rsvpCount={rsvpCount}
                   />
                 )}
               </div>
@@ -324,6 +300,47 @@ export function EventDetailPage() {
           </article>
         </div>
       </PortalLayout>
+
+      {/* Cancel confirmation modal (in-page, not window.confirm) */}
+      {showCancelConfirm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={() => setShowCancelConfirm(false)}
+        >
+          <div
+            className="mx-4 max-w-sm rounded-lg bg-white p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="serif text-lg text-lake">Cancel this event?</h3>
+              <button
+                onClick={() => setShowCancelConfirm(false)}
+                className="text-lake/40 hover:text-lake"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <p className="mt-3 text-[14px] text-lake/60">
+              Are you sure you want to cancel this event? This cannot be undone in the demo.
+            </p>
+            <div className="mt-5 flex gap-3">
+              <button
+                onClick={handleCancel}
+                className="bg-red-600 px-4 py-2 text-[12px] font-bold uppercase tracking-wider text-white"
+              >
+                Yes, cancel event
+              </button>
+              <button
+                onClick={() => setShowCancelConfirm(false)}
+                className="border border-lake/20 px-4 py-2 text-[12px] font-semibold uppercase tracking-wider text-lake"
+              >
+                No, go back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {toast && <Toast message={toast} onClose={() => setToast(null)} />}
     </>
   );
@@ -342,11 +359,12 @@ interface RsvpPanelProps {
   isRsvpClosed: boolean;
   rsvpDeadline?: string;
   userRsvp?: Rsvp;
-  user: { id: string; displayName: string; unit: string } | null;
+  user: { id: string; displayName: string; unit: string; role?: string } | null;
   rsvps: Rsvp[];
   submitRsvp: (rsvp: Rsvp) => Promise<Rsvp>;
   showToast: (msg: string) => void;
-  headcount: number;
+  goingCount: number;
+  rsvpCount: number;
 }
 
 function RsvpPanel({
@@ -364,25 +382,41 @@ function RsvpPanel({
   rsvps,
   submitRsvp,
   showToast,
+  goingCount,
+  rsvpCount,
 }: RsvpPanelProps) {
   const [guests, setGuests] = useState(userRsvp?.guests ?? 0);
   const [potluckItem, setPotluckItem] = useState(userRsvp?.potluckItem ?? '');
   const [note, setNote] = useState(userRsvp?.note ?? '');
+  const [savedIndicator, setSavedIndicator] = useState(false);
+
+  // Sync local state when userRsvp changes externally
+  useEffect(() => {
+    if (userRsvp) {
+      setGuests(userRsvp.guests);
+      setPotluckItem(userRsvp.potluckItem ?? '');
+      setNote(userRsvp.note ?? '');
+    }
+  }, [userRsvp]);
 
   if (!user) return null;
 
+  const currentStatus = userRsvp?.status;
+
+  const buildRsvp = (status: RsvpStatus): Rsvp => ({
+    eventId,
+    userId: user.id,
+    displayName: user.displayName,
+    unit: user.unit,
+    status,
+    guests: status === 'going' || status === 'maybe' ? guests : 0,
+    potluckItem: potluck ? potluckItem.trim() || undefined : undefined,
+    note: note.trim() || undefined,
+    respondedAt: new Date().toISOString(),
+  });
+
   const handleSubmit = async (status: RsvpStatus) => {
-    const rsvp: Rsvp = {
-      eventId,
-      userId: user.id,
-      displayName: user.displayName,
-      unit: user.unit,
-      status,
-      guests: status === 'going' || status === 'maybe' ? guests : 0,
-      potluckItem: potluck ? potluckItem.trim() || undefined : undefined,
-      note: note.trim() || undefined,
-      respondedAt: new Date().toISOString(),
-    };
+    const rsvp = buildRsvp(status);
     const result = await submitRsvp(rsvp);
     if (result.status === 'waitlist' && status === 'going') {
       showToast('This event is full — you have been added to the waitlist.');
@@ -391,6 +425,19 @@ function RsvpPanel({
     }
   };
 
+  const handleSaveExtras = async () => {
+    if (!currentStatus || currentStatus === 'not_going') {
+      showToast('Select a status first (Going, Maybe, or Can\'t go).');
+      return;
+    }
+    const rsvp = buildRsvp(currentStatus);
+    await submitRsvp(rsvp);
+    setSavedIndicator(true);
+    setTimeout(() => setSavedIndicator(false), 2000);
+  };
+
+  const showSaveButton = currentStatus && currentStatus !== 'not_going' && (allowGuests || potluck);
+
   return (
     <div>
       <h2 className="serif text-xl text-lake mb-4">RSVP</h2>
@@ -398,7 +445,7 @@ function RsvpPanel({
       {isRsvpClosed ? (
         <p className="text-[14px] text-lake/50">
           RSVPs for this event are closed
-          {rsvpDeadline && ` (closed ${formatDate(rsvpDeadline.split('T')[0])})`}.
+          {rsvpDeadline && ` (closed ${formatDateLong(rsvpDeadline.split('T')[0])})`}.
         </p>
       ) : (
         <>
@@ -423,17 +470,17 @@ function RsvpPanel({
               </div>
               {rsvpDeadline && (
                 <p className="mt-2 text-[12px] text-lake/40">
-                  RSVPs close {formatDate(rsvpDeadline.split('T')[0])} at{' '}
-                  {formatTime(rsvpDeadline)}
+                  RSVPs close {formatDateLong(rsvpDeadline.split('T')[0])} at{' '}
+                  {formatTimeInTZ(rsvpDeadline)}
                 </p>
               )}
             </div>
           )}
 
           {/* Current RSVP status */}
-          {userRsvp && (
+          {currentStatus && (
             <div className="mb-4">
-              <RsvpStatusChip status={userRsvp.status} />
+              <RsvpStatusChip status={currentStatus} />
             </div>
           )}
 
@@ -442,7 +489,7 @@ function RsvpPanel({
             <button
               onClick={() => handleSubmit('going')}
               className={`px-5 py-2.5 text-[12px] font-bold uppercase tracking-wider transition ${
-                userRsvp?.status === 'going' || userRsvp?.status === 'waitlist'
+                currentStatus === 'going' || currentStatus === 'waitlist'
                   ? 'bg-green-600 text-white'
                   : 'border border-green-600/30 text-green-700 hover:border-green-600'
               }`}
@@ -452,7 +499,7 @@ function RsvpPanel({
             <button
               onClick={() => handleSubmit('maybe')}
               className={`px-5 py-2.5 text-[12px] font-bold uppercase tracking-wider transition ${
-                userRsvp?.status === 'maybe'
+                currentStatus === 'maybe'
                   ? 'bg-amber-500 text-white'
                   : 'border border-amber-500/30 text-amber-700 hover:border-amber-500'
               }`}
@@ -462,7 +509,7 @@ function RsvpPanel({
             <button
               onClick={() => handleSubmit('not_going')}
               className={`px-5 py-2.5 text-[12px] font-bold uppercase tracking-wider transition ${
-                userRsvp?.status === 'not_going'
+                currentStatus === 'not_going'
                   ? 'bg-red-600 text-white'
                   : 'border border-red-600/30 text-red-700 hover:border-red-600'
               }`}
@@ -527,13 +574,28 @@ function RsvpPanel({
               className="mt-2 w-full max-w-md border border-lake/20 px-3 py-2 text-[14px] text-lake focus:border-brass focus:outline-none"
             />
           </div>
+
+          {/* Save extras button */}
+          {showSaveButton && (
+            <div className="mt-4 flex items-center gap-3">
+              <button
+                onClick={handleSaveExtras}
+                className="border border-brass/30 px-5 py-2 text-[12px] font-semibold uppercase tracking-wider text-brass-on-light transition hover:border-brass"
+              >
+                Save RSVP
+              </button>
+              {savedIndicator && (
+                <span className="text-[12px] font-semibold text-green-700">Saved</span>
+              )}
+            </div>
+          )}
         </>
       )}
 
       {/* Headcount + potluck list for owners */}
       <div className="mt-6 border-t border-lake/10 pt-6">
         <p className="text-[14px] font-semibold text-lake/70">
-          {countGoing(rsvps)} going
+          {rsvpCount} RSVP{rsvpCount === 1 ? '' : 's'} · {goingCount} people going
           {countMaybe(rsvps) > 0 && ` · ${countMaybe(rsvps)} maybe`}
         </p>
 
@@ -560,7 +622,7 @@ function RsvpPanel({
         )}
       </div>
 
-      {/* Full attendee list for staff/board */}
+      {/* Full attendee list for staff/board (not for Evite events) */}
       {user && (user.role === 'staff' || user.role === 'board') && (
         <AttendeeList rsvps={rsvps} />
       )}
@@ -570,6 +632,9 @@ function RsvpPanel({
 
 function AttendeeList({ rsvps }: { rsvps: Rsvp[] }) {
   const counts = countByStatus(rsvps);
+  const totalPeople = rsvps
+    .filter((r) => r.status === 'going')
+    .reduce((sum, r) => sum + 1 + r.guests, 0);
 
   const exportCsv = () => {
     const header = 'Name,Unit,Status,Guests,Dish,Note\n';
@@ -614,7 +679,7 @@ function AttendeeList({ rsvps }: { rsvps: Rsvp[] }) {
       </div>
 
       <div className="mb-4 flex gap-4 text-[12px] text-lake/50">
-        <span>{counts.going} going</span>
+        <span>{counts.going} going ({totalPeople} people)</span>
         <span>{counts.maybe} maybe</span>
         <span>{counts.waitlist} waitlist</span>
         <span>{counts.not_going} can't go</span>
@@ -638,7 +703,7 @@ function AttendeeList({ rsvps }: { rsvps: Rsvp[] }) {
                 <td className="py-2 pr-4 font-semibold text-lake">{r.displayName}</td>
                 <td className="py-2 pr-4 text-lake/60">{r.unit || '—'}</td>
                 <td className="py-2 pr-4">
-                  <RsvpStatusChip status={r.status} />
+                  <NeutralStatusChip status={r.status} />
                 </td>
                 <td className="py-2 pr-4 text-lake/60">{r.guests}</td>
                 <td className="py-2 pr-4 text-lake/60">{r.potluckItem || '—'}</td>

@@ -6,7 +6,13 @@ import { PortalLayout } from '../components/PortalLayout';
 import { useAuth } from '../auth/AuthContext';
 import { useEvents } from '../data/hooks';
 import { getEventsForMonth, getCalendarDays } from '../utils/calendarUtils';
-import { formatTime, getMonthName } from '../utils/format';
+import {
+  formatTimeInTZ,
+  getMonthName,
+  parseMonthParam,
+  monthKeyFromNums,
+  dayKey,
+} from '../lib/dates';
 import type { PortalEvent } from '../data/types';
 
 const ACCENT_PRESETS = [
@@ -30,11 +36,7 @@ function FlyerContent({
   const days = getCalendarDays(year, month);
   const monthEvents = getEventsForMonth(events, year, month);
   const eventDates = new Set(
-    monthEvents.map((e) => {
-      const d = new Date(e.startsAt);
-      const PAD = (n: number) => String(n).padStart(2, '0');
-      return `${d.getFullYear()}-${PAD(d.getMonth() + 1)}-${PAD(d.getDate())}`;
-    }),
+    monthEvents.map((e) => dayKey(e.startsAt)),
   );
 
   return (
@@ -173,7 +175,7 @@ function FlyerContent({
                 className="shrink-0 text-right text-[13px] font-semibold"
                 style={{ color: accent.color }}
               >
-                {formatTime(e.startsAt)}
+                {formatTimeInTZ(e.startsAt)}
               </div>
             </div>
           );
@@ -200,12 +202,10 @@ export function EventsFlyerPage() {
   const [accentIdx, setAccentIdx] = useState(0);
 
   const monthParam = searchParams.get('month');
-  const now = new Date();
   const { year, month } = useMemo(() => {
-    if (monthParam) {
-      const [y, m] = monthParam.split('-').map(Number);
-      if (y && m) return { year: y, month: m - 1 };
-    }
+    const parsed = parseMonthParam(monthParam);
+    if (parsed) return parsed;
+    const now = new Date();
     return { year: now.getFullYear(), month: now.getMonth() };
   }, [monthParam]);
 
@@ -213,7 +213,7 @@ export function EventsFlyerPage() {
 
   const changeMonth = (delta: number) => {
     const d = new Date(year, month + delta, 1);
-    const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    const ym = monthKeyFromNums(d.getFullYear(), d.getMonth());
     setSearchParams({ month: ym });
   };
 
