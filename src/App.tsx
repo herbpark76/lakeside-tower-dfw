@@ -1055,24 +1055,37 @@ function ResidencesPage() {
         </div>
       </section>
 
-      {/* WHAT'S HERE — four groups, brass subheadings, hairline rules */}
+      {/* WHAT'S HERE — four groups + tall 4:5 tower photo offset 80px lower */}
       <section className="bg-cream pb-[var(--space-xl)] md:pb-[var(--space-2xl)]">
         <div className="container-wide">
           <Reveal className="mb-12">
             <Eyebrow>What&rsquo;s here</Eyebrow>
           </Reveal>
-          <div className="border-t border-lake/10">
-            {amenityGroups.map(([heading, body], i) => (
-              <div
-                key={heading}
-                ref={(el) => { refs.current[i] = el; }}
-                data-reveal
-                className="grid gap-2 border-b border-lake/10 py-7 sm:grid-cols-[1fr_2fr] sm:gap-16 sm:py-9"
-              >
-                <h3 className="eyebrow text-brass-on-light">{heading}</h3>
-                <p className="body-text">{body}</p>
+          <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
+            <div className="border-t border-lake/10">
+              {amenityGroups.map(([heading, body], i) => (
+                <div
+                  key={heading}
+                  ref={(el) => { refs.current[i] = el; }}
+                  data-reveal
+                  className="grid gap-2 border-b border-lake/10 py-7 sm:grid-cols-[1fr_2fr] sm:gap-16 sm:py-9"
+                >
+                  <h3 className="eyebrow text-brass-on-light">{heading}</h3>
+                  <p className="body-text">{body}</p>
+                </div>
+              ))}
+            </div>
+            <div className="relative hidden lg:block">
+              <div className="img-inset sticky top-32 lg:mt-20">
+                <Photo
+                  slug="tower-aerial"
+                  alt="Lakeside Tower on the north shore of Lake Grapevine"
+                  className="aspect-[4/5] w-full"
+                  sizes="(min-width: 1024px) 35vw, 100vw"
+                  objectPosition="center 30%"
+                />
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
@@ -1104,17 +1117,18 @@ function ResidencesPage() {
       <section className="bg-sand section-pad">
         <div className="container-wide">
           <Reveal className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start lg:gap-24">
-            {/* TALL portrait balcony-sunset — min 600px */}
+            {/* TALL portrait balcony-sunset */}
             <div className="img-inset order-first lg:order-last">
-              <Img
+              <Photo
                 slug="balcony-sunset"
                 alt="Sunset over Lake Grapevine from a balcony at Lakeside Tower"
-                className="h-[600px] w-full object-cover sm:h-[700px]"
+                className="aspect-[4/5] w-full"
                 sizes="(min-width: 1024px) 50vw, 100vw"
               />
             </div>
             <div className="lg:pt-16">
-              <h2 className="display-3 serif text-lake">
+              <span className="block h-px w-12 bg-brass" />
+              <h2 className="display-3 serif text-lake mt-8">
                 A room for<br />
                 <em className="font-medium">bad weather.</em>
               </h2>
@@ -1249,7 +1263,7 @@ function LifeAtLakesidePage() {
         </div>
       </div>
 
-      {/* 1. A Saturday without a plan — cream, image right */}
+      {/* 1. A Saturday without a plan — cream, large trail photo + village inset */}
       <section className="bg-cream section-pad">
         <div className="container-wide">
           <Reveal className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:items-start lg:gap-20">
@@ -1266,27 +1280,46 @@ function LifeAtLakesidePage() {
                 The luxury isn&rsquo;t any single part of that. It&rsquo;s that none of it required arranging.
               </p>
             </div>
-            <div className="img-inset order-first lg:order-last">
-              <Img
-                slug="trail-woods"
-                alt="Light through the trees on the Northshore Trail"
-                className="w-full object-cover"
-                sizes="(min-width: 1024px) 60vw, 100vw"
-              />
+            <div className="relative order-first lg:order-last">
+              <div className="img-inset relative">
+                <Photo
+                  slug="trail-shoreline"
+                  alt="The Northshore Trail where it meets the lake"
+                  className="aspect-[4/5] w-full"
+                  sizes="(min-width: 1024px) 60vw, 100vw"
+                />
+              </div>
+              {/* Inset village-daylight photo — overlapping lower-left corner */}
+              <div className="absolute -bottom-10 -left-6 z-10 hidden w-[38%] border-6 border-cream sm:block">
+                <div className="img-inset">
+                  <Photo
+                    slug="village-daylight"
+                    alt="Daytime dining at Lakeside Village"
+                    className="w-full"
+                    sizes="(min-width: 640px) 25vw, 100vw"
+                  />
+                </div>
+              </div>
+            </div>
+          </Reveal>
+          <Reveal className="mt-10 sm:mt-16">
+            <div className="photo-caption">
+              <span className="photo-caption-rule" />
+              <span className="photo-caption-text">The Northshore Trail, a Saturday morning.</span>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* 2. Good days start close — sand, image left */}
+      {/* 2. Good days start close — sand, wide 3:2 image overlapping into next section */}
       <section className="bg-sand section-pad">
         <div className="container-wide">
           <Reveal className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:items-start lg:gap-20">
-            <div className="img-inset">
-              <Img
+            <div className="img-inset relative lg:-mb-[100px] lg:z-10">
+              <Photo
                 slug="village-daylight"
                 alt="Daytime dining at Lakeside Village"
-                className="w-full object-cover"
+                className="aspect-[3/2] w-full"
                 sizes="(min-width: 1024px) 60vw, 100vw"
               />
             </div>
@@ -1302,20 +1335,42 @@ function LifeAtLakesidePage() {
               <p className="body-text mt-6 text-lake/70 max-w-md">
                 All of it on foot. None of it requiring a car, a reservation made three weeks out, or a drive home afterward.
               </p>
+              <div className="photo-caption mt-6">
+                <span className="photo-caption-rule" />
+                <span className="photo-caption-text">Lakeside Village at dinnertime.</span>
+              </div>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* 3. The water — dark full-bleed, hero-sunset */}
-      <section className="relative flex min-h-[80vh] items-end overflow-hidden bg-lake-deep text-cream">
+      {/* 3. The water — full-bleed dark, scroll zoom + gradient fades */}
+      <section
+        className="photo-band-fade relative flex min-h-[80vh] items-end overflow-hidden bg-lake-deep text-cream"
+        style={{ '--fade-top': 'var(--sand)', '--fade-bottom': 'var(--lake-deep)' } as React.CSSProperties}
+      >
         <div className="absolute inset-0">
-          <Img
-            slug="hero-sunset"
-            alt="Sunset over Lake Grapevine"
-            className="h-full w-full object-cover object-center"
-            sizes="100vw"
-          />
+          <div className="photo-band-zoom h-full w-full" ref={(el) => {
+            if (!el) return;
+            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReduced || !('IntersectionObserver' in window)) {
+              el.classList.add('photo-revealed');
+              return;
+            }
+            const obs = new IntersectionObserver((entries) => {
+              entries.forEach((e) => {
+                if (e.isIntersecting) { e.target.classList.add('photo-revealed'); obs.unobserve(e.target); }
+              });
+            }, { threshold: 0.1 });
+            obs.observe(el);
+          }}>
+            <Photo
+              slug="hero-sunset"
+              alt="Sunset over Lake Grapevine"
+              className="h-full w-full"
+              sizes="100vw"
+            />
+          </div>
         </div>
         <div className="img-overlay absolute inset-0" />
         <div className="container-wide relative z-10 pb-16 pt-40 sm:pb-24 lg:pb-28">
@@ -1331,6 +1386,10 @@ function LifeAtLakesidePage() {
             <p className="body-text mt-6 text-cream/60 max-w-lg">
               Mornings it&rsquo;s glass. Afternoons it turns to chop and sailboats. Evenings it goes gold and then copper and then dark, and you find you&rsquo;ve been watching it for twenty minutes.
             </p>
+            <div className="photo-caption mt-8">
+              <span className="photo-caption-rule" />
+              <span className="photo-caption-text text-cream/60">Lake Grapevine, just after sunset.</span>
+            </div>
           </div>
         </div>
       </section>

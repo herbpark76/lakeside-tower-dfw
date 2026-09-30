@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { ChevronLeft, ChevronRight, X, ArrowDown } from 'lucide-react';
 import { Img, imageRegistry, imageBase } from '@/components/Img';
+import { Photo } from '@/components/Photo';
 import { useReveal } from '@/hooks/useReveal';
 import {
   galleryPhotos,
@@ -209,33 +210,33 @@ function GalleryThumbnail({
 }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [loaded, setLoaded] = useState(false);
-  const meta = imageRegistry[photo.src];
-  const aspectRatio = meta ? meta.aspectRatio : 1;
 
   const handleClick = () => {
     onOpen(index);
   };
 
+  const aspectClass =
+    photo.span === 'tall' ? 'aspect-[4/5]' :
+    photo.span === 'wide' ? 'aspect-[16/9]' :
+    'aspect-[3/2]';
+
   return (
     <button
       ref={buttonRef}
-      className="gallery-thumb"
+      className={`gallery-thumb gallery-thumb--${photo.span}`}
       onClick={handleClick}
       aria-label={`Open photograph: ${photo.caption}`}
       data-gallery-index={index}
     >
-      <div
-        className="gallery-thumb-frame"
-        style={{ aspectRatio: `${aspectRatio}` }}
-      >
-        <Img
+      <div className={`gallery-thumb-frame ${aspectClass}`}>
+        <Photo
           slug={photo.src}
           alt={photo.alt}
-          className={`gallery-thumb-img ${loaded ? 'gallery-thumb-img--loaded' : ''}`}
+          className="gallery-thumb-photo"
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           onLoad={() => setLoaded(true)}
         />
-        <div className="gallery-thumb-overlay">
+        <div className={`gallery-thumb-overlay ${loaded ? 'gallery-thumb-overlay--loaded' : ''}`}>
           <p className="gallery-thumb-caption">{photo.caption}</p>
         </div>
       </div>

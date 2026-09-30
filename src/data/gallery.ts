@@ -16,6 +16,7 @@ export interface GalleryPhoto {
   caption: string;
   category: GalleryCategory;
   orientation: 'landscape' | 'portrait';
+  span: 'tall' | 'wide' | 'normal';
 }
 
 export const categoryOrder: GalleryCategory[] = [
@@ -34,6 +35,7 @@ export const galleryPhotos: GalleryPhoto[] = [
     caption: 'Sunset over Lake Grapevine',
     category: 'The View',
     orientation: 'landscape',
+    span: 'wide',
   },
   {
     src: 'lake-panorama',
@@ -41,6 +43,7 @@ export const galleryPhotos: GalleryPhoto[] = [
     caption: 'The lake from the upper floors',
     category: 'The View',
     orientation: 'landscape',
+    span: 'wide',
   },
   {
     src: 'balcony-sunset',
@@ -48,6 +51,7 @@ export const galleryPhotos: GalleryPhoto[] = [
     caption: 'The light you come home to',
     category: 'The View',
     orientation: 'portrait',
+    span: 'tall',
   },
   {
     src: 'tower-aerial',
@@ -55,6 +59,7 @@ export const galleryPhotos: GalleryPhoto[] = [
     caption: 'Lakeside Tower on the north shore',
     category: 'The Tower',
     orientation: 'landscape',
+    span: 'normal',
   },
   {
     src: 'village-street',
@@ -62,6 +67,7 @@ export const galleryPhotos: GalleryPhoto[] = [
     caption: 'Lakeside Village',
     category: 'The Village',
     orientation: 'portrait',
+    span: 'tall',
   },
   {
     src: 'village-evening',
@@ -69,6 +75,7 @@ export const galleryPhotos: GalleryPhoto[] = [
     caption: 'Evening on the patio',
     category: 'The Village',
     orientation: 'landscape',
+    span: 'normal',
   },
   {
     src: 'village-daylight',
@@ -76,6 +83,7 @@ export const galleryPhotos: GalleryPhoto[] = [
     caption: 'Lunch downstairs',
     category: 'The Village',
     orientation: 'landscape',
+    span: 'normal',
   },
   {
     src: 'village-dining',
@@ -83,6 +91,7 @@ export const galleryPhotos: GalleryPhoto[] = [
     caption: 'Dinner, on foot',
     category: 'The Village',
     orientation: 'landscape',
+    span: 'normal',
   },
   {
     src: 'village-signage',
@@ -90,6 +99,7 @@ export const galleryPhotos: GalleryPhoto[] = [
     caption: 'The Tavern at Lakeside',
     category: 'The Village',
     orientation: 'landscape',
+    span: 'normal',
   },
   {
     src: 'trail-shoreline',
@@ -97,6 +107,7 @@ export const galleryPhotos: GalleryPhoto[] = [
     caption: 'Where the Northshore Trail begins',
     category: 'The Trail',
     orientation: 'landscape',
+    span: 'wide',
   },
   {
     src: 'trail-woods',
@@ -104,6 +115,7 @@ export const galleryPhotos: GalleryPhoto[] = [
     caption: 'Twenty-two miles of shade',
     category: 'The Trail',
     orientation: 'landscape',
+    span: 'normal',
   },
 ];
 
