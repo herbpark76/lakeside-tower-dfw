@@ -1271,7 +1271,11 @@ function ContactCard({ entry, highlighted }: { entry: typeof contacts[number]; h
 
   useEffect(() => {
     if (highlighted && cardRef.current) {
-      cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          cardRef.current?.scrollIntoView({ block: 'center', behavior: 'instant' });
+        }, 100);
+      });
     }
   }, [highlighted]);
 
@@ -1279,36 +1283,39 @@ function ContactCard({ entry, highlighted }: { entry: typeof contacts[number]; h
     <div
       ref={cardRef}
       id={`contact-${entry.id}`}
-      className={`relative rounded-sm border p-6 transition-colors duration-700 ${
+      className={`relative flex min-w-0 flex-col rounded-sm border p-6 transition-colors duration-700 ${
         highlighted
           ? 'border-brass/50 bg-brass/5'
           : 'border-lake/10 bg-card'
       }`}
     >
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <p className="eyebrow text-brass-on-light">{entry.name}</p>
+      <h3 className="serif text-[22px] leading-snug text-lake">{entry.name}</h3>
+      <div className="mt-2 max-w-full">
         <SampleNote />
       </div>
-      <p className="body-text text-lake/70 text-[14px]">{entry.for}</p>
+      <p className="body-text mt-4 text-[14px] text-lake/70">{entry.for}</p>
 
-      {entry.phone && (
-        <a
-          href={`tel:${entry.phone.replace(/[^0-9]/g, '')}`}
-          className="link-arrow mt-4 text-lake"
-        >
-          <span className="link-underline">{entry.phone}</span>
-          <ArrowUpRight size={14} strokeWidth={1.5} />
-        </a>
-      )}
-      {entry.email && (
-        <a
-          href={`mailto:${entry.email}`}
-          className="link-arrow mt-2 text-lake block"
-        >
-          <span className="link-underline">{entry.email}</span>
-          <ArrowUpRight size={14} strokeWidth={1.5} />
-        </a>
-      )}
+      <div className="mt-4 space-y-1.5">
+        {entry.phone && (
+          <a
+            href={`tel:${entry.phone.replace(/[^0-9]/g, '')}`}
+            className="block text-[16px] leading-relaxed text-lake no-underline hover:text-brass-on-light"
+            style={{ overflowWrap: 'anywhere' }}
+          >
+            {entry.phone}
+          </a>
+        )}
+        {entry.email && (
+          <a
+            href={`mailto:${entry.email}`}
+            className="block text-[16px] leading-relaxed text-lake no-underline hover:text-brass-on-light"
+            style={{ overflowWrap: 'anywhere' }}
+          >
+            {entry.email}
+          </a>
+        )}
+      </div>
+
       {entry.hours && (
         <p className="mt-4 text-[13px] text-lake/50">{entry.hours}</p>
       )}
@@ -1363,30 +1370,29 @@ function ContactPage() {
 
       <section className="bg-cream section-pad">
         <div className="container-wide">
-          <Reveal className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-24">
-            <div>
-              <Eyebrow>Address</Eyebrow>
-              <div className="mt-6 space-y-1">
-                <p className="body-text text-lake">Lakeside Tower</p>
-                <p className="body-text text-lake/70">2800 Lakeside Parkway</p>
-                <p className="body-text text-lake/70">Flower Mound, TX 75022</p>
-              </div>
+          <Reveal>
+            <Eyebrow>Address</Eyebrow>
+            <div className="mt-6 space-y-1">
+              <p className="body-text text-lake">Lakeside Tower</p>
+              <p className="body-text text-lake/70">2800 Lakeside Parkway</p>
+              <p className="body-text text-lake/70">Flower Mound, TX 75022</p>
             </div>
-            <div>
-              <Eyebrow>How to reach us</Eyebrow>
-              <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                {contacts.map((entry) => (
-                  <ContactCard
-                    key={entry.id}
-                    entry={entry}
-                    highlighted={highlightedId === entry.id}
-                  />
-                ))}
-              </div>
-              <p className="mt-8 text-[13px] text-lake/40">
-                In an emergency, call 911 first, then the front desk.
-              </p>
+          </Reveal>
+
+          <Reveal className="mt-12 md:mt-16">
+            <Eyebrow>How to reach us</Eyebrow>
+            <div className="mt-6 grid gap-5 md:grid-cols-2">
+              {contacts.map((entry) => (
+                <ContactCard
+                  key={entry.id}
+                  entry={entry}
+                  highlighted={highlightedId === entry.id}
+                />
+              ))}
             </div>
+            <p className="mt-8 text-[13px] text-lake/40">
+              In an emergency, call 911 first, then the front desk.
+            </p>
           </Reveal>
         </div>
       </section>
