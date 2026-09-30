@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Img, imageBase, imageRegistry, type ImgProps } from '@/components/Img';
+import { Img, imageRegistry, type ImgProps } from '@/components/Img';
 
 type Slug = ImgProps['slug'];
 
@@ -13,6 +13,19 @@ interface PhotoProps {
   onLoad?: () => void;
 }
 
+const warnedSlugs = new Set<string>();
+
+function checkImageSize(slug: string, img: HTMLImageElement) {
+  if (warnedSlugs.has(slug)) return;
+  const naturalW = img.naturalWidth;
+  if (naturalW > 0 && naturalW < 800) {
+    warnedSlugs.add(slug);
+    console.warn(
+      `[Photo] Image "${slug}" natural width is ${naturalW}px (under 800px). Consider replacing with a higher-resolution source.`
+    );
+  }
+}
+
 export function Photo({
   slug,
   alt,
@@ -23,6 +36,7 @@ export function Photo({
   onLoad,
 }: PhotoProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -53,6 +67,11 @@ export function Photo({
     return () => observer.disconnect();
   }, []);
 
+  const handleLoad = () => {
+    if (imgRef.current) checkImageSize(slug, imgRef.current);
+    onLoad?.();
+  };
+
   return (
     <div ref={wrapRef} className={`photo-grade ${className}`}>
       <Img
@@ -61,7 +80,7 @@ export function Photo({
         priority={priority}
         sizes={sizes}
         objectPosition={objectPosition}
-        onLoad={onLoad}
+        onLoad={handleLoad}
         className="photo-grade-img"
       />
       <div className="photo-grade-overlay" aria-hidden="true" />
@@ -69,33 +88,8 @@ export function Photo({
   );
 }
 
-const homePageSlugs = new Set<string>([
-  'hero-sunset',
-  'tower-aerial',
-  'trail-shoreline',
-  'village-evening',
-  'lake-panorama',
-  'balcony-sunset',
-  'trail-woods',
-  'village-street',
-  'village-daylight',
-]);
-
-const alternateSlugs: Slug[] = [
-  'village-signage',
-  'village-dining',
-  'tower-detail',
-];
-
-export function dedupHeroSlug(heroPath: string): Slug {
+export function heroPathToSlug(heroPath: string): Slug {
   const slugMatch = heroPath.match(/\/assets\/images\/([^-/]+)/);
   const heroSlug = slugMatch ? slugMatch[1] : '';
-
-  if (homePageSlugs.has(heroSlug)) {
-    for (const alt of alternateSlugs) {
-      if (!homePageSlugs.has(alt)) return alt;
-    }
-  }
-
-  return (heroSlug && heroSlug in imageRegistry ? heroSlug : alternateSlugs[0]) as Slug;
+  return (heroSlug && heroSlug in imageRegistry ? heroSlug : 'village-signage') as Slug;
 }

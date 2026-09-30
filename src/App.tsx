@@ -10,9 +10,7 @@ import {
   Minus,
 } from 'lucide-react';
 import { Img } from '@/components/Img';
-import { Photo, dedupHeroSlug } from '@/components/Photo';
-import type { ImgProps } from '@/components/Img';
-type Slug = ImgProps['slug'];
+import { Photo, heroPathToSlug } from '@/components/Photo';
 import { Seo } from '@/components/Seo';
 import { TonightAtTheLake } from '@/components/TonightAtTheLake';
 import { WalkabilitySection } from '@/components/WalkabilityMap';
@@ -339,8 +337,9 @@ function TowerSection() {
               <Photo
                 slug="tower-aerial"
                 alt="Lakeside Tower overlooking Lake Grapevine from above"
-                className="aspect-[4/5] w-full object-cover"
+                className="aspect-[4/5] w-full"
                 sizes="(min-width: 1024px) 55vw, 100vw"
+                objectPosition="center 40%"
               />
             </div>
           </div>
@@ -487,7 +486,7 @@ function PanoramaBand() {
 /* ── 5. LIFE HERE ── cream, three linked cards, uniform 4:5, captions ── */
 const stories = [
   ['01', 'The light you come home to.', 'balcony-sunset', '/residences#gallery', 'The light you come home to, a balcony in late summer.'] as const,
-  ['02', 'A Saturday without a plan.', 'trail-woods', '/journal/northshore-trail-first-timers-guide', 'The Northshore Trail, shade and quiet in the morning.'] as const,
+  ['02', 'A Saturday without a plan.', 'trail-shoreline', '/journal/northshore-trail-first-timers-guide', 'The Northshore Trail, shade and quiet in the morning.'] as const,
   ['03', 'The world within reach.', 'village-street', '/location', 'Lakeside Village, the street at the foot of the tower.'] as const,
 ];
 
@@ -516,7 +515,7 @@ function StoriesSection() {
                     <Photo
                       slug={image as never}
                       alt={title}
-                      className="aspect-[4/5] w-full object-cover"
+                      className="aspect-[4/5] w-full"
                       sizes="(min-width: 640px) 33vw, 100vw"
                     />
                   </div>
@@ -546,16 +545,7 @@ function StoriesSection() {
 /* ── 5b. FROM THE JOURNAL ── two newest posts, dedup hero images, above For our community ── */
 function JournalStrip() {
   const posts = journalPosts.slice(0, 2);
-  const usedAlts = new Set<string>();
-  const postSlugs = posts.map((post) => {
-    let slug = dedupHeroSlug(post.heroImage);
-    if (usedAlts.has(slug)) {
-      const fallbacks: Slug[] = ['village-signage', 'village-dining', 'tower-detail'];
-      slug = fallbacks.find((s) => !usedAlts.has(s)) || slug;
-    }
-    usedAlts.add(slug);
-    return slug;
-  });
+  const postSlugs = posts.map((post) => heroPathToSlug(post.heroImage));
   return (
     <section className="bg-sand section-pad">
       <div className="container-wide">
@@ -575,7 +565,7 @@ function JournalStrip() {
                     <Photo
                       slug={postSlugs[i]}
                       alt={post.heroAlt}
-                      className="aspect-[16/10] w-full object-cover"
+                      className="aspect-[3/2] w-full"
                       sizes="(min-width: 640px) 50vw, 100vw"
                     />
                   </div>
