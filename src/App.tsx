@@ -1,5 +1,5 @@
-import { useState, useEffect, type ReactNode } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { Outlet, useSearchParams } from 'react-router-dom';
 
 import {
   ArrowRight,
@@ -26,6 +26,8 @@ import { EventEditorPage } from '@/portal/pages/EventEditorPage';
 import { EventsFlyerPage } from '@/portal/pages/EventsFlyerPage';
 import { BuildingPage, DocumentsPage, DirectoryPage } from '@/portal/pages/PlaceholderPages';
 import { useReveal, useRevealStagger } from '@/hooks/useReveal';
+import { contacts } from '@/data/contacts';
+import { SampleNote } from '@/components/SampleNote';
 
 /* ── Skip to content link ── */
 export function SkipLink() {
@@ -1072,7 +1074,70 @@ function AboutPage() {
 }
 
 /* ── /contact ── */
+function ContactCard({ entry, highlighted }: { entry: typeof contacts[number]; highlighted: boolean }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (highlighted && cardRef.current) {
+      cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [highlighted]);
+
+  return (
+    <div
+      ref={cardRef}
+      id={`contact-${entry.id}`}
+      className={`relative rounded-sm border p-6 transition-colors duration-700 ${
+        highlighted
+          ? 'border-brass/50 bg-brass/5'
+          : 'border-lake/10 bg-card'
+      }`}
+    >
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <p className="eyebrow text-brass-on-light">{entry.name}</p>
+        <SampleNote />
+      </div>
+      <p className="body-text text-lake/70 text-[14px]">{entry.for}</p>
+
+      {entry.phone && (
+        <a
+          href={`tel:${entry.phone.replace(/[^0-9]/g, '')}`}
+          className="link-arrow mt-4 text-lake"
+        >
+          <span className="link-underline">{entry.phone}</span>
+          <ArrowUpRight size={14} strokeWidth={1.5} />
+        </a>
+      )}
+      {entry.email && (
+        <a
+          href={`mailto:${entry.email}`}
+          className="link-arrow mt-2 text-lake block"
+        >
+          <span className="link-underline">{entry.email}</span>
+          <ArrowUpRight size={14} strokeWidth={1.5} />
+        </a>
+      )}
+      {entry.hours && (
+        <p className="mt-4 text-[13px] text-lake/50">{entry.hours}</p>
+      )}
+      {entry.note && (
+        <p className="mt-3 text-[13px] italic text-lake/50">{entry.note}</p>
+      )}
+    </div>
+  );
+}
+
 function ContactPage() {
+  const [searchParams] = useSearchParams();
+  const topicId = searchParams.get('topic');
+  const [highlightedId, setHighlightedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (topicId && contacts.some((c) => c.id === topicId)) {
+      setHighlightedId(topicId);
+    }
+  }, [topicId]);
+
   return (
     <>
       <Seo
@@ -1116,19 +1181,19 @@ function ContactPage() {
               </div>
             </div>
             <div>
-              <Eyebrow>Email</Eyebrow>
-              <div className="mt-6">
-                <p className="body-text text-lake/70 mb-4">
-                  Reach the Lakeside Tower community by email.
-                </p>
-                <a
-                  href="mailto:[REAL EMAIL HERE]"
-                  className="link-arrow text-lake"
-                >
-                  <span className="link-underline">[REAL EMAIL HERE]</span>
-                  <ArrowUpRight size={15} strokeWidth={1.5} />
-                </a>
+              <Eyebrow>How to reach us</Eyebrow>
+              <div className="mt-6 grid gap-5 sm:grid-cols-2">
+                {contacts.map((entry) => (
+                  <ContactCard
+                    key={entry.id}
+                    entry={entry}
+                    highlighted={highlightedId === entry.id}
+                  />
+                ))}
               </div>
+              <p className="mt-8 text-[13px] text-lake/40">
+                In an emergency, call 911 first, then the front desk.
+              </p>
             </div>
           </Reveal>
         </div>
