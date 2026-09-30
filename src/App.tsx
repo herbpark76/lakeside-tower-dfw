@@ -27,7 +27,10 @@ import { EventsFlyerPage } from '@/portal/pages/EventsFlyerPage';
 import { BuildingPage, DocumentsPage, DirectoryPage } from '@/portal/pages/PlaceholderPages';
 import { useReveal, useRevealStagger } from '@/hooks/useReveal';
 import { contacts } from '@/data/contacts';
+import { floorPlans, type FloorPlan } from '@/data/floorPlans';
+import { listings, SHOW_LISTINGS, type Listing } from '@/data/listings';
 import { SampleNote } from '@/components/SampleNote';
+import { SampleBlock } from '@/components/SampleBlock';
 
 /* ── Skip to content link ── */
 export function SkipLink() {
@@ -763,6 +766,102 @@ function LocationPage() {
   );
 }
 
+/* ── Floor plan card ── */
+function FloorPlanPlaceholderSVG() {
+  return (
+    <svg
+      viewBox="0 0 200 140"
+      className="h-auto w-full"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      aria-hidden="true"
+    >
+      <rect x="10" y="10" width="180" height="120" rx="2" />
+      <line x1="10" y1="55" x2="115" y2="55" />
+      <line x1="115" y1="10" x2="115" y2="75" />
+      <line x1="115" y1="75" x2="190" y2="75" />
+      <line x1="10" y1="95" x2="115" y2="95" />
+      <line x1="60" y1="55" x2="60" y2="130" />
+      <rect x="14" y="14" width="40" height="37" rx="1" />
+      <rect x="120" y="14" width="66" height="57" rx="1" />
+      <rect x="14" y="59" width="42" height="32" rx="1" />
+      <rect x="64" y="99" width="48" height="27" rx="1" />
+      <rect x="120" y="79" width="66" height="47" rx="1" />
+    </svg>
+  );
+}
+
+function FloorPlanCard({ plan }: { plan: FloorPlan }) {
+  return (
+    <div className="relative rounded-sm border border-lake/10 bg-card p-6">
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <h3 className="serif text-2xl text-lake">{plan.name}</h3>
+        <SampleNote />
+      </div>
+
+      <div className="grid gap-6 sm:grid-cols-[1fr_1fr]">
+        <dl className="space-y-1.5 text-[13px] text-lake/70">
+          <div className="flex justify-between gap-4">
+            <dt className="text-lake/40">Bedrooms</dt>
+            <dd>{plan.beds}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-lake/40">Bathrooms</dt>
+            <dd>{plan.baths}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-lake/40">Interior</dt>
+            <dd>{plan.sqft}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-lake/40">Balcony</dt>
+            <dd>{plan.balcony}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-lake/40">Floors</dt>
+            <dd>{plan.floors}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-lake/40">Exposure</dt>
+            <dd>{plan.exposure}</dd>
+          </div>
+        </dl>
+
+        <div className="flex flex-col">
+          <div className="flex-1 rounded-sm border border-lake/8 bg-cream p-4 text-brass-light/60">
+            {plan.planImage ? (
+              <img src={plan.planImage} alt={`${plan.name} floor plan`} className="h-auto w-full" />
+            ) : (
+              <FloorPlanPlaceholderSVG />
+            )}
+          </div>
+          <p className="mt-2 text-center text-[11px] uppercase tracking-[0.12em] text-lake/30">
+            {plan.planImage ? 'Floor plan' : 'Plan drawing to come'}
+          </p>
+        </div>
+      </div>
+
+      <ul className="mt-5 space-y-1 text-[13px] text-lake/60">
+        {plan.highlights.map((h) => (
+          <li key={h} className="flex items-start gap-2">
+            <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-brass" />
+            {h}
+          </li>
+        ))}
+      </ul>
+
+      <a
+        href="/contact?topic=buying"
+        className="link-arrow mt-6 text-lake"
+      >
+        <span className="link-underline">Ask about this plan</span>
+        <ArrowUpRight size={14} strokeWidth={1.5} />
+      </a>
+    </div>
+  );
+}
+
 function ResidencesPage() {
   const amenityGroups = [
     ['The water', 'Resort-style pool with hot tub and poolside cabanas; outdoor fire pit and grilling stations.'],
@@ -842,6 +941,27 @@ function ResidencesPage() {
         </div>
       </section>
 
+      {/* FLOOR PLANS */}
+      <section className="bg-sand section-pad">
+        <div className="container-wide">
+          <Reveal>
+            <Eyebrow>Floor plans</Eyebrow>
+            <h2 className="display-4 serif mt-6 text-lake">
+              Room to<br />
+              <em className="font-medium">spread out.</em>
+            </h2>
+          </Reveal>
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:gap-8">
+            {floorPlans.map((plan) => (
+              <FloorPlanCard key={plan.id} plan={plan} />
+            ))}
+          </div>
+          <p className="mt-8 text-[13px] text-lake/40">
+            Plans, dimensions and square footage are approximate and vary by residence.
+          </p>
+        </div>
+      </section>
+
       <PhotoGallery />
 
       {/* Editorial moment — "A room for bad weather." */}
@@ -878,6 +998,78 @@ function ResidencesPage() {
               Lakeside Tower sold out during its original release. Residences become available through resale from time to time.
             </p>
           </Reveal>
+        </div>
+      </section>
+
+      {/* INTERESTED IN A RESIDENCE? */}
+      <section className="bg-lake-deep section-pad text-cream">
+        <div className="container-wide">
+          <Reveal>
+            <p className="eyebrow mb-6 text-brass-on-dark">Residences available</p>
+            <h2 className="display-4 serif text-cream">
+              Your view is<br />
+              <em className="font-medium">waiting.</em>
+            </h2>
+          </Reveal>
+
+          {SHOW_LISTINGS && listings.length > 0 ? (
+            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:gap-8">
+              {listings.map((listing) => (
+                <SampleBlock key={listing.id} className="!border-brass-light/20">
+                  <div className="flex items-center gap-3">
+                    <h3 className="serif text-2xl text-cream">{listing.name}</h3>
+                  </div>
+                  <dl className="mt-4 space-y-1 text-[14px] text-cream/70">
+                    <div className="flex justify-between">
+                      <dt className="text-cream/40">Bedrooms</dt>
+                      <dd>{listing.beds}</dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="text-cream/40">Bathrooms</dt>
+                      <dd>{listing.baths}</dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="text-cream/40">Square feet</dt>
+                      <dd>{listing.sqft}</dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="text-cream/40">Exposure</dt>
+                      <dd>{listing.exposure}</dd>
+                    </div>
+                    <div className="flex justify-between border-t border-cream/10 pt-2 mt-2">
+                      <dt className="text-cream/40">Price</dt>
+                      <dd className="font-semibold text-brass-on-dark">{listing.price}</dd>
+                    </div>
+                  </dl>
+                  <p className="mt-3 text-[12px] text-cream/40">{listing.listedBy}</p>
+                </SampleBlock>
+              ))}
+            </div>
+          ) : (
+            <Reveal className="mt-12">
+              <p className="body-text text-cream/60 max-w-md">
+                No residences are listed right now.{' '}
+                <a href="/contact?topic=buying" className="link-underline text-brass-on-dark">
+                  Ask to be told when one is.
+                </a>
+              </p>
+            </Reveal>
+          )}
+
+          <div className="mt-12 flex flex-col gap-4 sm:flex-row">
+            <a
+              href="/contact?topic=buying"
+              className="inline-flex items-center gap-3 bg-brass px-6 py-4 text-[13px] font-bold uppercase tracking-[0.14em] text-lake-deep transition hover:brightness-110"
+            >
+              Ask about buying <ArrowRight size={15} />
+            </a>
+            <a
+              href="/faq"
+              className="inline-flex items-center gap-3 border border-cream/25 px-6 py-4 text-[13px] font-semibold uppercase tracking-[0.14em] text-cream/80 transition hover:border-brass-light hover:text-cream"
+            >
+              Read the FAQ
+            </a>
+          </div>
         </div>
       </section>
 
