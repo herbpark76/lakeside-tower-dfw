@@ -13,8 +13,8 @@ export function SampleBlock({ children, className = '' }: SampleBlockProps) {
   }
 
   return (
-    <div className={`relative rounded-sm border border-dashed border-brass/40 p-4 ${className}`}>
-      <div className="absolute right-3 top-3 z-10">
+    <div className={`rounded-sm border border-dashed border-brass/40 p-4 ${className}`}>
+      <div className="mb-3">
         <SampleNote />
       </div>
       {children}

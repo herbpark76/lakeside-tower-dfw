@@ -1324,16 +1324,16 @@ function AboutPage() {
       {/* THE STORY SO FAR */}
       <section className="bg-sand section-pad">
         <div className="container-wide">
-          <Reveal className="mx-auto max-w-[760px]">
+          <Reveal>
             <div className="flex items-center gap-3">
               <Eyebrow>The story so far</Eyebrow>
               <SampleNote />
             </div>
             <h2 className="display-4 serif mt-6 text-lake">
-              Five years,<br />
-              <em className="font-medium">one community.</em>
+              How we<br />
+              <em className="font-medium">got here.</em>
             </h2>
-            <ol className="mt-10 space-y-0">
+            <ol className="mt-10 max-w-[760px] space-y-0">
               {timeline.map((entry) => (
                 <li key={entry.year} className="relative flex gap-6 pb-8 last:pb-0">
                   <div className="flex flex-col items-center">
@@ -1354,13 +1354,13 @@ function AboutPage() {
       {/* HOW THE BUILDING IS RUN */}
       <section className="bg-cream section-pad">
         <div className="container-wide">
-          <Reveal className="mx-auto max-w-[760px]">
+          <Reveal>
             <Eyebrow>How the building is run</Eyebrow>
             <h2 className="display-4 serif mt-6 text-lake">
               Owners at<br />
               <em className="font-medium">the helm.</em>
             </h2>
-            <SampleBlock className="mt-8">
+            <SampleBlock className="mt-8 max-w-[760px]">
               <p className="body-text text-[15px] leading-relaxed text-lake/70">{governanceText}</p>
             </SampleBlock>
           </Reveal>
@@ -1373,8 +1373,8 @@ function AboutPage() {
           <Reveal>
             <Eyebrow>The board</Eyebrow>
             <h2 className="display-4 serif mt-6 text-lake">
-              Five owners,<br />
-              <em className="font-medium">elected by owners.</em>
+              Elected by owners,<br />
+              <em className="font-medium">for owners.</em>
             </h2>
           </Reveal>
           <Reveal className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

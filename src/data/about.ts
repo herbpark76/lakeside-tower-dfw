@@ -3,12 +3,12 @@ export const SHOW_BOARD_NAMES = true;
 export interface Fact {
   value: string;
   label: string;
-  sample: true;
+  sample?: boolean;
 }
 
 export const facts: Fact[] = [
-  { value: '16', label: 'floors', sample: true },
-  { value: '55', label: 'residences', sample: true },
+  { value: '16', label: 'floors' },
+  { value: '55', label: 'residences' },
   { value: '2020', label: 'year completed', sample: true },
   { value: '5', label: 'board members', sample: true },
 ];
