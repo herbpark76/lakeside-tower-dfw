@@ -286,7 +286,7 @@ export function PhotoGallery() {
   };
 
   return (
-    <section className="bg-cream pb-[var(--space-xl)] md:pb-[var(--space-2xl)]">
+    <section id="gallery" className="bg-cream pb-[var(--space-xl)] md:pb-[var(--space-2xl)]">
       <div className="container-wide">
         <div ref={headerRef} data-reveal className="mb-10">
           <p className="eyebrow text-brass-on-light">Gallery</p>

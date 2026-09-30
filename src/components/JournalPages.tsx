@@ -33,6 +33,9 @@ function PostCard({ post, index }: { post: JournalPost; index: number }) {
         <div className="journal-card-body">
           <p className="eyebrow text-brass-on-light">{formatDate(post.date)}</p>
           <h3 className="serif text-2xl text-lake mt-3 leading-tight">{post.title}</h3>
+          <p className="mt-2 text-[13px] text-lake/50">
+            By {post.author || 'The Lakeside Tower Journal'}
+          </p>
           <p className="body-text mt-3 text-lake/70 text-[15px] leading-7">{post.excerpt}</p>
           <span className="journal-card-read">
             Read <ArrowRight size={14} strokeWidth={1.5} />
@@ -118,6 +121,11 @@ export function JournalPostPage({ slug }: { slug: string }) {
     ? post.heroImage
     : `${SITE_URL}${post.heroImage}`;
 
+  const authorName = post.author || 'The Lakeside Tower Journal';
+  const authorJsonLd = post.author
+    ? { '@type': 'Person', name: post.author }
+    : { '@type': 'Organization', name: 'The Lakeside Tower Journal' };
+
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -125,10 +133,7 @@ export function JournalPostPage({ slug }: { slug: string }) {
     description: post.excerpt,
     image: [ogImageUrl],
     datePublished: post.date,
-    author: {
-      '@type': 'Organization',
-      name: post.author,
-    },
+    author: authorJsonLd,
     publisher: {
       '@type': 'Organization',
       name: 'Lakeside Tower',
@@ -168,9 +173,7 @@ export function JournalPostPage({ slug }: { slug: string }) {
           <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
             <div className="max-w-3xl">
               <p className="eyebrow mb-4 text-brass-on-dark">
-                {formatDate(post.date)}
-                <span className="mx-2 opacity-50">&middot;</span>
-                {post.author}
+                By {authorName} <span className="mx-2 opacity-50">&middot;</span> {formatDate(post.date)}
               </p>
               <h1 className="display-4 serif text-cream">{post.title}</h1>
             </div>

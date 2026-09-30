@@ -15,7 +15,7 @@ import { TonightAtTheLake } from '@/components/TonightAtTheLake';
 import { WalkabilitySection } from '@/components/WalkabilityMap';
 import { PhotoGallery } from '@/components/PhotoGallery';
 import { JournalIndexPage, JournalPostPage } from '@/components/JournalPages';
-import { journalPosts } from '@/data/journal';
+import { journalPosts, formatDate, type JournalPost } from '@/data/journal';
 import { AuthProvider } from '@/portal/auth/AuthContext';
 import { RequireAuth } from '@/portal/auth/RequireAuth';
 import { SignInPage } from '@/portal/pages/SignInPage';
@@ -419,11 +419,11 @@ function PanoramaBand() {
   );
 }
 
-/* ── 5. LIFE HERE ── cream, three static cards (not links) ── */
+/* ── 5. LIFE HERE ── cream, three linked cards ── */
 const stories = [
-  ['01', 'The light you come home to.', 'balcony-sunset', true] as const,
-  ['02', 'A Saturday without a plan.', 'trail-woods', false] as const,
-  ['03', 'The world within reach.', 'village-street', true] as const,
+  ['01', 'The light you come home to.', 'balcony-sunset', true, '/residences#gallery'] as const,
+  ['02', 'A Saturday without a plan.', 'trail-woods', false, '/journal/northshore-trail-first-timers-guide'] as const,
+  ['03', 'The world within reach.', 'village-street', true, '/location'] as const,
 ];
 
 function StoriesSection() {
@@ -439,25 +439,82 @@ function StoriesSection() {
           </h2>
         </Reveal>
         <div className="grid gap-8 sm:grid-cols-3 sm:gap-10">
-          {stories.map(([num, title, image, tall], i) => (
+          {stories.map(([num, title, image, tall, href], i) => (
             <div
               key={title}
               ref={(el) => { refs.current[i] = el; }}
               data-reveal
             >
-              <div className="img-inset overflow-hidden">
-                <Img
-                  slug={image as never}
-                  alt={title}
-                  className={`${tall ? 'aspect-[3/4]' : 'aspect-[4/5]'} w-full object-cover`}
-                  sizes="(min-width: 640px) 33vw, 100vw"
-                />
-              </div>
-              <p className="mt-5 font-mono text-[13px] text-brass-on-light">{num}</p>
-              <h3 className="display-2 serif mt-2 text-lake">{title}</h3>
+              <a href={href} className="group block">
+                <div className="img-inset overflow-hidden">
+                  <Img
+                    slug={image as never}
+                    alt={title}
+                    className={`${tall ? 'aspect-[3/4]' : 'aspect-[4/5]'} w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]`}
+                    sizes="(min-width: 640px) 33vw, 100vw"
+                  />
+                </div>
+                <div className="mt-5 flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-mono text-[13px] text-brass-on-light">{num}</p>
+                    <h3 className="display-2 serif mt-2 text-lake">{title}</h3>
+                  </div>
+                  <span className="mt-1 flex-shrink-0 text-lake transition-transform duration-300 group-hover:translate-x-1">
+                    <ArrowRight size={20} strokeWidth={1.5} />
+                  </span>
+                </div>
+              </a>
             </div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── 5b. FROM THE JOURNAL ── two newest posts, above For our community ── */
+function JournalStrip() {
+  const posts = journalPosts.slice(0, 2);
+  return (
+    <section className="bg-sand section-pad">
+      <div className="container-wide">
+        <Reveal className="mb-12 max-w-2xl">
+          <Eyebrow>From the Journal</Eyebrow>
+          <h2 className="display-4 serif mt-7 text-lake">
+            Stories from<br />
+            <em className="font-medium">the water&rsquo;s edge.</em>
+          </h2>
+        </Reveal>
+        <div className="grid gap-8 sm:grid-cols-2 sm:gap-10">
+          {posts.map((post) => (
+            <Reveal key={post.slug}>
+              <a href={`/journal/${post.slug}`} className="group block">
+                <div className="img-inset overflow-hidden">
+                  <img
+                    src={post.heroImage}
+                    alt={post.heroAlt}
+                    className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <p className="mt-5 text-[13px] text-lake/50">
+                  By {post.author || 'The Lakeside Tower Journal'} <span className="mx-1.5 opacity-50">&middot;</span> {formatDate(post.date)}
+                </p>
+                <h3 className="display-2 serif mt-2 text-lake">{post.title}</h3>
+                <p className="body-text mt-3 text-[15px] leading-7 text-lake/70">{post.excerpt}</p>
+              </a>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal className="mt-10">
+          <a
+            href="/journal"
+            className="inline-flex items-center gap-3 border-b border-lake/30 pb-3 text-[13px] font-semibold uppercase tracking-[0.14em] text-lake transition hover:border-brass hover:text-brass-on-light"
+          >
+            Read the Journal <ArrowRight size={15} />
+          </a>
+        </Reveal>
       </div>
     </section>
   );
@@ -541,6 +598,7 @@ function HomePage() {
       <VillageSection />
       <PanoramaBand />
       <StoriesSection />
+      <JournalStrip />
       <OwnersSection />
       <ClosingSection />
       </main>
