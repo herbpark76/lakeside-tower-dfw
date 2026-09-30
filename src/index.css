@@ -217,6 +217,97 @@ p { text-wrap: pretty; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
 }
 
+/* ── Photo grade + clip-path wipe reveal ── */
+.photo-grade {
+  position: relative;
+  overflow: hidden;
+}
+.photo-grade-img {
+  filter: saturate(0.85) contrast(1.05) brightness(0.98);
+  display: block;
+}
+.photo-grade-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(138, 111, 61, 0.06);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .photo-grade {
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .photo-grade.photo-revealed {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .photo-grade {
+    clip-path: none !important;
+  }
+}
+
+/* Scroll zoom for full-bleed bands */
+@media (prefers-reduced-motion: no-preference) {
+  .photo-band-zoom {
+    transform: scale(1.08);
+    transition: transform 1600ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .photo-band-zoom.photo-revealed {
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .photo-band-zoom {
+    transform: none !important;
+  }
+}
+
+/* Gradient fade edges for full-bleed bands */
+.photo-band-fade::before,
+.photo-band-fade::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 80px;
+  pointer-events: none;
+  z-index: 1;
+}
+.photo-band-fade::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--fade-top, transparent), transparent);
+}
+.photo-band-fade::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--fade-bottom, transparent), transparent);
+}
+
+/* Photo caption */
+.photo-caption {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 16px;
+}
+.photo-caption-rule {
+  flex-shrink: 0;
+  width: 24px;
+  height: 1px;
+  background: var(--brass);
+  margin-top: 10px;
+}
+.photo-caption-text {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--lake);
+  opacity: 0.65;
+  line-height: 1.4;
+}
+
 /* Skip link */
 .skip-link {
   position: absolute;

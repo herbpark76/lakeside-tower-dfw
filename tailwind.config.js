@@ -28,6 +28,9 @@ export default {
       scale: {
         103: '1.03',
       },
+      borderWidth: {
+        6: '6px',
+      },
     },
   },
   plugins: [],

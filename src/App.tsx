@@ -10,6 +10,9 @@ import {
   Minus,
 } from 'lucide-react';
 import { Img } from '@/components/Img';
+import { Photo, dedupHeroSlug } from '@/components/Photo';
+import type { ImgProps } from '@/components/Img';
+type Slug = ImgProps['slug'];
 import { Seo } from '@/components/Seo';
 import { TonightAtTheLake } from '@/components/TonightAtTheLake';
 import { WalkabilitySection } from '@/components/WalkabilityMap';
@@ -312,13 +315,13 @@ function Hero() {
   );
 }
 
-/* ── 1. LAKESIDE TOWER ── cream, text left / tower-aerial right ── */
+/* ── 1. LAKESIDE TOWER ── cream, text left / 4:5 portrait right, overlaps into trail section ── */
 function TowerSection() {
   return (
-    <section id="home" className="bg-cream section-pad">
+    <section id="home" className="relative bg-cream section-pad">
       <div className="container-wide">
-        <Reveal className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:items-end lg:gap-20">
-          <div className="lg:pb-6">
+        <Reveal className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start lg:gap-20">
+          <div className="lg:pt-8">
             <Eyebrow>Lakeside Tower</Eyebrow>
             <h2 className="display-4 serif mt-6 text-lake">
               A home to<br />
@@ -331,13 +334,15 @@ function TowerSection() {
               <ArrowLink href="/residences">Discover the residences</ArrowLink>
             </div>
           </div>
-          <div className="img-inset relative order-first lg:order-last">
-            <Img
-              slug="tower-aerial"
-              alt="Lakeside Tower overlooking Lake Grapevine from above"
-              className="w-full object-cover"
-              sizes="(min-width: 1024px) 60vw, 100vw"
-            />
+          <div className="relative order-first lg:order-last">
+            <div className="img-inset relative lg:-mb-[120px] lg:z-10">
+              <Photo
+                slug="tower-aerial"
+                alt="Lakeside Tower overlooking Lake Grapevine from above"
+                className="aspect-[4/5] w-full object-cover"
+                sizes="(min-width: 1024px) 55vw, 100vw"
+              />
+            </div>
           </div>
         </Reveal>
       </div>
@@ -345,17 +350,35 @@ function TowerSection() {
   );
 }
 
-/* ── 2. THE TRAIL ── full-bleed dark, trail-shoreline, strongest differentiator ── */
+/* ── 2. THE TRAIL ── full-bleed dark, scroll zoom + gradient fade, caption ── */
 function TrailSection() {
   return (
-    <section className="relative flex min-h-[90vh] items-end overflow-hidden bg-lake-deep text-cream">
+    <section
+      className="photo-band-fade relative flex min-h-[90vh] items-end overflow-hidden bg-lake-deep text-cream"
+      style={{ '--fade-top': 'var(--cream)', '--fade-bottom': 'var(--sand)' } as React.CSSProperties}
+    >
       <div className="absolute inset-0">
-        <Img
-          slug="trail-shoreline"
-          alt="The Northshore Trail beginning at the edge of Lakeside Tower"
-          className="h-full w-full object-cover object-center"
-          sizes="100vw"
-        />
+        <div className="photo-band-zoom h-full w-full" ref={(el) => {
+          if (!el) return;
+          const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (prefersReduced || !('IntersectionObserver' in window)) {
+            el.classList.add('photo-revealed');
+            return;
+          }
+          const obs = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) { e.target.classList.add('photo-revealed'); obs.unobserve(e.target); }
+            });
+          }, { threshold: 0.1 });
+          obs.observe(el);
+        }}>
+          <Photo
+            slug="trail-shoreline"
+            alt="The Northshore Trail beginning at the edge of Lakeside Tower"
+            className="h-full w-full object-cover object-center"
+            sizes="100vw"
+          />
+        </div>
       </div>
       <div className="img-overlay absolute inset-0" />
       <div className="container-wide relative z-10 pb-16 pt-40 sm:pb-24 lg:pb-28">
@@ -368,25 +391,42 @@ function TrailSection() {
           <p className="body-text mt-8 text-cream/75 max-w-lg">
             You can walk out of the building and onto the Northshore Trail. No car, no trailhead parking, no loading a bike onto a rack &mdash; the trail simply begins where the building ends.
           </p>
+          <div className="photo-caption mt-8">
+            <span className="photo-caption-rule" />
+            <span className="photo-caption-text text-cream/60">Where the Northshore Trail begins, a morning in October.</span>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ── 3. LAKESIDE VILLAGE ── sand, village-evening left / text right ── */
+/* ── 3. LAKESIDE VILLAGE ── sand, large photo + inset photo, caption ── */
 function VillageSection() {
   return (
-    <section className="bg-sand section-pad">
+    <section className="relative bg-sand section-pad">
       <div className="container-wide">
         <Reveal className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:items-center lg:gap-20">
-          <div className="img-inset">
-            <Img
-              slug="village-evening"
-              alt="Evening patio at Lakeside Village"
-              className="w-full object-cover"
-              sizes="(min-width: 1024px) 60vw, 100vw"
-            />
+          <div className="relative">
+            <div className="img-inset">
+              <Photo
+                slug="village-evening"
+                alt="Evening patio at Lakeside Village"
+                className="w-full object-cover"
+                sizes="(min-width: 1024px) 60vw, 100vw"
+              />
+            </div>
+            {/* Inset photo — overlapping lower-right corner, hidden on mobile */}
+            <div className="absolute -bottom-12 -right-6 z-10 hidden w-[40%] border-6 border-cream p-0 sm:block">
+              <div className="img-inset">
+                <Photo
+                  slug="village-daylight"
+                  alt="Daytime dining at Lakeside Village"
+                  className="w-full object-cover"
+                  sizes="(min-width: 640px) 25vw, 100vw"
+                />
+              </div>
+            </div>
           </div>
           <div>
             <Eyebrow>Lakeside Village</Eyebrow>
@@ -397,6 +437,10 @@ function VillageSection() {
             <p className="body-text mt-8 text-lake/70">
               Walk to a table in the evening. A patio for a slow afternoon. More than a dozen places to eat and drink, all of them on foot.
             </p>
+            <div className="photo-caption mt-6">
+              <span className="photo-caption-rule" />
+              <span className="photo-caption-text">Lakeside Village, an evening in September.</span>
+            </div>
           </div>
         </Reveal>
       </div>
@@ -404,26 +448,47 @@ function VillageSection() {
   );
 }
 
-/* ── 4. LAKE PANORAMA BAND ── full-width, no text, visual breath ── */
+/* ── 4. LAKE PANORAMA BAND ── full-width, scroll zoom + gradient fades ── */
 function PanoramaBand() {
   return (
-    <div className="relative w-full overflow-hidden">
-      <Img
-        slug="lake-panorama"
-        alt="Panoramic view of Lake Grapevine from Lakeside Tower"
-        className="h-[400px] w-full object-cover"
-        sizes="100vw"
-        objectPosition="center"
-      />
+    <div
+      className="photo-band-fade relative w-full overflow-hidden"
+      style={{ '--fade-top': 'var(--sand)', '--fade-bottom': 'var(--cream)' } as React.CSSProperties}
+    >
+      <div
+        className="photo-band-zoom h-full w-full"
+        ref={(el) => {
+          if (!el) return;
+          const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (prefersReduced || !('IntersectionObserver' in window)) {
+            el.classList.add('photo-revealed');
+            return;
+          }
+          const obs = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) { e.target.classList.add('photo-revealed'); obs.unobserve(e.target); }
+            });
+          }, { threshold: 0.1 });
+          obs.observe(el);
+        }}
+      >
+        <Photo
+          slug="lake-panorama"
+          alt="Panoramic view of Lake Grapevine from Lakeside Tower"
+          className="h-[400px] w-full object-cover"
+          sizes="100vw"
+          objectPosition="center"
+        />
+      </div>
     </div>
   );
 }
 
-/* ── 5. LIFE HERE ── cream, three linked cards ── */
+/* ── 5. LIFE HERE ── cream, three linked cards, uniform 4:5, captions ── */
 const stories = [
-  ['01', 'The light you come home to.', 'balcony-sunset', true, '/residences#gallery'] as const,
-  ['02', 'A Saturday without a plan.', 'trail-woods', false, '/journal/northshore-trail-first-timers-guide'] as const,
-  ['03', 'The world within reach.', 'village-street', true, '/location'] as const,
+  ['01', 'The light you come home to.', 'balcony-sunset', '/residences#gallery', 'The light you come home to, a balcony in late summer.'] as const,
+  ['02', 'A Saturday without a plan.', 'trail-woods', '/journal/northshore-trail-first-timers-guide', 'The Northshore Trail, shade and quiet in the morning.'] as const,
+  ['03', 'The world within reach.', 'village-street', '/location', 'Lakeside Village, the street at the foot of the tower.'] as const,
 ];
 
 function StoriesSection() {
@@ -439,7 +504,7 @@ function StoriesSection() {
           </h2>
         </Reveal>
         <div className="grid gap-8 sm:grid-cols-3 sm:gap-10">
-          {stories.map(([num, title, image, tall, href], i) => (
+          {stories.map(([num, title, image, href, caption], i) => (
             <div
               key={title}
               ref={(el) => { refs.current[i] = el; }}
@@ -447,12 +512,14 @@ function StoriesSection() {
             >
               <a href={href} className="group block">
                 <div className="img-inset overflow-hidden">
-                  <Img
-                    slug={image as never}
-                    alt={title}
-                    className={`${tall ? 'aspect-[3/4]' : 'aspect-[4/5]'} w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]`}
-                    sizes="(min-width: 640px) 33vw, 100vw"
-                  />
+                  <div className="group-hover:scale-[1.03] transition-transform duration-700">
+                    <Photo
+                      slug={image as never}
+                      alt={title}
+                      className="aspect-[4/5] w-full object-cover"
+                      sizes="(min-width: 640px) 33vw, 100vw"
+                    />
+                  </div>
                 </div>
                 <div className="mt-5 flex items-start justify-between gap-3">
                   <div>
@@ -463,6 +530,10 @@ function StoriesSection() {
                     <ArrowRight size={20} strokeWidth={1.5} />
                   </span>
                 </div>
+                <div className="photo-caption">
+                  <span className="photo-caption-rule" />
+                  <span className="photo-caption-text">{caption}</span>
+                </div>
               </a>
             </div>
           ))}
@@ -472,9 +543,19 @@ function StoriesSection() {
   );
 }
 
-/* ── 5b. FROM THE JOURNAL ── two newest posts, above For our community ── */
+/* ── 5b. FROM THE JOURNAL ── two newest posts, dedup hero images, above For our community ── */
 function JournalStrip() {
   const posts = journalPosts.slice(0, 2);
+  const usedAlts = new Set<string>();
+  const postSlugs = posts.map((post) => {
+    let slug = dedupHeroSlug(post.heroImage);
+    if (usedAlts.has(slug)) {
+      const fallbacks: Slug[] = ['village-signage', 'village-dining', 'tower-detail'];
+      slug = fallbacks.find((s) => !usedAlts.has(s)) || slug;
+    }
+    usedAlts.add(slug);
+    return slug;
+  });
   return (
     <section className="bg-sand section-pad">
       <div className="container-wide">
@@ -486,17 +567,18 @@ function JournalStrip() {
           </h2>
         </Reveal>
         <div className="grid gap-8 sm:grid-cols-2 sm:gap-10">
-          {posts.map((post) => (
+          {posts.map((post, i) => (
             <Reveal key={post.slug}>
               <a href={`/journal/${post.slug}`} className="group block">
                 <div className="img-inset overflow-hidden">
-                  <img
-                    src={post.heroImage}
-                    alt={post.heroAlt}
-                    className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <div className="group-hover:scale-[1.03] transition-transform duration-700">
+                    <Photo
+                      slug={postSlugs[i]}
+                      alt={post.heroAlt}
+                      className="aspect-[16/10] w-full object-cover"
+                      sizes="(min-width: 640px) 50vw, 100vw"
+                    />
+                  </div>
                 </div>
                 <p className="mt-5 text-[13px] text-lake/50">
                   By {post.author || 'The Lakeside Tower Journal'} <span className="mx-1.5 opacity-50">&middot;</span> {formatDate(post.date)}
