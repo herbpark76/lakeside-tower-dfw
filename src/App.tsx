@@ -6,6 +6,8 @@ import {
   ArrowUpRight,
   Menu,
   X,
+  Plus,
+  Minus,
 } from 'lucide-react';
 import { Img } from '@/components/Img';
 import { Seo } from '@/components/Seo';
@@ -29,6 +31,8 @@ import { useReveal, useRevealStagger } from '@/hooks/useReveal';
 import { contacts } from '@/data/contacts';
 import { floorPlans, type FloorPlan } from '@/data/floorPlans';
 import { listings, SHOW_LISTINGS, type Listing } from '@/data/listings';
+import { faqCategories } from '@/data/faq';
+import { SHOW_SAMPLE_MARKERS } from '@/data/draft';
 import { SampleNote } from '@/components/SampleNote';
 import { SampleBlock } from '@/components/SampleBlock';
 
@@ -242,6 +246,7 @@ export function Footer() {
           <div className="grid gap-4 text-[17px] text-cream/70">
             <a href="/owners" className="link-underline transition hover:text-cream w-fit">Owners</a>
             <a href="/contact" className="link-underline transition hover:text-cream w-fit">Contact</a>
+            <a href="/faq" className="link-underline transition hover:text-cream w-fit">FAQ</a>
             <a href="/privacy" className="link-underline transition hover:text-cream w-fit">Privacy</a>
           </div>
         </div>
@@ -1466,6 +1471,135 @@ function JournalPage() {
   );
 }
 
+/* ── /faq ── */
+function FaqAccordionItem({ item, index, categoryId }: { item: typeof faqCategories[number]['items'][number]; index: number; categoryId: string }) {
+  const [open, setOpen] = useState(false);
+  const answerId = `faq-${categoryId}-${index}`;
+  return (
+    <div className="border-b border-lake/10">
+      <button
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls={answerId}
+        className="flex w-full items-center justify-between gap-4 py-5 text-left"
+      >
+        <span className="text-[16px] leading-snug text-lake">{item.question}</span>
+        <span className="flex-shrink-0 text-brass-on-light">
+          {open ? <Minus size={18} strokeWidth={1.5} /> : <Plus size={18} strokeWidth={1.5} />}
+        </span>
+      </button>
+      {open && (
+        <div id={answerId} className="min-w-0 pb-5">
+          <p className="body-text text-[15px] leading-relaxed text-lake/70">{item.answer}</p>
+          <div className="mt-3 max-w-full">
+            <SampleNote />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FaqPage() {
+  const faqJsonLd = !SHOW_SAMPLE_MARKERS
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqCategories.flatMap((cat) =>
+          cat.items.map((item) => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer },
+          }))
+        ),
+      }
+    : undefined;
+
+  return (
+    <>
+      <Seo
+        title="FAQ | Lakeside Tower"
+        description="Answers to common questions about owning and living at Lakeside Tower \u2014 pets, parking, guests, leasing, moving in and more."
+        path="/faq"
+        jsonLd={faqJsonLd}
+      />
+      <SkipLink />
+      <main id="main">
+      <div className="relative flex min-h-[70vh] items-end overflow-hidden bg-lake text-cream">
+        <div className="absolute inset-0">
+          <Img
+            slug="tower-aerial"
+            alt=""
+            className="h-full w-full object-cover opacity-60"
+            sizes="100vw"
+          />
+        </div>
+        <div className="img-overlay absolute inset-0" />
+        <Header />
+        <div className="container-wide relative z-10 pb-16 pt-36 sm:pb-24">
+          <div className="max-w-3xl">
+            <p className="eyebrow mb-6 text-brass-on-dark">FAQ</p>
+            <h1 className="display-4 serif text-cream">
+              Good<br />
+              <em className="font-medium">questions.</em>
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <section className="bg-cream section-pad">
+        <div className="container-wide">
+          <Reveal className="mx-auto max-w-[820px]">
+            <div className="flex flex-wrap gap-2.5">
+              {faqCategories.map((cat) => (
+                <a
+                  key={cat.id}
+                  href={`#${cat.id}`}
+                  className="rounded-full border border-lake/15 px-4 py-1.5 text-[12px] font-medium tracking-[0.04em] text-lake/70 transition hover:border-brass hover:text-brass-on-light"
+                >
+                  {cat.label}
+                </a>
+              ))}
+            </div>
+
+            <div className="mt-12 space-y-12">
+              {faqCategories.map((cat) => (
+                <div key={cat.id} id={cat.id} className="min-w-0 scroll-mt-24">
+                  <h2 className="display-2 serif text-lake">{cat.label}</h2>
+                  <div className="mt-2 border-t border-lake/10">
+                    {cat.items.map((item, i) => (
+                      <FaqAccordionItem
+                        key={i}
+                        item={item}
+                        index={i}
+                        categoryId={cat.id}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-16 border-t border-lake/10 pt-10">
+              <p className="text-[15px] text-lake/60">Didn&rsquo;t find it?</p>
+              <a
+                href="/contact"
+                className="link-arrow mt-3 text-lake"
+              >
+                <span className="link-underline">Contact us</span>
+                <ArrowUpRight size={15} strokeWidth={1.5} />
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      </main>
+      <Footer />
+    </>
+  );
+}
+
 /* ── /journal/:slug ── routes generated below from journalPosts ── */
 
 function NotFoundPage() {
@@ -1512,6 +1646,7 @@ export const routes = [
   })),
   { path: '/about', element: <AboutPage /> },
   { path: '/contact', element: <ContactPage /> },
+  { path: '/faq', element: <FaqPage /> },
   { path: '/privacy', element: <PrivacyPage /> },
   { path: '/owners', element: <OwnersPage /> },
   {
