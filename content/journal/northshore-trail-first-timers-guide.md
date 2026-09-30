@@ -4,6 +4,7 @@ slug: northshore-trail-first-timers-guide
 date: 2026-09-24
 excerpt: "A first-timer's guide to the Northshore Trail, which begins a four-minute walk from the front door."
 heroImage: /assets/images/trail-woods-1024.webp
+cardImage: /assets/images/trail-woods-1024.webp
 heroAlt: "Light through the trees on the Northshore Trail"
 author: "Lakeside Tower Community"
 ---

@@ -4,6 +4,7 @@ slug: dinner-on-foot
 date: 2026-09-24
 excerpt: "A walking guide to the restaurants of Lakeside Village, twelve to sixteen minutes up the parkway."
 heroImage: /assets/images/village-evening-1280.webp
+cardImage: /assets/images/village-dining-1024.jpg
 heroAlt: "Evening on the patio at Lakeside Village"
 author: "Lakeside Tower Community"
 ---

@@ -486,7 +486,7 @@ function PanoramaBand() {
 /* ── 5. LIFE HERE ── cream, three linked cards, uniform 4:5, captions ── */
 const stories = [
   ['01', 'The light you come home to.', 'balcony-sunset', '/residences#gallery', 'The light you come home to, a balcony in late summer.'] as const,
-  ['02', 'A Saturday without a plan.', 'trail-shoreline', '/journal/northshore-trail-first-timers-guide', 'The Northshore Trail, shade and quiet in the morning.'] as const,
+  ['02', 'A Saturday without a plan.', 'trail-shoreline', '/journal/northshore-trail-first-timers-guide', 'The Northshore Trail, where it meets the lake.'] as const,
   ['03', 'The world within reach.', 'village-street', '/location', 'Lakeside Village, the street at the foot of the tower.'] as const,
 ];
 
@@ -542,10 +542,10 @@ function StoriesSection() {
   );
 }
 
-/* ── 5b. FROM THE JOURNAL ── two newest posts, dedup hero images, above For our community ── */
+/* ── 5b. FROM THE JOURNAL ── two newest posts, card images, above For our community ── */
 function JournalStrip() {
   const posts = journalPosts.slice(0, 2);
-  const postSlugs = posts.map((post) => heroPathToSlug(post.heroImage));
+  const postSlugs = posts.map((post) => heroPathToSlug(post.cardImage || post.heroImage));
   return (
     <section className="bg-sand section-pad">
       <div className="container-wide">

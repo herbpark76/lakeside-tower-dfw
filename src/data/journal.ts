@@ -6,6 +6,7 @@ export interface JournalPost {
   date: string;
   excerpt: string;
   heroImage: string;
+  cardImage: string;
   heroAlt: string;
   author: string;
   bodyHtml: string;
@@ -17,6 +18,7 @@ interface RawFrontMatter {
   date?: string;
   excerpt?: string;
   heroImage?: string;
+  cardImage?: string;
   heroAlt?: string;
   author?: string;
 }
@@ -58,6 +60,7 @@ function loadPosts(): JournalPost[] {
       date: data.date ?? '',
       excerpt: data.excerpt ?? '',
       heroImage: data.heroImage ?? '',
+      cardImage: data.cardImage ?? data.heroImage ?? '',
       heroAlt: data.heroAlt ?? '',
       author: data.author ?? '',
       bodyHtml: marked.parse(content, { async: false }) as string,

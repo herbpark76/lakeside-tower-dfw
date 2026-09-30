@@ -89,7 +89,9 @@ export function Photo({
 }
 
 export function heroPathToSlug(heroPath: string): Slug {
-  const slugMatch = heroPath.match(/\/assets\/images\/([^-/]+)/);
-  const heroSlug = slugMatch ? slugMatch[1] : '';
-  return (heroSlug && heroSlug in imageRegistry ? heroSlug : 'village-signage') as Slug;
+  const knownSlugs = Object.keys(imageRegistry).sort((a, b) => b.length - a.length);
+  for (const slug of knownSlugs) {
+    if (heroPath.includes(slug)) return slug as Slug;
+  }
+  return 'village-signage' as Slug;
 }
