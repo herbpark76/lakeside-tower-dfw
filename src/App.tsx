@@ -32,6 +32,7 @@ import { contacts } from '@/data/contacts';
 import { floorPlans, type FloorPlan } from '@/data/floorPlans';
 import { listings, SHOW_LISTINGS, type Listing } from '@/data/listings';
 import { faqCategories } from '@/data/faq';
+import { facts, timeline, governanceText, boardMembers, SHOW_BOARD_NAMES } from '@/data/about';
 import { SHOW_SAMPLE_MARKERS } from '@/data/draft';
 import { SampleNote } from '@/components/SampleNote';
 import { SampleBlock } from '@/components/SampleBlock';
@@ -1243,17 +1244,109 @@ function AboutPage() {
         </div>
       </div>
 
+      {/* FACTS STRIP */}
       <section className="bg-cream section-pad">
         <div className="container-wide">
-          <Reveal className="measure-narrow space-y-8">
-            <p className="body-text text-lg leading-8 text-lake/80">
-              Lakeside Tower is a private residential community of fifty-five residences on the north shore of Lake Grapevine in Flower Mound, Texas. The building is owned and governed by its residents through the homeowners association.
-            </p>
+          <Reveal className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-6">
+            {facts.map((fact) => (
+              <div key={fact.label} className="min-w-0 text-center md:text-left">
+                <p className="serif text-5xl text-lake sm:text-6xl">{fact.value}</p>
+                <p className="mt-2 text-[13px] uppercase tracking-[0.1em] text-lake/50">{fact.label}</p>
+                {fact.sample && (
+                  <div className="mt-2 flex justify-center md:justify-start">
+                    <SampleNote />
+                  </div>
+                )}
+              </div>
+            ))}
           </Reveal>
         </div>
       </section>
 
+      {/* THE STORY SO FAR */}
       <section className="bg-sand section-pad">
+        <div className="container-wide">
+          <Reveal className="mx-auto max-w-[760px]">
+            <div className="flex items-center gap-3">
+              <Eyebrow>The story so far</Eyebrow>
+              <SampleNote />
+            </div>
+            <h2 className="display-4 serif mt-6 text-lake">
+              Five years,<br />
+              <em className="font-medium">one community.</em>
+            </h2>
+            <ol className="mt-10 space-y-0">
+              {timeline.map((entry) => (
+                <li key={entry.year} className="relative flex gap-6 pb-8 last:pb-0">
+                  <div className="flex flex-col items-center">
+                    <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-brass" />
+                    <span className="mt-1 w-px flex-1 bg-lake/15" />
+                  </div>
+                  <div className="min-w-0 pb-1">
+                    <p className="font-mono text-[14px] text-brass-on-light">{entry.year}</p>
+                    <p className="body-text mt-1 text-[15px] leading-relaxed text-lake/70">{entry.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* HOW THE BUILDING IS RUN */}
+      <section className="bg-cream section-pad">
+        <div className="container-wide">
+          <Reveal className="mx-auto max-w-[760px]">
+            <Eyebrow>How the building is run</Eyebrow>
+            <h2 className="display-4 serif mt-6 text-lake">
+              Owners at<br />
+              <em className="font-medium">the helm.</em>
+            </h2>
+            <SampleBlock className="mt-8">
+              <p className="body-text text-[15px] leading-relaxed text-lake/70">{governanceText}</p>
+            </SampleBlock>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* THE BOARD */}
+      <section className="bg-sand section-pad">
+        <div className="container-wide">
+          <Reveal>
+            <Eyebrow>The board</Eyebrow>
+            <h2 className="display-4 serif mt-6 text-lake">
+              Five owners,<br />
+              <em className="font-medium">elected by owners.</em>
+            </h2>
+          </Reveal>
+          <Reveal className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            {boardMembers.map((member) => (
+              <div key={member.role} className="min-w-0 rounded-sm border border-lake/10 bg-card p-5">
+                <h3 className="serif text-[20px] leading-snug text-lake">{member.role}</h3>
+                {SHOW_BOARD_NAMES ? (
+                  <>
+                    <p className="mt-3 text-[14px] text-lake/60">{member.name}</p>
+                    <div className="mt-3 max-w-full">
+                      <SampleNote />
+                    </div>
+                  </>
+                ) : null}
+              </div>
+            ))}
+          </Reveal>
+          <Reveal className="mt-10">
+            <a
+              href="/contact?topic=board"
+              className="inline-flex items-center gap-3 border-b border-lake/30 pb-3 text-[13px] font-semibold uppercase tracking-[0.14em] text-lake transition hover:border-brass hover:text-brass-on-light"
+            >
+              Contact the board <ArrowRight size={15} />
+            </a>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* THIS SITE */}
+      <section className="bg-cream section-pad">
         <div className="container-wide">
           <Reveal className="measure-narrow">
             <Eyebrow>This site</Eyebrow>
