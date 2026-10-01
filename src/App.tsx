@@ -1230,6 +1230,14 @@ function ResidencesPage() {
 }
 
 /* ── /life-at-lakeside ── */
+const calendarCards = [
+  { title: 'A string quartet by candlelight', body: 'Cocktails on the amenity deck, then a quartet from the Dallas Symphony Orchestra.' },
+  { title: 'Oktoberfest with the neighbors', body: 'Schnitzel, pretzels and a local taproom\u2019s beer tasting on the deck.' },
+  { title: 'Tower Talks', body: 'Residents share their travels, ten minutes and a slideshow each.' },
+  { title: 'Coffee with management', body: 'An open hour to talk events, maintenance and building questions.' },
+  { title: 'A Halloween garden party', body: 'The fountain becomes a cauldron; costumes optional, contest serious.' },
+];
+
 function LifeAtLakesidePage() {
   return (
     <>
@@ -1391,6 +1399,39 @@ function LifeAtLakesidePage() {
               <span className="photo-caption-text text-cream/60">Lake Grapevine, just after sunset.</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* 4. At the tower — typography-led calendar preview */}
+      <section className="bg-sand section-pad">
+        <div className="container-wide">
+          <Reveal>
+            <Eyebrow>At the tower</Eyebrow>
+            <h2 className="display-4 serif mt-6 text-lake">
+              A full<br />
+              <em className="font-medium">calendar.</em>
+            </h2>
+            <p className="body-text mt-8 max-w-lg text-lake/70">
+              Most months, there&rsquo;s something on the calendar most weeks. A recent October looked like this:
+            </p>
+          </Reveal>
+          <Reveal className="mt-10 grid grid-cols-1 gap-px bg-brass/20 sm:grid-cols-2 lg:grid-cols-5">
+            {calendarCards.map((card) => (
+              <div key={card.title} className="flex min-h-[220px] flex-col bg-sand p-6">
+                <div className="h-px w-8 bg-brass/50" />
+                <h3 className="serif text-[20px] leading-snug text-lake mt-5">{card.title}</h3>
+                <p className="body-text mt-3 text-[14px] leading-relaxed text-lake/60">{card.body}</p>
+              </div>
+            ))}
+          </Reveal>
+          <Reveal className="mt-10">
+            <a
+              href="/owners"
+              className="inline-flex items-center gap-3 border-b border-lake/30 pb-3 text-[13px] font-semibold uppercase tracking-[0.14em] text-lake transition hover:border-brass hover:text-brass-on-light"
+            >
+              Owners see the full calendar and RSVP in the owner portal <ArrowRight size={15} />
+            </a>
+          </Reveal>
         </div>
       </section>
 
