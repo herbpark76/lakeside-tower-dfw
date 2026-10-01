@@ -20,7 +20,13 @@ export function CategoryChip({ category }: { category: EventCategory }) {
 }
 
 interface BadgeProps {
-  event: Pick<PortalEvent, 'rsvpRequired' | 'potluck' | 'offsite' | 'status' | 'externalRsvpUrl' | 'recurring'>;
+  event: Pick<PortalEvent, 'rsvpRequired' | 'potluck' | 'offsite' | 'status' | 'externalRsvpUrl' | 'recurring' | 'category'>;
+}
+
+function externalLinkLabel(url: string, category?: PortalEvent['category']): string {
+  if (url.includes('evite.com')) return 'Evite';
+  if (category === 'Neighborhood' || category === 'Off-site') return 'Tickets';
+  return 'Details';
 }
 
 export function EventBadges({ event }: BadgeProps) {
@@ -48,7 +54,7 @@ export function EventBadges({ event }: BadgeProps) {
       )}
       {event.externalRsvpUrl && (
         <span className="rounded bg-lake/8 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-lake">
-          Evite
+          {externalLinkLabel(event.externalRsvpUrl, event.category)}
         </span>
       )}
       {event.recurring && (

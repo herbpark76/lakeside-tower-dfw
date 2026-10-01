@@ -45,7 +45,23 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
 }
 
 function isEviteEvent(event: PortalEvent | undefined): boolean {
-  return !!event?.externalRsvpUrl;
+  return !!event?.externalRsvpUrl && event.externalRsvpUrl.includes('evite.com');
+}
+
+function isExternalLinkEvent(event: PortalEvent | undefined): boolean {
+  return !!event?.externalRsvpUrl && !event.externalRsvpUrl.includes('evite.com');
+}
+
+function externalLinkButtonLabel(event: PortalEvent): string {
+  if (event.externalRsvpUrl?.includes('evite.com')) return 'RSVP on Evite';
+  if (event.category === 'Neighborhood') return 'Get tickets';
+  return 'View details';
+}
+
+function externalLinkHelperText(event: PortalEvent): string {
+  if (event.externalRsvpUrl?.includes('evite.com')) return 'RSVPs for this event are handled on Evite.';
+  if (event.category === 'Neighborhood') return 'Tickets and reservations are handled on the event website.';
+  return 'See the event website for full details.';
 }
 
 export function EventDetailPage() {
@@ -68,6 +84,7 @@ export function EventDetailPage() {
   const isStaffOrBoard = user?.role === 'staff' || user?.role === 'board';
   const isCancelled = event?.status === 'cancelled';
   const isEvite = isEviteEvent(event);
+  const isExternalLink = isExternalLinkEvent(event);
 
   const userRsvp = user ? findUserRsvp(rsvps, user.id) : undefined;
   const isRsvpClosed = useMemo(() => {
@@ -241,7 +258,7 @@ export function EventDetailPage() {
             {/* RSVP section */}
             {!isCancelled && (
               <div className="mt-10 border-t border-lake/10 pt-8">
-                {isEvite ? (
+                {isEvite || isExternalLink ? (
                   <div>
                     <h2 className="serif text-xl text-lake mb-3">RSVP</h2>
                     <a
@@ -250,11 +267,11 @@ export function EventDetailPage() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 bg-brass px-6 py-3 text-[13px] font-bold uppercase tracking-[0.12em] text-lake-deep transition hover:brightness-110"
                     >
-                      RSVP on Evite
+                      {externalLinkButtonLabel(event)}
                       <ExternalLink size={15} />
                     </a>
                     <p className="mt-3 text-[13px] text-lake/50">
-                      RSVPs for this event are handled on Evite.
+                      {externalLinkHelperText(event)}
                     </p>
                   </div>
                 ) : (

@@ -443,7 +443,7 @@ function ListEventRow({ event, userId }: { event: PortalEvent; userId: string })
   const { rsvps } = useRsvps(event.id);
   const headcount = countGoing(rsvps);
   const userRsvp = findUserRsvp(rsvps, userId);
-  const isEvite = !!event.externalRsvpUrl;
+  const isExternalRsvp = !!event.externalRsvpUrl;
 
   const d = new Date(event.startsAt);
   const monthShort = d.toLocaleDateString('en-US', { month: 'short', timeZone: 'America/Chicago' });
@@ -482,10 +482,10 @@ function ListEventRow({ event, userId }: { event: PortalEvent; userId: string })
           </span>
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-3">
-          {!isEvite && headcount > 0 && (
+          {!isExternalRsvp && headcount > 0 && (
             <span className="text-[12px] font-semibold text-lake/60">{headcount} going</span>
           )}
-          {!isEvite && userRsvp && <RsvpStatusChip status={userRsvp.status} />}
+          {!isExternalRsvp && userRsvp && <RsvpStatusChip status={userRsvp.status} />}
         </div>
       </div>
     </Link>
