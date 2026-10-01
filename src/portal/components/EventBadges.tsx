@@ -3,14 +3,11 @@ import { Link } from 'react-router-dom';
 import { Users, MapPin, Potluck } from 'lucide-react';
 
 const CATEGORY_COLORS: Record<EventCategory, string> = {
-  Social: 'bg-lake/8 text-lake',
-  'Food & Wine': 'bg-brass/10 text-brass-on-light',
-  Fitness: 'bg-green-600/10 text-green-700',
-  Games: 'bg-lake/8 text-lake',
-  Holiday: 'bg-green-600/10 text-green-700',
-  'Off-site': 'bg-amber-500/10 text-amber-700',
-  Meeting: 'bg-lake-deep/8 text-lake-deep',
-  'Vendor Pop-up': 'bg-brass/10 text-brass-on-light',
+  'Holidays': 'bg-green-600/10 text-green-700',
+  'HOA Sponsored': 'bg-brass/10 text-brass-on-light',
+  'Resident Sponsored': 'bg-lake/8 text-lake',
+  'Board/Committee': 'bg-lake-deep/8 text-lake-deep',
+  'Neighborhood': 'bg-amber-500/10 text-amber-700',
 };
 
 export function CategoryChip({ category }: { category: EventCategory }) {
@@ -23,7 +20,7 @@ export function CategoryChip({ category }: { category: EventCategory }) {
 }
 
 interface BadgeProps {
-  event: Pick<PortalEvent, 'rsvpRequired' | 'potluck' | 'offsite' | 'status' | 'externalRsvpUrl'>;
+  event: Pick<PortalEvent, 'rsvpRequired' | 'potluck' | 'offsite' | 'status' | 'externalRsvpUrl' | 'recurring'>;
 }
 
 export function EventBadges({ event }: BadgeProps) {
@@ -52,6 +49,11 @@ export function EventBadges({ event }: BadgeProps) {
       {event.externalRsvpUrl && (
         <span className="rounded bg-lake/8 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-lake">
           Evite
+        </span>
+      )}
+      {event.recurring && (
+        <span className="rounded bg-lake/8 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-lake">
+          Recurring
         </span>
       )}
     </>
@@ -91,12 +93,9 @@ export function NeutralStatusChip({ status }: { status: RsvpStatus }) {
 }
 
 export const EVENT_CATEGORIES: EventCategory[] = [
-  'Social',
-  'Food & Wine',
-  'Fitness',
-  'Games',
-  'Holiday',
-  'Off-site',
-  'Meeting',
-  'Vendor Pop-up',
+  'Holidays',
+  'HOA Sponsored',
+  'Resident Sponsored',
+  'Board/Committee',
+  'Neighborhood',
 ];

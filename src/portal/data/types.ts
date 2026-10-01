@@ -26,14 +26,11 @@ export interface Announcement {
 }
 
 export type EventCategory =
-  | 'Social'
-  | 'Food & Wine'
-  | 'Fitness'
-  | 'Games'
-  | 'Holiday'
-  | 'Off-site'
-  | 'Meeting'
-  | 'Vendor Pop-up';
+  | 'Holidays'
+  | 'HOA Sponsored'
+  | 'Resident Sponsored'
+  | 'Board/Committee'
+  | 'Neighborhood';
 
 export type EventStatus = 'scheduled' | 'cancelled';
 
@@ -47,6 +44,8 @@ export interface PortalEvent {
   location: string;
   locationTBD?: boolean;
   offsite?: boolean;
+  recurring?: boolean;
+  recurringLabel?: string;
   rsvpRequired: boolean;
   rsvpDeadline?: string; // ISO datetime
   capacity?: number;
