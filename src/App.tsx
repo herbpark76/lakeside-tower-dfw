@@ -1297,8 +1297,8 @@ function LifeAtLakesidePage() {
                   />
                 </div>
               </div>
-              {/* Caption sits directly under its photo, aligned to the photo's left edge */}
-              <div className="photo-caption mt-3">
+              {/* Caption right-aligned to clear the overlapping inset on the left */}
+              <div className="photo-caption mt-3 sm:mt-14 justify-end">
                 <span className="photo-caption-rule" />
                 <span className="photo-caption-text">The Northshore Trail, a Saturday morning.</span>
               </div>
