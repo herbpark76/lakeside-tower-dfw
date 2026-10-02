@@ -11,6 +11,7 @@ interface PhotoProps {
   sizes?: string;
   objectPosition?: string;
   onLoad?: () => void;
+  noReveal?: boolean;
 }
 
 const warnedSlugs = new Set<string>();
@@ -34,22 +35,26 @@ export function Photo({
   sizes = '100vw',
   objectPosition = 'center',
   onLoad,
+  noReveal = false,
 }: PhotoProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const el = wrapRef.current;
-    if (!el) return;
+    if (!el || noReveal) return;
 
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
 
-    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-      el.classList.add('photo-revealed');
-      return;
-    }
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) return;
+
+    const rect = el.getBoundingClientRect();
+    const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inViewport) return;
+
+    el.classList.add('photo-grade--hidden');
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -60,12 +65,20 @@ export function Photo({
           }
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0, rootMargin: '0px 0px -10% 0px' }
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+
+    const timer = setTimeout(() => {
+      el.classList.add('photo-revealed');
+    }, 2000);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
+  }, [noReveal]);
 
   const handleLoad = () => {
     if (imgRef.current) checkImageSize(slug, imgRef.current);

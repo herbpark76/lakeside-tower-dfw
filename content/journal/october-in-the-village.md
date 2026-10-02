@@ -4,7 +4,7 @@ slug: october-in-the-village
 date: 2026-10-01
 excerpt: "Two Oktoberfests and a birthday, all within a walk of the lobby."
 heroImage: /assets/images/village-evening-1280.webp
-cardImage: /assets/images/village-dining-1024.jpg
+cardImage: /assets/images/village-signage-1024.jpg
 heroAlt: "Lakeside Village in the evening"
 author: "Lakeside Tower Community"
 ---

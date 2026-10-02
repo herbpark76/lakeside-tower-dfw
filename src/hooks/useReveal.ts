@@ -11,15 +11,13 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>() {
       '(prefers-reduced-motion: reduce)'
     ).matches;
 
-    if (prefersReducedMotion) {
-      el.classList.add('is-revealed');
-      return;
-    }
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) return;
 
-    if (!('IntersectionObserver' in window)) {
-      el.classList.add('is-revealed');
-      return;
-    }
+    const rect = el.getBoundingClientRect();
+    const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inViewport) return;
+
+    el.classList.add('reveal-hidden');
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -30,11 +28,19 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>() {
           }
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0, rootMargin: '0px 0px -10% 0px' }
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+
+    const timer = setTimeout(() => {
+      el.classList.add('is-revealed');
+    }, 2000);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
   }, []);
 
   return ref;
@@ -48,21 +54,20 @@ export function useRevealStagger<T extends HTMLElement = HTMLElement>(count: num
       '(prefers-reduced-motion: reduce)'
     ).matches;
 
-    if (prefersReducedMotion) {
-      refs.current.forEach((el) => el?.classList.add('is-revealed'));
-      return;
-    }
-
-    if (!('IntersectionObserver' in window)) {
-      refs.current.forEach((el) => el?.classList.add('is-revealed'));
-      return;
-    }
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) return;
 
     const observers: IntersectionObserver[] = [];
+    const timers: ReturnType<typeof setTimeout>[] = [];
 
     refs.current.forEach((el, index) => {
       if (!el) return;
+
+      const rect = el.getBoundingClientRect();
+      const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
+      if (inViewport) return;
+
       el.style.transitionDelay = `${index * 80}ms`;
+      el.classList.add('reveal-hidden');
 
       const observer = new IntersectionObserver(
         (entries) => {
@@ -73,14 +78,22 @@ export function useRevealStagger<T extends HTMLElement = HTMLElement>(count: num
             }
           });
         },
-        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+        { threshold: 0, rootMargin: '0px 0px -10% 0px' }
       );
 
       observer.observe(el);
       observers.push(observer);
+
+      const timer = setTimeout(() => {
+        el.classList.add('is-revealed');
+      }, 2000 + index * 80);
+      timers.push(timer);
     });
 
-    return () => observers.forEach((o) => o.disconnect());
+    return () => {
+      observers.forEach((o) => o.disconnect());
+      timers.forEach((t) => clearTimeout(t));
+    };
   }, [count]);
 
   return refs;
