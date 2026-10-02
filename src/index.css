@@ -533,20 +533,19 @@ p { text-wrap: pretty; }
 
 /* ── Photo gallery ── */
 .gallery-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
+  column-count: 1;
+  column-gap: 24px;
 }
 @media (min-width: 640px) {
   .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    column-count: 2;
+    column-gap: 20px;
   }
 }
 @media (min-width: 1024px) {
   .gallery-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
+    column-count: 3;
+    column-gap: 24px;
   }
 }
 
@@ -554,9 +553,11 @@ p { text-wrap: pretty; }
   display: block;
   width: 100%;
   padding: 0;
+  margin: 0 0 24px;
   border: none;
   background: none;
   cursor: pointer;
+  break-inside: avoid;
 }
 
 .gallery-thumb-frame {
@@ -569,10 +570,12 @@ p { text-wrap: pretty; }
 
 .gallery-thumb-photo {
   width: 100%;
-  height: 100%;
+  height: auto;
+  display: block;
 }
 
 .gallery-thumb-photo .photo-grade-img {
+  height: auto;
   transition: transform 600ms var(--ease);
 }
 

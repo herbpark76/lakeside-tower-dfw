@@ -215,11 +215,6 @@ function GalleryThumbnail({
     onOpen(index);
   };
 
-  const aspectClass =
-    photo.span === 'tall' ? 'aspect-[4/5]' :
-    photo.span === 'wide' ? 'aspect-[16/9]' :
-    'aspect-[3/2]';
-
   return (
     <button
       ref={buttonRef}
@@ -228,7 +223,7 @@ function GalleryThumbnail({
       aria-label={`Open photograph: ${photo.caption}`}
       data-gallery-index={index}
     >
-      <div className={`gallery-thumb-frame ${aspectClass}`}>
+      <div className="gallery-thumb-frame">
         <Photo
           slug={photo.src}
           alt={photo.alt}

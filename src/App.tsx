@@ -1116,26 +1116,15 @@ function ResidencesPage() {
       {/* Editorial moment — "A room for bad weather." */}
       <section className="bg-sand section-pad">
         <div className="container-wide">
-          <Reveal className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start lg:gap-24">
-            {/* TALL portrait balcony-sunset */}
-            <div className="img-inset order-first lg:order-last">
-              <Photo
-                slug="balcony-sunset"
-                alt="Sunset over Lake Grapevine from a balcony at Lakeside Tower"
-                className="aspect-[4/5] w-full"
-                sizes="(min-width: 1024px) 50vw, 100vw"
-              />
-            </div>
-            <div className="lg:pt-16">
-              <span className="block h-px w-12 bg-brass" />
-              <h2 className="display-3 serif text-lake mt-8">
-                A room for<br />
-                <em className="font-medium">bad weather.</em>
-              </h2>
-              <p className="body-text mt-8 text-lake/70 max-w-md">
-                There&rsquo;s a GolfZon simulator downstairs. In August, when the putting green is a bad idea by ten in the morning, it turns out to be the most-used room in the building.
-              </p>
-            </div>
+          <Reveal className="mx-auto max-w-[640px] text-center">
+            <span className="mx-auto block h-px w-12 bg-brass" />
+            <h2 className="display-3 serif text-lake mt-8">
+              A room for<br />
+              <em className="font-medium">bad weather.</em>
+            </h2>
+            <p className="body-text mt-8 text-lake/70 mx-auto max-w-md">
+              There&rsquo;s a GolfZon simulator downstairs. In August, when the putting green is a bad idea by ten in the morning, it turns out to be the most-used room in the building.
+            </p>
           </Reveal>
         </div>
       </section>
@@ -1271,7 +1260,7 @@ function LifeAtLakesidePage() {
         </div>
       </div>
 
-      {/* 1. A Saturday without a plan — cream, large trail photo + village inset */}
+      {/* 1. A Saturday without a plan — cream, large trail photo + trail-woods inset */}
       <section className="bg-cream section-pad">
         <div className="container-wide">
           <Reveal className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:items-start lg:gap-20">
@@ -1297,23 +1286,22 @@ function LifeAtLakesidePage() {
                   sizes="(min-width: 1024px) 60vw, 100vw"
                 />
               </div>
-              {/* Inset village-daylight photo — overlapping lower-left corner */}
+              {/* Inset trail-woods photo — overlapping lower-left corner */}
               <div className="absolute -bottom-10 -left-6 z-10 hidden w-[38%] border-6 border-cream sm:block">
                 <div className="img-inset">
                   <Photo
-                    slug="village-daylight"
-                    alt="Daytime dining at Lakeside Village"
+                    slug="trail-woods"
+                    alt="Light through the trees on the Northshore Trail"
                     className="w-full"
                     sizes="(min-width: 640px) 25vw, 100vw"
                   />
                 </div>
               </div>
-            </div>
-          </Reveal>
-          <Reveal className="mt-10 sm:mt-16">
-            <div className="photo-caption">
-              <span className="photo-caption-rule" />
-              <span className="photo-caption-text">The Northshore Trail, a Saturday morning.</span>
+              {/* Caption sits directly under its photo, aligned to the photo's left edge */}
+              <div className="photo-caption mt-3">
+                <span className="photo-caption-rule" />
+                <span className="photo-caption-text">The Northshore Trail, a Saturday morning.</span>
+              </div>
             </div>
           </Reveal>
         </div>
@@ -1323,13 +1311,20 @@ function LifeAtLakesidePage() {
       <section className="bg-sand section-pad">
         <div className="container-wide">
           <Reveal className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:items-start lg:gap-20">
-            <div className="img-inset relative lg:-mb-[100px] lg:z-10">
-              <Photo
-                slug="village-daylight"
-                alt="Daytime dining at Lakeside Village"
-                className="aspect-[3/2] w-full"
-                sizes="(min-width: 1024px) 60vw, 100vw"
-              />
+            <div>
+              <div className="img-inset relative lg:-mb-[100px] lg:z-10">
+                <Photo
+                  slug="village-evening"
+                  alt="Evening atmosphere on the patio at Lakeside Village"
+                  className="aspect-[3/2] w-full"
+                  sizes="(min-width: 1024px) 60vw, 100vw"
+                />
+              </div>
+              {/* Caption sits directly under the photo, aligned to its left edge */}
+              <div className="photo-caption mt-3">
+                <span className="photo-caption-rule" />
+                <span className="photo-caption-text">Lakeside Village at dinnertime.</span>
+              </div>
             </div>
             <div className="lg:pt-8">
               <Eyebrow>02</Eyebrow>
@@ -1343,10 +1338,6 @@ function LifeAtLakesidePage() {
               <p className="body-text mt-6 text-lake/70 max-w-md">
                 All of it on foot. None of it requiring a car, a reservation made three weeks out, or a drive home afterward.
               </p>
-              <div className="photo-caption mt-6">
-                <span className="photo-caption-rule" />
-                <span className="photo-caption-text">Lakeside Village at dinnertime.</span>
-              </div>
             </div>
           </Reveal>
         </div>
